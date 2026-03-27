@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+/* Design tokens from UI-SPEC.md */
+@theme {
+  /* Colors */
+  --color-canvas-white: #FFFFFF;
+  --color-card-light: #F7F7F7;
+  --color-card-hover: #F0F0F0;
+  --color-ink-black: #111111;
+  --color-ink-gray: #666666;
+  --color-ink-light: #999999;
+  --color-dark-card-bg: #111111;
+  --color-dark-card-hover: #000000;
+
+  /* Typography */
+  --font-family-sans: 'Inter', system-ui, sans-serif;
+  --font-family-mono: 'JetBrains Mono', monospace;
+
+  /* Spacing (multiples of 4) */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+  --spacing-3xl: 64px;
+
+  /* Layout */
+  --spacing-card-gap: 4px;
+  --spacing-container-padding: 40px;
+  --layout-max-width: 1600px;
+  --layout-min-card-height: 320px;
+
+  /* Animation */
+  --transition-timing: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-duration: 300ms;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-family-sans);
+  background-color: var(--color-canvas-white);
+  color: var(--color-ink-black);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Typography utilities */
+.font-mono {
+  font-family: var(--font-family-mono);
+}
+
+.tracking-tight {
+  letter-spacing: -0.02em;
+}
+
+.tracking-tighter {
+  letter-spacing: -0.04em;
+}
+
+/* Touch target minimum (44px for accessibility) */
+.touch-target {
+  min-width: 44px;
+  min-height: 44px;
+  touch-action: manipulation;
+}
