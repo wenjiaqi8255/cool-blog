@@ -1,10 +1,11 @@
 ---
 phase: 1
 slug: foundation-bento-grid
-status: draft
+status: approved
 shadcn_initialized: false
 preset: none
 created: 2026-03-27
+reviewed_at: 2026-03-27
 ---
 
 # Phase 1 — UI Design Contract
@@ -21,7 +22,7 @@ created: 2026-03-27
 | Preset | not applicable |
 | Component library | none (custom components) |
 | Icon library | Heroicons or Lucide (planner's discretion) |
-| Font | Inter (200-600), JetBrains Mono (300-400) |
+| Font | Inter (300, 400), JetBrains Mono (300, 400) |
 
 ---
 
@@ -51,20 +52,22 @@ Exceptions:
 |------|------|--------|-------------|
 | Body | 16px | 400 (Regular) | 1.5 |
 | Label/Meta | 9px | 400 (Regular) | 1.4 |
-| Heading | 20px | 200-300 (Light) | 1.2 |
-| Display/Headline | 28px+ | 200-300 (Light) | 1.2 |
+| Heading | 20px | 300 (Light) | 1.2 |
+| Display/Headline | 28px+ | 300 (Light) | 1.2 |
 
 ### Typography Details
 
 **Font Families:**
-- Sans: Inter (weights 200-600)
-- Mono: JetBrains Mono (weights 300-400)
+- Sans: Inter (weights 300, 400 only)
+- Mono: JetBrains Mono (weights 300, 400 only)
 
 **Letter-spacing:**
 - Headlines: -0.02em to -0.04em (tight)
 - Meta tags: 0.1em (uppercase labels)
 
 **Body:** 16px at weight 400, line-height 1.5 (default)
+
+**Headlines:** 20-28px+ at weight 300 (Light), tight letter-spacing
 
 ---
 
@@ -105,7 +108,7 @@ Exceptions:
 | Primary CTA | "Subscribe" (newsletter) |
 | Empty state heading | "No projects yet" / "No articles yet" |
 | Empty state body | "Check back soon for updates." |
-| Error state | "Something went wrong. Please try again." |
+| Error state | "Unable to load content. Please check your connection and try again." |
 | Destructive confirmation | N/A (no destructive actions in Phase 1) |
 
 ### Phase 1 Specific Copy
@@ -157,6 +160,19 @@ Exceptions:
 
 ---
 
+## Visual Hierarchy
+
+**Primary Focal Point:** The first large image card (span-2 or span-4) in the top-left area of the Bento Grid draws the eye first.
+
+**Visual Priority Order:**
+1. Large image cards (span-2/4) — highest visual weight
+2. Dark variant cards — contrast against light background
+3. Stats card with live data — dynamic content
+4. Text cards (light variant) — supporting content
+5. Terminal cards — niche aesthetic accent
+
+---
+
 ## Responsive Breakpoints
 
 | Breakpoint | Columns | Behavior |
@@ -189,14 +205,14 @@ Exceptions:
 
 ## Checker Sign-Off
 
-- [ ] Dimension 1 Copywriting: PASS
-- [ ] Dimension 2 Visuals: PASS
-- [ ] Dimension 3 Color: PASS
-- [ ] Dimension 4 Typography: PASS
-- [ ] Dimension 5 Spacing: PASS
-- [ ] Dimension 6 Registry Safety: PASS
+- [x] Dimension 1 Copywriting: PASS
+- [x] Dimension 2 Visuals: PASS
+- [x] Dimension 3 Color: PASS
+- [x] Dimension 4 Typography: PASS
+- [x] Dimension 5 Spacing: PASS
+- [x] Dimension 6 Registry Safety: PASS
 
-**Approval:** pending
+**Approval:** approved (2026-03-27)
 
 ---
 
