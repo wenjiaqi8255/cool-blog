@@ -1,82 +1,54 @@
-# Requirements: Cool Blog — Bento Grid Portfolio & Technical Writing
+# Requirements: Cool Blog — Bento Grid Portfolio
 
 **Defined:** 2026-03-27
-**Core Value:** Visual impact meets content depth — striking portfolio showcase paired with deep technical articles
+**Core Value:** Visual impact meets content depth — Portfolio showcases work through striking visuals; Articles provide deep technical content with excellent readability.
+
+---
 
 ## v1 Requirements
 
 Requirements for initial release. Each maps to roadmap phases.
 
-### Layout & Design
+### Portfolio (Portfolio Tab)
 
-- [ ] **LAY-01**: Bento Grid layout with 4-column base and 4px gaps
-- [ ] **LAY-02**: Card variants: span-2, span-4, row-2 for visual hierarchy
-- [ ] **LAY-03**: Light cards (#F7F7F7) with dark variant (#111111)
-- [ ] **LAY-04**: Smooth hover transitions (background, arrow transform)
-- [ ] **LAY-05**: Image cards with grayscale-to-color effect on hover
-- [ ] **LAY-06**: Terminal/code block styling with JetBrains Mono
-- [ ] **LAY-07**: Fully responsive (mobile, tablet, desktop)
+- [ ] **PORT-01**: Bento Grid layout with varying card sizes (span-2, span-4, row-2)
+- [ ] **PORT-02**: Dark and light card variants with smooth hover transitions
+- [ ] **PORT-03**: Image cards with grayscale-to-color effect on hover
+- [ ] **PORT-04**: Terminal/code block styling within cards
+- [ ] **PORT-05**: Tab navigation between Portfolio and Articles views
 
-### Navigation & Structure
+### Articles (Articles Tab)
 
-- [ ] **NAV-01**: Tab navigation between Portfolio and Articles views
-- [ ] **NAV-02**: Header with brand, menu pills, and subscribe CTA
-- [ ] **NAV-03**: Footer with sitemap, topics, social links
-- [ ] **NAV-04**: URL routing: `/` (portfolio), `/articles`, `/articles/[slug]`
+- [ ] **ART-01**: Article list with title, excerpt, date, and tags
+- [ ] **ART-02**: Individual article page with full content rendering
+- [ ] **ART-03**: Markdown content from Git-managed files
+- [ ] **ART-04**: Syntax highlighting for code blocks
+- [ ] **ART-05**: Search and filter functionality (by tag, title)
 
-### Portfolio Tab
+### Newsletter (Newsletter tab)
 
-- [ ] **PORT-01**: Manifesto/hero card with large headline
-- [ ] **PORT-02**: Project showcase cards with images
-- [ ] **PORT-03**: Stats card (e.g., commit count, metrics)
-- [ ] **PORT-04**: Clickable cards linking to project details or external URLs
-- [ ] **PORT-05**: Arrow icon animation on card hover
+- [ ] **NEWS-01**: Newsletter subscription form with email capture
+- [ ] **NEWS-02**: Email storage in Neon Postgres database
+- [ ] **NEWS-03**: Subscription confirmation and thank you message
+- [ ] **NEWS-04**: Resend confirmation email to subscriber
 
-### Articles Tab
+### Deployment (Deployment Tab)
 
-- [ ] **ART-01**: Article list with title, excerpt, date, tags
-- [ ] **ART-02**: Individual article page with full Markdown rendering
-- [ ] **ART-03**: Syntax highlighting for code blocks (Shiki)
-- [ ] **ART-04**: Article content from Git-managed Markdown files
-- [ ] **ART-05**: Reading time estimate
+- [ ] **DEPLOY-01**: Deployment to Cloudflare Pages
+- [ ] **DEPLOY-02**: Custom domain support (optional)
+- [ ] **DEPLOY-03**: Environment variables configuration
+- [ ] **DEPLOY-04**: HTTPS with Let's Encrypt (SSL certificates auto, custom domain DNS)
 
-### Search & Filter
+### SEO & Metadata (SEO Tab)
 
-- [ ] **SRCH-01**: Full-text search across article titles and content
-- [ ] **SRCH-02**: Tag-based filtering
-- [ ] **SRCH-03**: Search results displayed in article list format
-- [ ] **SRCH-04**: Clear search/reset functionality
+- [ ] **SEO-01**: Meta tags, Open Graph, Twitter Cards
+- [ ] **SEO-02**: RSS feed generation
+- [ ] **SEO-03**: Sitemap.xml for search engines (clean URLs, mobile-responsive design)
 
-### Newsletter
+### Responsive (Responsive Tab)
 
-- [ ] **NEWS-01**: Email subscription form in portfolio grid
-- [ ] **NEWS-02**: Email validation before submission
-- [ ] **NEWS-03**: Store emails in Neon Postgres database
-- [ ] **NEWS-04**: Success/error feedback on submission
-- [ ] **NEWS-05**: Retry logic with exponential backoff for Neon cold starts
-
-### Content Management
-
-- [ ] **CONT-01**: Markdown content files in `/content/` directory
-- [ ] **CONT-02**: Astro content collections for type-safe content
-- [ ] **CONT-03**: Frontmatter schema (title, date, tags, excerpt, image)
-- [ ] **CONT-04**: Draft/published status via frontmatter
-
-### Deployment & Infrastructure
-
-- [ ] **DEP-01**: Deployment to Cloudflare Pages
-- [ ] **DEP-02**: Hybrid rendering (static pages + serverless newsletter)
-- [ ] **DEP-03**: Cloudflare image service binding (not Sharp)
-- [ ] **DEP-04**: `nodejs_compat` flag enabled
-- [ ] **DEP-05**: Environment variables via Cloudflare secrets
-
-### SEO & Meta
-
-- [ ] **SEO-01**: Meta tags (title, description, author)
-- [ ] **SEO-02**: Open Graph tags for social sharing
-- [ ] **SEO-03**: Twitter Card meta tags
-- [ ] **SEO-04**: RSS feed generation
-- [ ] **SEO-05**: Sitemap generation
+- [ ] **RESP-01**: Fully responsive design (mobile, tablet, desktop)
+- [ ] **RESP-02**: Touch-friendly interactions on mobile (swipe gestures, tap targets, readable typography)
 
 ## v2 Requirements
 
@@ -114,12 +86,13 @@ Explicitly excluded. Documented to prevent scope creep.
 |---------|--------|
 | User authentication | Newsletter only requires email, no accounts |
 | Comments system | Deferred to v2, adds moderation complexity |
-| Dark mode toggle | Intentional light theme, dark cards provide contrast |
-| Multi-language | English only for v1 |
-| Admin dashboard | Content managed via Git, no CMS backend |
-| Social login | No OAuth needed for newsletter-only |
-| Real-time features | Static site with serverless functions sufficient |
-| Member-only content | Public blog, no paywall |
+| Dark mode toggle | Intentional light theme; dark cards provide contrast within portfolio view |
+| Mobile app | v1 is web-first, mobile later |
+| OAuth login | Not needed for newsletter-only subscription |
+| CMS backend | Markdown files in repo, no API needed |
+| Table of contents | v1 scope control, performance issues |
+| Service Worker | Complexity for v1, defer to v2 |
+| Social features | Deferred to v2+ |
 
 ## Traceability
 
@@ -127,13 +100,35 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (To be populated during roadmap creation) | — | Pending |
+| PORT-01 | Phase 1 | Pending |
+| PORT-02 | Phase 1 | Pending |
+| PORT-03 | Phase 1 | Pending |
+| PORT-04 | Phase 1 | Pending |
+| PORT-05 | Phase 1 | Pending |
+| RESP-01 | Phase 1 | Pending |
+| RESP-02 | Phase 1 | Pending |
+| DEPLOY-01 | Phase 1 | Pending |
+| DEPLOY-02 | Phase 1 | Pending |
+| DEPLOY-03 | Phase 1 | Pending |
+| DEPLOY-04 | Phase 1 | Pending |
+| ART-01 | Phase 2 | Pending |
+| ART-02 | Phase 2 | Pending |
+| ART-03 | Phase 2 | Pending |
+| ART-04 | Phase 2 | Pending |
+| ART-05 | Phase 2 | Pending |
+| NEWS-01 | Phase 3 | Pending |
+| NEWS-02 | Phase 3 | Pending |
+| NEWS-03 | Phase 3 | Pending |
+| NEWS-04 | Phase 3 | Pending |
+| SEO-01 | Phase 4 | Pending |
+| SEO-02 | Phase 4 | Pending |
+| SEO-03 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 35 total
-- Mapped to phases: 0
-- Unmapped: 35 ⚠️
+- v1 requirements: 23 total
+- Mapped to phases: 23
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-03-27*
-*Last updated: 2026-03-27 after initial definition*
+*Last updated: 2026-03-27 after roadmap creation*
