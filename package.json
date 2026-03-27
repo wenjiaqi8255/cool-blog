@@ -1,0 +1,32 @@
+{
+  "name": "cool-blog",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "npm run test:unit && npm run test:e2e",
+    "test:unit": "vitest run",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "astro": "^6.1.1",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@astrojs/cloudflare": "^13.1.4",
+    "@astrojs/react": "^5.0.2",
+    "@astrojs/tailwind": "^6.0.2",
+    "tailwindcss": "^4.2.2",
+    "@fontsource/inter": "^5.0.0",
+    "@fontsource/jetbrains-mono": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "vitest": "^3.0.0",
+    "@playwright/test": "^1.50.0",
+    "@testing-library/react": "^16.0.0",
+    "jsdom": "^26.0.0"
+  }
+}
