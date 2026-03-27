@@ -1,0 +1,107 @@
+---
+interface Props {
+  title: string;
+  body?: string;
+  link?: string;
+  variant?: 'light' | 'dark';
+}
+
+const { title, body, link = '#', variant = 'light' } = Astro.props;
+---
+
+<div class:list={['text-card', variant]}>
+  <a href={link} class="card-link">
+    <div class="content">
+      <div class="text">
+        <h3 class="title">{title}</h3>
+        {body && <p class="body">{body}</p>}
+      </div>
+      <span class="arrow" aria-hidden="true">↗</span>
+    </div>
+  </a>
+</div>
+
+<style>
+  .text-card {
+    background: var(--color-card-light);
+    border-radius: 8px;
+    overflow: hidden;
+    height: 100%;
+    min-height: 320px;
+    transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .text-card:hover {
+    background: var(--color-card-hover);
+  }
+
+  .text-card.dark {
+    background: var(--color-dark-card-bg);
+  }
+
+  .text-card.dark:hover {
+    background: var(--color-dark-card-hover);
+  }
+
+  .card-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    gap: 16px;
+  }
+
+  .text {
+    flex: 1;
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    margin: 0 0 12px 0;
+    color: var(--color-ink-black);
+    line-height: 1.2;
+  }
+
+  .text-card.dark .title {
+    color: #FFFFFF;
+  }
+
+  .body {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-ink-gray);
+    margin: 0;
+  }
+
+  .text-card.dark .body {
+    color: #999999;
+  }
+
+  .arrow {
+    font-size: 16px;
+    color: var(--color-ink-gray);
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    align-self: flex-end;
+  }
+
+  .text-card.dark .arrow {
+    color: #999999;
+  }
+
+  .text-card:hover .arrow {
+    transform: translate(4px, -4px);
+  }
+</style>
