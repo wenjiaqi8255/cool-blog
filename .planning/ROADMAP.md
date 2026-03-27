@@ -29,14 +29,14 @@ Decimal phases appear between their surrounding integers in numeric order.
   3. User can interact with dark/light card variants that respond smoothly to hover
   4. User can see image cards transition from grayscale to color on hover
   5. User can navigate between Portfolio and Articles views via tab navigation
-**Plans**: TBD
+**Plans**: 5 plans in 5 waves
 
 Plans:
-- [ ] 01-01: Project scaffolding with Astro, Cloudflare adapter, and Tailwind CSS
-- [ ] 01-02: Bento Grid component with card variants and hover animations
-- [ ] 01-03: Responsive layout and touch-friendly interactions
-- [ ] 01-04: Tab navigation between Portfolio and Articles
-- [ ] 01-05: Cloudflare Pages deployment with environment configuration
+- [ ] 01-01-PLAN.md — Project scaffolding with Astro, Cloudflare adapter, Tailwind CSS v4, and test infrastructure
+- [ ] 01-02-PLAN.md — Card components (Image, Text, Terminal, Stats) with hover animations and GitHub API
+- [ ] 01-03-PLAN.md — Configuration-driven Bento Grid with responsive breakpoints
+- [ ] 01-04-PLAN.md — Navigation system with tabs, subscribe modal, and main pages
+- [ ] 01-05-PLAN.md — Cloudflare Pages deployment configuration and documentation
 
 ### Phase 2: Content System
 **Goal**: Users can browse, read, and search technical articles with excellent readability and code syntax highlighting.
@@ -96,11 +96,12 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Bento Grid | 0/5 | Not started | - |
+| 1. Foundation & Bento Grid | 0/5 | Ready to execute | - |
 | 2. Content System | 0/4 | Not started | - |
 | 3. Newsletter & Backend | 0/4 | Not started | - |
 | 4. SEO & Launch | 0/4 | Not started | - |
 
 ---
 *Roadmap created: 2026-03-27*
+*Roadmap updated: 2026-03-28 (Phase 1 plans created)*
 *Granularity: coarse*
