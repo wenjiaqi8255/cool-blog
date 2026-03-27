@@ -34,9 +34,9 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Deployment (Deployment Tab)
 
-- [ ] **DEPLOY-01**: Deployment to Cloudflare Pages
-- [ ] **DEPLOY-02**: Custom domain support (optional)
-- [ ] **DEPLOY-03**: Environment variables configuration
+- [x] **DEPLOY-01**: Deployment to Cloudflare Pages
+- [x] **DEPLOY-02**: Custom domain support (optional)
+- [x] **DEPLOY-03**: Environment variables configuration
 - [ ] **DEPLOY-04**: HTTPS with Let's Encrypt (SSL certificates auto, custom domain DNS)
 
 ### SEO & Metadata (SEO Tab)
@@ -107,9 +107,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PORT-05 | Phase 1 | Pending |
 | RESP-01 | Phase 1 | Pending |
 | RESP-02 | Phase 1 | Pending |
-| DEPLOY-01 | Phase 1 | Pending |
-| DEPLOY-02 | Phase 1 | Pending |
-| DEPLOY-03 | Phase 1 | Pending |
+| DEPLOY-01 | Phase 1 | Complete |
+| DEPLOY-02 | Phase 1 | Complete |
+| DEPLOY-03 | Phase 1 | Complete |
 | DEPLOY-04 | Phase 1 | Pending |
 | ART-01 | Phase 2 | Pending |
 | ART-02 | Phase 2 | Pending |
