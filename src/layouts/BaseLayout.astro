@@ -1,0 +1,44 @@
+---
+import '@fontsource/inter/300.css';
+import '@fontsource/inter/400.css';
+import '@fontsource/jetbrains-mono/300.css';
+import '@fontsource/jetbrains-mono/400.css';
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'KERNEL_PANIC / ARCHITECTURE & SYSTEMS',
+  description = 'Computing as craft — Technical writing and portfolio'
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-canvas-white text-ink-black">
+    <slot />
+  </body>
+</html>
+
+<style is:global>
+  /* Ensure smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Focus styles for accessibility */
+  :focus-visible {
+    outline: 2px solid var(--color-ink-black);
+    outline-offset: 2px;
+  }
+</style>
