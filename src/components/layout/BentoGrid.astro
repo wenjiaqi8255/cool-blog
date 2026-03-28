@@ -1,0 +1,114 @@
+---
+import { portfolioCards, type CardConfig } from '../../config/cards';
+import ImageCard from '../cards/ImageCard.astro';
+import TextCard from '../cards/TextCard.astro';
+import TerminalCard from '../cards/TerminalCard.astro';
+import StatsCard from '../cards/StatsCard';
+
+interface Props {
+  cards?: CardConfig[];
+}
+
+const { cards = portfolioCards } = Astro.props;
+
+// Map card types to components
+const cardComponents = {
+  image: ImageCard,
+  text: TextCard,
+  terminal: TerminalCard,
+  stats: StatsCard
+};
+---
+
+<div class="bento-grid">
+  {cards.map((card) => {
+    const Component = cardComponents[card.type];
+    const isReactComponent = card.type === 'stats';
+
+    return (
+      <div
+        class:list={[
+          'bento-card',
+          `col-span-${card.span}`,
+          card.row === 2 && 'row-span-2'
+        ]}
+        data-card-id={card.id}
+        data-card-type={card.type}
+      >
+        {isReactComponent ? (
+          <Component client:load {...card.props} />
+        ) : (
+          <Component {...card.props} variant={card.variant} />
+        )}
+      </div>
+    );
+  })}
+</div>
+
+<style>
+  .bento-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 4px;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 40px;
+    grid-auto-rows: minmax(320px, auto);
+  }
+
+  /* Column span utilities */
+  .col-span-1 {
+    grid-column: span 1;
+  }
+
+  .col-span-2 {
+    grid-column: span 2;
+  }
+
+  .col-span-4 {
+    grid-column: span 4;
+  }
+
+  .row-span-2 {
+    grid-row: span 2;
+  }
+
+  /* Tablet: 2 columns */
+  @media (max-width: 1024px) {
+    .bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 3px;
+      padding: 0 24px;
+    }
+
+    /* Full-width cards on tablet */
+    .col-span-4 {
+      grid-column: span 2;
+    }
+  }
+
+  /* Mobile: 1 column */
+  @media (max-width: 768px) {
+    .bento-grid {
+      grid-template-columns: 1fr;
+      gap: 2px;
+      padding: 0 16px;
+    }
+
+    /* All cards full-width on mobile */
+    .col-span-1,
+    .col-span-2,
+    .col-span-4 {
+      grid-column: span 1;
+    }
+
+    .row-span-2 {
+      grid-row: span 1;
+    }
+  }
+
+  /* Card container */
+  .bento-card {
+    min-height: 320px;
+  }
+</style>
