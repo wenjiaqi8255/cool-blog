@@ -1,0 +1,52 @@
+---
+// Simplified footer for Phase 1 (per UI-SPEC.md: "planner's discretion")
+---
+
+<footer class="footer">
+  <div class="footer-content">
+    <span class="brand">KERNEL_PANIC</span>
+    <span class="copyright">© 2026 KERNEL PANIC</span>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: 48px;
+    padding: 32px 40px;
+    border-top: 1px solid #EEEEEE;
+  }
+
+  .footer-content {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .brand {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--color-ink-black);
+    letter-spacing: -0.02em;
+  }
+
+  .copyright {
+    font-size: 10px;
+    color: var(--color-ink-light);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  @media (max-width: 640px) {
+    .footer {
+      padding: 24px 16px;
+    }
+
+    .footer-content {
+      flex-direction: column;
+      gap: 8px;
+      text-align: center;
+    }
+  }
+</style>

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
+import Footer from '../components/layout/Footer.astro';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -9,9 +10,9 @@ const currentPath = Astro.url.pathname;
   title="Articles — KERNEL_PANIC"
   description="Technical articles on machine learning, systems engineering, and software craftsmanship"
 >
-  <Header currentPath={currentPath} />
-  <main class="main-content">
-    <div class="articles-container">
+  <div class="layout-wrapper">
+    <Header currentPath={currentPath} />
+    <main class="main-content">
       <h1 class="page-title">Articles</h1>
       <p class="page-description">
         Deep dives into machine learning, distributed systems, and the craft of building robust software.
@@ -24,20 +25,21 @@ const currentPath = Astro.url.pathname;
           Phase 2 will populate this page with technical articles and tutorials.
         </p>
       </div>
-    </div>
-  </main>
+    </main>
+    <Footer />
+  </div>
 </BaseLayout>
 
 <style>
-  .main-content {
-    padding-top: 24px;
-    padding-bottom: 64px;
-  }
-
-  .articles-container {
+  .layout-wrapper {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 0 40px;
+    padding: 40px;
+  }
+
+  .main-content {
+    margin-top: 24px;
+    min-height: 60vh;
   }
 
   .page-title {
@@ -82,8 +84,8 @@ const currentPath = Astro.url.pathname;
   }
 
   @media (max-width: 768px) {
-    .articles-container {
-      padding: 0 16px;
+    .layout-wrapper {
+      padding: 16px;
     }
 
     .page-title {

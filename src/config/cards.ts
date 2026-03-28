@@ -16,154 +16,163 @@ export interface CardConfig {
 
 /**
  * Portfolio Cards Configuration
- * 12 cards matching the design mockup
+ * Matching the design mockup layout
  */
 export const portfolioCards: CardConfig[] = [
-  // Row 1: Featured project (large) + Stats
+  // Row 1: Manifesto (span-2) + Featured Setup image (span-2)
   {
-    id: 'featured-ml-project',
-    type: 'image',
+    id: 'manifesto',
+    type: 'text',
     span: 2,
-    row: 2,
-    variant: 'dark',
+    variant: 'light',
     props: {
-      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80',
-      title: 'Machine Learning Pipeline',
-      subtitle: 'Production-grade ML infrastructure',
-      link: '/projects/ml-pipeline'
+      metaTag: 'Manifesto',
+      title: 'COMPUTING AS CRAFT.',
+      body: 'Exploring the intersection of generative intelligence, low-level systems engineering, and the aesthetics of the command line interface.',
+      link: '#',
+      isLarge: true
     }
   },
+  {
+    id: 'featured-setup',
+    type: 'image',
+    span: 2,
+    variant: 'light',
+    props: {
+      image: 'https://images.unsplash.com/photo-1496559249665-c7e2874707ea?q=80&w=2574&auto=format&fit=crop',
+      title: 'THE MONOCHROME WORKFLOW',
+      metaTag: 'Featured Setup',
+      link: '#'
+    }
+  },
+
+  // Row 2: Transformer Latency + Ricing Arch Linux (dark)
+  {
+    id: 'transformer-latency',
+    type: 'terminal',
+    span: 1,
+    variant: 'light',
+    props: {
+      metaTag: 'Artificial Intelligence',
+      title: 'Transformer Latency',
+      commands: ['python verify_model.py', '> Inference: 42ms', '> Accuracy: 98.4%'],
+      link: '#'
+    }
+  },
+  {
+    id: 'ricing-arch',
+    type: 'terminal',
+    span: 1,
+    variant: 'dark',
+    props: {
+      metaTag: 'Unixporn',
+      title: 'Ricing Arch Linux',
+      body: 'A deep dive into tiling window managers, polybar configuration, and creating the perfect distraction-free environment.',
+      commands: ['pacman -S bspwm sxhkd'],
+      link: '#'
+    }
+  },
+
+  // Row 3: Weekly Commits (stats) + Rust vs C++ + Code image (span-2)
   {
     id: 'weekly-commits',
     type: 'stats',
     span: 1,
     props: {
-      repo: 'vercel/next.js', // Using a popular repo for demo
-      label: 'Weekly Commits'
+      label: 'Repo Activity',
+      title: 'Weekly Commits',
+      value: '142+'
     }
   },
   {
-    id: 'about-text',
+    id: 'rust-vs-cpp',
     type: 'text',
     span: 1,
     variant: 'light',
     props: {
-      title: 'Computing as Craft',
-      body: 'Building systems that matter. Focused on machine learning, distributed systems, and elegant code architecture.',
-      link: '/about'
+      metaTag: 'Engineering',
+      title: 'Rust vs C++',
+      body: 'Memory safety without garbage collection. Why the industry is shifting its backend philosophy.',
+      link: '#'
     }
   },
-
-  // Row 2: Image cards + Terminal
   {
-    id: 'project-data-viz',
+    id: 'source-code',
     type: 'image',
-    span: 1,
-    variant: 'light',
-    props: {
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80',
-      title: 'Data Visualization',
-      subtitle: 'Interactive dashboards',
-      link: '/projects/data-viz'
-    }
-  },
-  {
-    id: 'terminal-setup',
-    type: 'terminal',
     span: 2,
-    props: {
-      title: 'Development Setup',
-      commands: [
-        'brew install neovim',
-        'git config --global init.defaultBranch main',
-        'npm install -g pnpm'
-      ],
-      link: '/setup'
-    }
-  },
-  {
-    id: 'project-api',
-    type: 'image',
-    span: 1,
     variant: 'light',
     props: {
-      image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80',
-      title: 'API Architecture',
-      subtitle: 'Scalable backend systems',
-      link: '/projects/api'
+      image: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2670&auto=format&fit=crop',
+      metaTag: 'Source Code',
+      link: '#'
     }
   },
 
-  // Row 3: Text cards
+  // Row 4: ZSH Plugins + Self-Hosting LLMs + Ghost in Shell (dark, row-2)
   {
-    id: 'writing-philosophy',
+    id: 'zsh-plugins',
     type: 'text',
-    span: 2,
+    span: 1,
+    variant: 'light',
+    props: {
+      metaTag: 'Terminal',
+      title: 'ZSH Plugins',
+      body: 'Optimizing shell productivity with autosuggestions and syntax highlighting.',
+      link: '#'
+    }
+  },
+  {
+    id: 'self-hosting-llms',
+    type: 'text',
+    span: 1,
+    variant: 'light',
+    props: {
+      metaTag: 'Homelab',
+      title: 'Self-Hosting LLMs',
+      body: 'Running Llama 3 on consumer hardware via Docker containers.',
+      link: '#'
+    }
+  },
+  {
+    id: 'ghost-in-shell',
+    type: 'text',
+    span: 1,
+    row: 2,
     variant: 'dark',
     props: {
-      title: 'Technical Writing',
-      body: 'Deep dives into systems engineering, machine learning internals, and the craft of building robust software.',
-      link: '/articles'
-    }
-  },
-  {
-    id: 'project-mobile',
-    type: 'image',
-    span: 1,
-    variant: 'light',
-    props: {
-      image: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&q=80',
-      title: 'Mobile Development',
-      subtitle: 'Cross-platform apps',
-      link: '/projects/mobile'
-    }
-  },
-  {
-    id: 'stats-code',
-    type: 'text',
-    span: 1,
-    variant: 'light',
-    props: {
-      title: 'Open Source',
-      body: 'Contributing to the community. Active maintainer of several CLI tools and libraries.',
-      link: '/opensource'
+      metaTag: 'Philosophy',
+      title: 'THE GHOST IN THE SHELL',
+      body: 'Are we building tools that help us think, or tools that replace thought? An analysis of copilot-driven development.',
+      link: '#',
+      isLarge: true,
+      showIcon: true
     }
   },
 
-  // Row 4: Newsletter + Projects
+  // Row 5: Vim Motions (span-2) + Newsletter
+  {
+    id: 'vim-motions',
+    type: 'terminal',
+    span: 2,
+    variant: 'light',
+    props: {
+      metaTag: 'Tutorial',
+      title: 'Vim Motions for Beginners',
+      commands: ['vim ~/.vimrc', '" set relative line numbers', 'set relativenumber'],
+      link: '#'
+    }
+  },
   {
     id: 'newsletter-cta',
     type: 'text',
-    span: 2,
-    variant: 'dark',
-    props: {
-      title: 'Stay Updated',
-      body: 'Subscribe to the newsletter for weekly insights on ML, systems engineering, and software craftsmanship.',
-      link: '#subscribe'
-    }
-  },
-  {
-    id: 'project-cli',
-    type: 'image',
     span: 1,
     variant: 'light',
     props: {
-      image: 'https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&q=80',
-      title: 'CLI Tools',
-      subtitle: 'Developer productivity',
-      link: '/projects/cli'
-    }
-  },
-  {
-    id: 'project-research',
-    type: 'image',
-    span: 1,
-    variant: 'light',
-    props: {
-      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80',
-      title: 'Research',
-      subtitle: 'Academic collaborations',
-      link: '/projects/research'
+      metaTag: 'Newsletter',
+      title: 'Join the 0.1%',
+      body: 'Weekly insights on code, aesthetics, and systems.',
+      link: '#subscribe',
+      showEmailInput: true
     }
   }
 ];

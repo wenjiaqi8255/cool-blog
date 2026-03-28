@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
 import BentoGrid from '../components/layout/BentoGrid.astro';
+import Footer from '../components/layout/Footer.astro';
 
 const currentPath = Astro.url.pathname;
 ---
@@ -10,15 +11,33 @@ const currentPath = Astro.url.pathname;
   title="KERNEL_PANIC / ARCHITECTURE & SYSTEMS"
   description="Computing as craft — Technical writing and portfolio"
 >
-  <Header currentPath={currentPath} />
-  <main class="main-content">
-    <BentoGrid />
-  </main>
+  <div class="layout-wrapper">
+    <Header currentPath={currentPath} />
+    <main class="bento-grid-container">
+      <BentoGrid />
+    </main>
+    <Footer />
+  </div>
 </BaseLayout>
 
 <style>
-  .main-content {
-    padding-top: 24px;
-    padding-bottom: 64px;
+  .layout-wrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  .bento-grid-container {
+    margin-top: 40px;
+  }
+
+  @media (max-width: 768px) {
+    .layout-wrapper {
+      padding: 16px;
+    }
+
+    .bento-grid-container {
+      margin-top: 24px;
+    }
   }
 </style>

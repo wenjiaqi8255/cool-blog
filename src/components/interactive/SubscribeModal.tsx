@@ -100,10 +100,10 @@ export default function SubscribeModal() {
     <>
       <button
         onClick={handleOpen}
-        className="subscribe-button"
+        className="nav-pill"
         aria-haspopup="dialog"
       >
-        Subscribe
+        SUBSCRIBE
       </button>
 
       {isOpen && (

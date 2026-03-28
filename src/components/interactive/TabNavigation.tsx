@@ -12,6 +12,7 @@ export default function TabNavigation({ currentPath: initialPath }: Props) {
     setCurrentPath(window.location.pathname);
   }, []);
 
+  // Per UI-SPEC.md: Tab navigation between Portfolio and Articles views
   const tabs = [
     { label: 'Portfolio', href: '/' },
     { label: 'Articles', href: '/articles' }

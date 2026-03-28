@@ -1,39 +1,76 @@
 ---
 interface Props {
   title?: string;
-  commands: string[];
+  commands?: string[];
   link?: string;
+  variant?: 'light' | 'dark';
+  metaTag?: string;
+  body?: string;
 }
 
-const { title, commands, link = '#' } = Astro.props;
+const { title, commands = [], link = '#', variant = 'dark', metaTag, body } = Astro.props;
 ---
 
-<div class="terminal-card">
+<div class:list={['card', variant]}>
   <a href={link} class="card-link">
-    {title && <h3 class="title">{title}</h3>}
-    <div class="terminal">
-      <div class="terminal-header">
-        <span class="dot red"></span>
-        <span class="dot yellow"></span>
-        <span class="dot green"></span>
+    <span class="arrow-icon" aria-hidden="true">↗</span>
+    {metaTag && <span class="meta-tag">{metaTag}</span>}
+    {title && <h3 class="headline">{title}</h3>}
+    {body && <p class="copy">{body}</p>}
+    {commands.length > 0 && (
+      <div class="terminal-block">
+        {commands.map((cmd, i) => (
+          <div class="terminal-line">
+            {i === commands.length - 1 ? (
+              <>
+                <span class="prompt">{cmd}</span><span class="cursor"></span>
+              </>
+            ) : (
+              <span class="prompt">{cmd}</span>
+            )}
+          </div>
+        ))}
       </div>
-      <pre class="terminal-body"><code>{commands.map(cmd => `> ${cmd}`).join('\n')}<span class="cursor">▊</span></code></pre>
-    </div>
+    )}
   </a>
 </div>
 
 <style>
-  .terminal-card {
-    background: var(--color-dark-card-bg);
-    border-radius: 8px;
+  .card {
+    background-color: var(--color-card-light);
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
     overflow: hidden;
-    height: 100%;
+    transition: background-color 0.4s var(--ease-out);
+    text-decoration: none;
+    color: var(--color-ink-black);
     min-height: 320px;
-    transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    height: 100%;
   }
 
-  .terminal-card:hover {
-    background: var(--color-dark-card-hover);
+  .card:hover {
+    background-color: var(--color-card-hover);
+  }
+
+  .card:hover .arrow-icon {
+    transform: translate(4px, -4px);
+  }
+
+  .card.dark {
+    background-color: var(--color-ink-black);
+    color: var(--color-canvas-white);
+  }
+
+  .card.dark:hover {
+    background-color: #000;
+  }
+
+  .card.dark .meta-tag,
+  .card.dark .copy {
+    color: #888;
   }
 
   .card-link {
@@ -42,66 +79,81 @@ const { title, commands, link = '#' } = Astro.props;
     height: 100%;
     text-decoration: none;
     color: inherit;
-    padding: 24px;
   }
 
-  .title {
-    font-size: 16px;
-    font-weight: 300;
-    letter-spacing: -0.02em;
-    margin: 0 0 16px 0;
-    color: #FFFFFF;
-  }
-
-  .terminal {
-    flex: 1;
-    background: #000000;
-    border-radius: 6px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .terminal-header {
-    display: flex;
-    gap: 8px;
-    padding: 12px 16px;
-    background: #1a1a1a;
-    border-bottom: 1px solid #333333;
-  }
-
-  .dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-  }
-
-  .dot.red { background: #FF5F56; }
-  .dot.yellow { background: #FFBD2E; }
-  .dot.green { background: #27C93F; }
-
-  .terminal-body {
-    flex: 1;
-    margin: 0;
-    padding: 16px;
-    font-family: var(--font-family-mono);
+  .arrow-icon {
+    position: absolute;
+    top: 24px;
+    right: 24px;
     font-size: 14px;
+    transition: transform 0.3s var(--ease-out);
+  }
+
+  .meta-tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-light);
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .headline {
+    font-size: 28px;
     font-weight: 300;
-    color: #F0F0F0;
-    white-space: pre-wrap;
-    word-break: break-word;
-    line-height: 1.6;
-    overflow: auto;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    max-width: 90%;
+  }
+
+  .copy {
+    font-size: 13px;
+    color: var(--color-ink-gray);
+    line-height: 1.5;
+    max-width: 300px;
+    margin: 0 0 20px 0;
+  }
+
+  .terminal-block {
+    font-family: var(--font-family-mono);
+    font-size: 12px;
+    color: #333;
+    margin-top: auto;
+    border-top: 1px solid #E5E5E5;
+    padding-top: 20px;
+    width: 100%;
+  }
+
+  .card.dark .terminal-block {
+    color: #aaa;
+    border-top: 1px solid #333;
+  }
+
+  .terminal-line {
+    margin-bottom: 4px;
+  }
+
+  .prompt::before {
+    content: "➜ ";
+    color: var(--color-ink-light);
   }
 
   .cursor {
     display: inline-block;
+    width: 6px;
+    height: 14px;
+    background-color: var(--color-ink-black);
     animation: blink 1s step-end infinite;
-    color: #FFFFFF;
+    vertical-align: middle;
+    margin-left: 4px;
+  }
+
+  .card.dark .cursor {
+    background-color: #fff;
   }
 
   @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+    50% { opacity: 0; }
   }
 </style>
