@@ -128,3 +128,186 @@ body {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+/* Tab Navigation styles */
+.tab-navigation {
+  display: flex;
+  gap: 8px;
+}
+
+.tab-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-ink-gray);
+  background: transparent;
+  border: 1px solid var(--color-ink-black);
+  border-radius: 9999px;
+  text-decoration: none;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  touch-action: manipulation;
+}
+
+.tab-button:hover {
+  background: var(--color-card-light);
+  color: var(--color-ink-black);
+}
+
+.tab-button.active {
+  background: var(--color-ink-black);
+  color: #FFFFFF;
+  border-color: var(--color-ink-black);
+}
+
+.tab-button:focus-visible {
+  outline: 2px solid var(--color-ink-black);
+  outline-offset: 2px;
+}
+
+/* Subscribe Button styles */
+.subscribe-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+  background: var(--color-ink-black);
+  border: 1px solid var(--color-ink-black);
+  border-radius: 9999px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  touch-action: manipulation;
+}
+
+.subscribe-button:hover {
+  background: var(--color-dark-card-hover);
+  border-color: var(--color-dark-card-hover);
+}
+
+.subscribe-button:focus-visible {
+  outline: 2px solid var(--color-ink-black);
+  outline-offset: 2px;
+}
+
+/* Subscribe Modal styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 16px;
+}
+
+.modal-content {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+.modal-header {
+  margin-bottom: 24px;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  color: var(--color-ink-black);
+  margin: 0 0 8px 0;
+}
+
+.modal-description {
+  font-size: 14px;
+  color: var(--color-ink-gray);
+  margin: 0;
+  line-height: 1.5;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 16px;
+  font-size: 16px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: var(--color-ink-black);
+  transition: border-color 200ms;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: var(--color-ink-black);
+}
+
+.modal-input::placeholder {
+  color: var(--color-ink-light);
+}
+
+.modal-submit {
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #FFFFFF;
+  background: var(--color-ink-black);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 200ms;
+  touch-action: manipulation;
+}
+
+.modal-submit:hover {
+  background: var(--color-dark-card-hover);
+}
+
+.modal-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--color-ink-gray);
+  font-size: 24px;
+  touch-action: manipulation;
+}
+
+.modal-close:hover {
+  color: var(--color-ink-black);
+}
