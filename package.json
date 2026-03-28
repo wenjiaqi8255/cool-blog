@@ -9,8 +9,8 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
-    "deploy": "astro build && wrangler pages deploy ./dist",
-    "deploy:preview": "astro build && wrangler pages deploy ./dist --branch preview",
+    "deploy": "astro build && wrangler pages deploy ./dist/client --project-name=cool-blog --branch=main",
+    "deploy:preview": "astro build && wrangler pages deploy ./dist/client --project-name=cool-blog --branch=preview",
     "cf:login": "wrangler login",
     "cf:whoami": "wrangler whoami"
   },
@@ -21,9 +21,11 @@
     "@fontsource/inter": "^5.0.0",
     "@fontsource/jetbrains-mono": "^5.0.0",
     "astro": "^6.1.1",
+    "fuse.js": "^7.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "tailwindcss": "^4.2.2"
+    "tailwindcss": "^4.2.2",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@playwright/test": "^1.50.0",
