@@ -2,10 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: phase_complete
-stopped_at: Phase 1 complete — All 5 plans executed
-last_updated: "2026-03-28T03:10:00.000Z"
-last_activity: 2026-03-28 — Phase 1 complete (5/5 plans)
+status: executing
+stopped_at: Phase 02 Plan 01: Content Collections Setup
+last_updated: "2026-03-28T05:30:00.000Z"
+last_activity: 2026-03-28 — Executing plan 02-01 (Content Collections Setup)
+current_phase: 2
+current_plan: 1
+total_phases: 4
+total_plans_phase_2: 4
 progress:
   total_phases: 4
   completed_phases: 1
@@ -25,9 +29,10 @@ See: .planning/PROJECT.md (updated 2026-03-27)
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & Bento Grid) — ✅ COMPLETE
-Plan: 5 of 5 in current phase — ✅ COMPLETE
-Status: Phase 1 verification passed, awaiting user approval for Phase 2
+Phase: 2 of 4 (Content System) — IN PROGRESS
+Plan: 1 of 4 in current phase — EXECUTING
+Status: Executing plan 02-01 (Content Collections Setup)
+Last activity: 2026-03-28 — Running plan 02-01
 Last activity: 2026-03-28 — Completed plan 01-05 (Cloudflare Pages deployment)
 
 Progress: [██████████] 100% (Phase 1)
@@ -56,7 +61,7 @@ Progress: [██████████] 100% (Phase 1)
 | Phase | Plans | Total | Avg/Plan | Status |
 |-------|-------|-------|----------|--------|
 | 1. Foundation & Bento Grid | 5 | 5 | 9.4 min | ✅ Complete |
-| 2. Content System | 0 | 4 | - | Pending |
+| 2. Content System | 1 | 4 | ~2 min | In Progress |
 | 3. Newsletter & Backend | 0 | 4 | - | Pending |
 | 4. SEO & Launch | 0 | 4 | - | Pending |
 
@@ -81,6 +86,8 @@ Recent decisions affecting current work:
 - [01-04]: File-based tests for React components to avoid complex testing setup
 - [01-04]: Modal implements focus trap, Escape key handling, body scroll lock for accessibility
 - [01-05]: Cloudflare Pages deployment with wrangler CLI
+- [02-01]: Use Astro 6 content.config.ts format with glob loader (not legacy src/content/config.ts)
+- [02-01]: Fixed npm install with --legacy-peer-deps due to @astrojs/tailwind v6 vs astro v6 conflict
 
 ### Pending Todos
 
@@ -92,17 +99,14 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-28T03:10:00.000Z
-Stopped at: Phase 1 complete — Awaiting user approval to start Phase 2
-Resume file: None
+Last session: 2026-03-28T05:30:00.000Z
+Stopped at: Phase 02 Plan 01: Content Collections Setup - Complete
 
 ## Next Steps
 
 **User should:**
-1. Run `npm run dev` and verify Phase 1 locally
-2. Run `npm run deploy` to deploy to Cloudflare Pages (optional)
-3. Approve Phase 1 completion
-4. Run `/gsd:plan-phase 2` to plan the next phase
+1. Continue with next plan in Phase 2 (ArticleCard component)
+2. Or run `/gsd:plan 02-02` to execute next plan
 
 ---
 *State initialized: 2026-03-27*

@@ -21,7 +21,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 - [ ] **ART-01**: Article list with title, excerpt, date, and tags
 - [ ] **ART-02**: Individual article page with full content rendering
-- [ ] **ART-03**: Markdown content from Git-managed files
+- [x] **ART-03**: Markdown content from Git-managed files
 - [ ] **ART-04**: Syntax highlighting for code blocks
 - [ ] **ART-05**: Search and filter functionality (by tag, title)
 
@@ -113,7 +113,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DEPLOY-04 | Phase 1 | Pending |
 | ART-01 | Phase 2 | Pending |
 | ART-02 | Phase 2 | Pending |
-| ART-03 | Phase 2 | Pending |
+| ART-03 | Phase 2 | Complete |
 | ART-04 | Phase 2 | Pending |
 | ART-05 | Phase 2 | Pending |
 | NEWS-01 | Phase 3 | Pending |
