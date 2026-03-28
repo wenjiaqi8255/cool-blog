@@ -3,18 +3,18 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 02 Plan 01: Content Collections Setup
-last_updated: "2026-03-28T05:30:00.000Z"
-last_activity: 2026-03-28 — Executing plan 02-01 (Content Collections Setup)
+stopped_at: Phase 02 Plan 02: Article Card & Article Page
+last_updated: "2026-03-28T05:40:00.000Z"
+last_activity: 2026-03-28 — Completed plan 02-02 (Article Card & Article Page)
 current_phase: 2
-current_plan: 1
+current_plan: 2
 total_phases: 4
 total_plans_phase_2: 4
 progress:
   total_phases: 4
   completed_phases: 1
   total_plans: 5
-  completed_plans: 5
+  completed_plans: 6
   percent: 100
 ---
 
@@ -25,17 +25,16 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-27)
 
 **Core value:** Visual impact meets content depth — Portfolio showcases work through striking visuals; Articles provide deep technical content with excellent readability.
-**Current focus:** Phase 1 COMPLETE — Ready for Phase 2
+**Current focus:** Phase 2 IN PROGRESS — Article list and pages created
 
 ## Current Position
 
 Phase: 2 of 4 (Content System) — IN PROGRESS
-Plan: 1 of 4 in current phase — EXECUTING
-Status: Executing plan 02-01 (Content Collections Setup)
-Last activity: 2026-03-28 — Running plan 02-01
-Last activity: 2026-03-28 — Completed plan 01-05 (Cloudflare Pages deployment)
+Plan: 2 of 4 in current phase — COMPLETED
+Status: Completed plan 02-02 (Article Card & Article Page)
+Last activity: 2026-03-28 — Completed plan 02-02
 
-Progress: [██████████] 100% (Phase 1)
+Progress: [██████████] 100% (Phase 1 + 2 plans)
 
 ## Phase 1 Summary
 
@@ -49,11 +48,17 @@ Progress: [██████████] 100% (Phase 1)
 
 **Total Phase 1 duration:** ~47 minutes
 
+## Phase 2 Summary
+
+| Plan | Description | Status | Duration |
+|------|-------------|--------|----------|
+| 02-01 | Content Collections Setup | ✅ Complete | ~2min |
+| 02-02 | Article Card & Article Page | ✅ Complete | ~5min |
+
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 5
-- Average duration: 9.4 min
+- Total plans completed: 6
 - Total execution time: ~1 hour
 
 **By Phase:**
@@ -61,13 +66,9 @@ Progress: [██████████] 100% (Phase 1)
 | Phase | Plans | Total | Avg/Plan | Status |
 |-------|-------|-------|----------|--------|
 | 1. Foundation & Bento Grid | 5 | 5 | 9.4 min | ✅ Complete |
-| 2. Content System | 1 | 4 | ~2 min | In Progress |
+| 2. Content System | 2 | 4 | ~3.5 min | In Progress |
 | 3. Newsletter & Backend | 0 | 4 | - | Pending |
 | 4. SEO & Launch | 0 | 4 | - | Pending |
-
-**Recent Trend:**
-- Last 5 plans: 19min, 10min, 11min, 4min, 3min
-- Trend: Accelerating
 
 ## Accumulated Context
 
@@ -88,10 +89,12 @@ Recent decisions affecting current work:
 - [01-05]: Cloudflare Pages deployment with wrangler CLI
 - [02-01]: Use Astro 6 content.config.ts format with glob loader (not legacy src/content/config.ts)
 - [02-01]: Fixed npm install with --legacy-peer-deps due to @astrojs/tailwind v6 vs astro v6 conflict
+- [02-02]: Used article.id instead of article.slug for dynamic route params (Astro 6 glob loader)
+- [02-02]: Removed duplicate articles.astro causing route collision
 
 ### Pending Todos
 
-None — Phase 1 complete.
+- Tag filter and search (Plan 02-03)
 
 ### Blockers/Concerns
 
@@ -99,14 +102,14 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-03-28T05:30:00.000Z
-Stopped at: Phase 02 Plan 01: Content Collections Setup - Complete
+Last session: 2026-03-28T05:40:00.000Z
+Stopped at: Phase 02 Plan 02: Article Card & Article Page - Complete
 
 ## Next Steps
 
 **User should:**
-1. Continue with next plan in Phase 2 (ArticleCard component)
-2. Or run `/gsd:plan 02-02` to execute next plan
+1. Continue with next plan in Phase 2 (Tag Filter & Search)
+2. Or run `/gsd:plan 02-03` to execute next plan
 
 ---
 *State initialized: 2026-03-27*
