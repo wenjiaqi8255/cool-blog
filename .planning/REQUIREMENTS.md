@@ -11,7 +11,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Portfolio (Portfolio Tab)
 
-- [ ] **PORT-01**: Bento Grid layout with varying card sizes (span-2, span-4, row-2)
+- [x] **PORT-01**: Bento Grid layout with varying card sizes (span-2, span-4, row-2)
 - [ ] **PORT-02**: Dark and light card variants with smooth hover transitions
 - [ ] **PORT-03**: Image cards with grayscale-to-color effect on hover
 - [ ] **PORT-04**: Terminal/code block styling within cards
@@ -47,7 +47,7 @@ Requirements for initial release. Each maps to roadmap phases.
 
 ### Responsive (Responsive Tab)
 
-- [ ] **RESP-01**: Fully responsive design (mobile, tablet, desktop)
+- [x] **RESP-01**: Fully responsive design (mobile, tablet, desktop)
 - [ ] **RESP-02**: Touch-friendly interactions on mobile (swipe gestures, tap targets, readable typography)
 
 ## v2 Requirements
@@ -100,12 +100,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PORT-01 | Phase 1 | Pending |
+| PORT-01 | Phase 1 | Complete |
 | PORT-02 | Phase 1 | Pending |
 | PORT-03 | Phase 1 | Pending |
 | PORT-04 | Phase 1 | Pending |
 | PORT-05 | Phase 1 | Pending |
-| RESP-01 | Phase 1 | Pending |
+| RESP-01 | Phase 1 | Complete |
 | RESP-02 | Phase 1 | Pending |
 | DEPLOY-01 | Phase 1 | Complete |
 | DEPLOY-02 | Phase 1 | Complete |
