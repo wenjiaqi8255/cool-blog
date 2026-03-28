@@ -1,0 +1,52 @@
+---
+// CodeBlock.astro - Code block wrapper with copy functionality
+// Wraps Shiki-generated code blocks and adds copy button
+---
+
+<div class="code-block-wrapper">
+  <button class="copy-button" aria-label="Copy code to clipboard">
+    <span class="copy-text">Copy</span>
+  </button>
+  <slot />
+</div>
+
+<script>
+  // Find all code blocks in the article and add copy functionality
+  function initCopyButtons() {
+    const codeBlocks = document.querySelectorAll('.code-block-wrapper pre');
+
+    codeBlocks.forEach((block) => {
+      const wrapper = block.closest('.code-block-wrapper');
+      const button = wrapper?.querySelector('.copy-button');
+
+      if (button && wrapper) {
+        button.addEventListener('click', async () => {
+          const code = block.querySelector('code');
+          const text = code?.textContent || '';
+
+          try {
+            await navigator.clipboard.writeText(text);
+            const copyText = button.querySelector('.copy-text');
+            if (copyText) {
+              copyText.textContent = 'Copied!';
+            }
+            button.classList.add('copied');
+
+            setTimeout(() => {
+              if (copyText) {
+                copyText.textContent = 'Copy';
+              }
+              button.classList.remove('copied');
+            }, 2000);
+          } catch (err) {
+            console.error('Failed to copy:', err);
+          }
+        });
+      }
+    });
+  }
+
+  // Initialize on page load and after view transitions
+  document.addEventListener('DOMContentLoaded', initCopyButtons);
+  document.addEventListener('astro:page-load', initCopyButtons);
+</script>
