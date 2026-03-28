@@ -1,0 +1,6 @@
+name = "cool-blog"
+compatibility_date = "2024-04-03"
+
+# This is a static site deployed to Cloudflare Pages
+# The build output is in ./dist
+# Use: npm run deploy (which runs: astro build && wrangler pages deploy ./dist)

@@ -8,7 +8,11 @@
     "preview": "astro preview",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "deploy": "astro build && wrangler pages deploy ./dist",
+    "deploy:preview": "astro build && wrangler pages deploy ./dist --branch preview",
+    "cf:login": "wrangler login",
+    "cf:whoami": "wrangler whoami"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.1.4",
