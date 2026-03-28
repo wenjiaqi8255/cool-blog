@@ -48,13 +48,13 @@ Plans:
   3. User can see code blocks with syntax highlighting in articles
   4. User can search articles by title and filter by tag
   5. Content is managed through Git-based Markdown files
-**Plans**: TBD
+**Plans**: 4 plans in 4 waves
 
 Plans:
-- [ ] 02-01: Astro Content Collections with Zod schemas for articles
-- [ ] 02-02: Article list and individual article pages with layouts
-- [ ] 02-03: Syntax highlighting with Shiki
-- [ ] 02-04: Search and filter functionality (client-side)
+- [ ] 02-01-PLAN.md — Astro Content Collections with Zod schemas for articles
+- [ ] 02-02-PLAN.md — Article list and individual article pages with layouts
+- [ ] 02-03-PLAN.md — Syntax highlighting with Shiki
+- [ ] 02-04-PLAN.md — Search and filter functionality (client-side)
 
 ### Phase 3: Newsletter & Backend
 **Goal**: Users can subscribe to the newsletter and receive confirmation, with emails stored securely in Neon Postgres.
