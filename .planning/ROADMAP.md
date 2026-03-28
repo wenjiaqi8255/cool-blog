@@ -13,7 +13,7 @@ Build a visually striking technical blog and portfolio site with Bento Grid layo
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Bento Grid** ✅ COMPLETE (2026-03-28) — Project setup, Cloudflare deployment, responsive Bento Grid with card variants
-- [ ] **Phase 2: Content System** — Articles system with markdown, syntax highlighting, search/filter, and tab navigation (2/4 complete)
+- [x] **Phase 2: Content System** ✅ COMPLETE (2026-03-28) — Articles system with markdown, syntax highlighting, search/filter, and tab navigation (4/4 complete)
 - [ ] **Phase 3: Newsletter & Backend** - Newsletter subscription with Neon Postgres integration
 - [ ] **Phase 4: SEO & Launch** - Meta tags, RSS, sitemap, and final deployment polish
 
@@ -53,8 +53,8 @@ Plans:
 Plans:
 - [x] 02-01-PLAN.md — Astro Content Collections with Zod schemas for articles ✅
 - [x] 02-02-PLAN.md — Article list and individual article pages with layouts ✅
-- [ ] 02-03-PLAN.md — Syntax highlighting with Shiki
-- [ ] 02-04-PLAN.md — Search and filter functionality (client-side)
+- [x] 02-03-PLAN.md — Syntax highlighting with Shiki ✅
+- [x] 02-04-PLAN.md — Search and filter functionality (client-side) ✅
 
 ### Phase 3: Newsletter & Backend
 **Goal**: Users can subscribe to the newsletter and receive confirmation, with emails stored securely in Neon Postgres.
@@ -97,7 +97,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & Bento Grid | 5/5 | ✅ Complete | 2026-03-28 |
-| 2. Content System | 2/4 | In Progress | - |
+| 2. Content System | 4/4 | ✅ Complete | 2026-03-28 |
 | 3. Newsletter & Backend | 0/4 | Not started | - |
 | 4. SEO & Launch | 0/4 | Not started | - |
 
