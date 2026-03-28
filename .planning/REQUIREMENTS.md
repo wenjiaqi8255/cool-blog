@@ -15,7 +15,7 @@ Requirements for initial release. Each maps to roadmap phases.
 - [ ] **PORT-02**: Dark and light card variants with smooth hover transitions
 - [ ] **PORT-03**: Image cards with grayscale-to-color effect on hover
 - [ ] **PORT-04**: Terminal/code block styling within cards
-- [ ] **PORT-05**: Tab navigation between Portfolio and Articles views
+- [x] **PORT-05**: Tab navigation between Portfolio and Articles views
 
 ### Articles (Articles Tab)
 
@@ -48,7 +48,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Responsive (Responsive Tab)
 
 - [x] **RESP-01**: Fully responsive design (mobile, tablet, desktop)
-- [ ] **RESP-02**: Touch-friendly interactions on mobile (swipe gestures, tap targets, readable typography)
+- [x] **RESP-02**: Touch-friendly interactions on mobile (swipe gestures, tap targets, readable typography)
 
 ## v2 Requirements
 
@@ -104,9 +104,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PORT-02 | Phase 1 | Pending |
 | PORT-03 | Phase 1 | Pending |
 | PORT-04 | Phase 1 | Pending |
-| PORT-05 | Phase 1 | Pending |
+| PORT-05 | Phase 1 | Complete |
 | RESP-01 | Phase 1 | Complete |
-| RESP-02 | Phase 1 | Pending |
+| RESP-02 | Phase 1 | Complete |
 | DEPLOY-01 | Phase 1 | Complete |
 | DEPLOY-02 | Phase 1 | Complete |
 | DEPLOY-03 | Phase 1 | Complete |
