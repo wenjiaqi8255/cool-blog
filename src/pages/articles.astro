@@ -1,0 +1,97 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+
+const currentPath = Astro.url.pathname;
+---
+
+<BaseLayout
+  title="Articles — KERNEL_PANIC"
+  description="Technical articles on machine learning, systems engineering, and software craftsmanship"
+>
+  <Header currentPath={currentPath} />
+  <main class="main-content">
+    <div class="articles-container">
+      <h1 class="page-title">Articles</h1>
+      <p class="page-description">
+        Deep dives into machine learning, distributed systems, and the craft of building robust software.
+      </p>
+
+      <div class="placeholder-state">
+        <div class="placeholder-icon">📝</div>
+        <h2 class="placeholder-title">Articles Coming Soon</h2>
+        <p class="placeholder-text">
+          Phase 2 will populate this page with technical articles and tutorials.
+        </p>
+      </div>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  .main-content {
+    padding-top: 24px;
+    padding-bottom: 64px;
+  }
+
+  .articles-container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  .page-title {
+    font-size: 48px;
+    font-weight: 200;
+    letter-spacing: -0.04em;
+    color: var(--color-ink-black);
+    margin: 0 0 16px 0;
+  }
+
+  .page-description {
+    font-size: 18px;
+    color: var(--color-ink-gray);
+    margin: 0 0 48px 0;
+    max-width: 600px;
+  }
+
+  .placeholder-state {
+    text-align: center;
+    padding: 80px 24px;
+    background: var(--color-card-light);
+    border-radius: 12px;
+  }
+
+  .placeholder-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+  }
+
+  .placeholder-title {
+    font-size: 24px;
+    font-weight: 300;
+    letter-spacing: -0.02em;
+    color: var(--color-ink-black);
+    margin: 0 0 8px 0;
+  }
+
+  .placeholder-text {
+    font-size: 14px;
+    color: var(--color-ink-gray);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .articles-container {
+      padding: 0 16px;
+    }
+
+    .page-title {
+      font-size: 32px;
+    }
+
+    .page-description {
+      font-size: 16px;
+    }
+  }
+</style>

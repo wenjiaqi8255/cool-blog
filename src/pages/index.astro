@@ -1,8 +1,24 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/layout/Header.astro';
+import BentoGrid from '../components/layout/BentoGrid.astro';
+
+const currentPath = Astro.url.pathname;
 ---
 
-<BaseLayout>
-  <h1>Welcome to Cool Blog</h1>
-  <p>Foundation setup complete.</p>
+<BaseLayout
+  title="KERNEL_PANIC / ARCHITECTURE & SYSTEMS"
+  description="Computing as craft — Technical writing and portfolio"
+>
+  <Header currentPath={currentPath} />
+  <main class="main-content">
+    <BentoGrid />
+  </main>
 </BaseLayout>
+
+<style>
+  .main-content {
+    padding-top: 24px;
+    padding-bottom: 64px;
+  }
+</style>
