@@ -1,0 +1,200 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/layout/Header.astro';
+import Footer from '../../components/layout/Footer.astro';
+
+export async function getStaticPaths() {
+  const articles = await getCollection('articles');
+  return articles
+    .filter((article) => !article.data.draft)
+    .map((article) => ({
+      params: { slug: article.id },
+      props: { entry: article },
+    }));
+}
+
+interface Props {
+  entry: Awaited<ReturnType<typeof getCollection<'articles'>>>[number];
+}
+
+const { entry } = Astro.props;
+const { data, id } = entry;
+const { title, date, tags, excerpt } = data;
+
+// Get raw markdown body to estimate word count
+const wordCount = entry.body ? entry.body.split(/\s+/).length : 0;
+const readingTime = Math.max(1, Math.ceil(wordCount / 200));
+
+// Format date
+const formattedDate = date.toISOString().split('T')[0];
+const currentPath = Astro.url.pathname;
+
+// Render markdown content
+const { Content } = await render(entry);
+---
+
+<BaseLayout
+  title={`${title} — KERNEL_PANIC`}
+  description={excerpt || title}
+>
+  <div class="layout-wrapper">
+    <Header currentPath={currentPath} />
+    <main class="main-content">
+      <article class="article">
+        <header class="article-header">
+          <h1 class="article-title">{title}</h1>
+          <div class="article-meta">
+            <span class="reading-time">{readingTime} min read</span>
+            <span class="separator">·</span>
+            <time datetime={formattedDate}>{formattedDate}</time>
+            <span class="separator">·</span>
+            <span class="tags">{tags.join(', ')}</span>
+          </div>
+        </header>
+
+        <div class="article-body">
+          <Content />
+        </div>
+      </article>
+    </main>
+    <Footer />
+  </div>
+</BaseLayout>
+
+<style>
+  .layout-wrapper {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 40px;
+  }
+
+  .main-content {
+    margin-top: 24px;
+    min-height: 60vh;
+  }
+
+  .article {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .article-header {
+    margin-bottom: 48px;
+  }
+
+  .article-title {
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-ink-black);
+    margin: 0 0 16px 0;
+  }
+
+  .article-meta {
+    font-size: 14px;
+    color: var(--color-ink-light);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .separator {
+    opacity: 0.5;
+  }
+
+  .article-body {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--color-ink-black);
+  }
+
+  /* Markdown content styles */
+  .article-body :global(h2) {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 48px 0 24px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .article-body :global(h3) {
+    font-size: 20px;
+    font-weight: 400;
+    margin: 32px 0 16px 0;
+  }
+
+  .article-body :global(p) {
+    margin: 16px 0;
+  }
+
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    margin: 16px 0;
+    padding-left: 24px;
+  }
+
+  .article-body :global(li) {
+    margin: 8px 0;
+  }
+
+  .article-body :global(a) {
+    color: var(--color-ink-black);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .article-body :global(code) {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    background: var(--color-ink-black);
+    color: var(--color-canvas-white);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  .article-body :global(pre) {
+    background: var(--color-ink-black);
+    border-radius: 8px;
+    padding: 24px;
+    overflow-x: auto;
+    margin: 24px 0;
+  }
+
+  .article-body :global(pre code) {
+    background: transparent;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .article-body :global(blockquote) {
+    border-left: 2px solid var(--color-ink-light);
+    margin: 24px 0;
+    padding-left: 16px;
+    color: var(--color-ink-gray);
+  }
+
+  .article-body :global(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 24px 0;
+  }
+
+  @media (max-width: 768px) {
+    .layout-wrapper {
+      padding: 16px;
+    }
+
+    .article-title {
+      font-size: 24px;
+    }
+
+    .article-body {
+      font-size: 15px;
+    }
+  }
+</style>

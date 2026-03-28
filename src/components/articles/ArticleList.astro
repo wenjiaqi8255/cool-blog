@@ -1,0 +1,42 @@
+---
+import { getCollection } from 'astro:content';
+import ArticleCard from './ArticleCard.astro';
+import BentoGrid from '../layout/BentoGrid.astro';
+
+// Fetch all non-draft articles, sorted by date (newest first)
+const allArticles = await getCollection('articles');
+const articles = allArticles
+  .filter((article) => !article.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+---
+
+{articles.length > 0 ? (
+  <div class="article-list">
+    <BentoGrid>
+      {articles.map((article) => (
+        <div class="col-span-1">
+          <ArticleCard article={article} />
+        </div>
+      ))}
+    </BentoGrid>
+  </div>
+) : (
+  <div class="empty-state">
+    <p>暂无文章</p>
+  </div>
+)}
+
+<style>
+  .article-list {
+    margin-top: 24px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 24px;
+    background: var(--color-card-light);
+    border-radius: 12px;
+    color: var(--color-ink-gray);
+    font-size: 16px;
+  }
+</style>
