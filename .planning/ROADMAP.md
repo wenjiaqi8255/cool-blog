@@ -12,8 +12,8 @@ Build a visually striking technical blog and portfolio site with Bento Grid layo
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [x] **Phase 1: Foundation & Bento Grid** ✅ COMPLETE (2026-03-28) — Project setup, Cloudflare deployment, responsive Bento Grid with card variants
-- [x] **Phase 2: Content System** ✅ COMPLETE (2026-03-28) — Articles system with markdown, syntax highlighting, search/filter, and tab navigation (4/4 complete)
+- [x] **Phase 1: Foundation & Bento Grid** — Project setup, Cloudflare deployment, responsive Bento Grid with card variants
+- [x] **Phase 2: Content System** — Articles system with markdown, syntax highlighting, search/filter, and tab navigation (4/4 complete)
 - [ ] **Phase 3: Newsletter & Backend** — Newsletter subscription with Neon Postgres integration
 - [ ] **Phase 4: SEO & Launch** — Meta tags, RSS, sitemap, and final deployment polish
 
@@ -32,11 +32,11 @@ Decimal phases appear between their surrounding integers in numeric order.
 **Plans**: 5 plans in 5 waves
 
 Plans:
-- [x] 01-01-PLAN.md — Project scaffolding with Astro, Cloudflare adapter, Tailwind CSS v4, and test infrastructure ✅
-- [x] 01-02-PLAN.md — Card components (Image, Text, Terminal, Stats) with hover animations and GitHub API ✅
-- [x] 01-03-PLAN.md — Configuration-driven Bento Grid with responsive breakpoints ✅
-- [x] 01-04-PLAN.md — Navigation system with tabs, subscribe modal, and main pages ✅
-- [x] 01-05-PLAN.md — Cloudflare Pages deployment configuration and documentation ✅
+- [x] 01-01-PLAN.md — Project scaffolding with Astro, Cloudflare adapter, Tailwind CSS v4, and test infrastructure
+- [x] 01-02-PLAN.md — Card components (Image, Text, Terminal, Stats) with hover animations and GitHub API
+- [x] 01-03-PLAN.md — Configuration-driven Bento Grid with responsive breakpoints
+- [x] 01-04-PLAN.md — Navigation system with tabs, subscribe modal, and main pages
+- [x] 01-05-PLAN.md — Cloudflare Pages deployment configuration and documentation
 
 ### Phase 2: Content System
 **Goal**: Users can browse, read, and search technical articles with excellent readability and code syntax highlighting.
@@ -51,10 +51,10 @@ Plans:
 **Plans**: 4 plans in 4 waves
 
 Plans:
-- [x] 02-01-PLAN.md — Astro Content Collections with Zod schemas for articles ✅
-- [x] 02-02-PLAN.md — Article list and individual article pages with layouts ✅
-- [x] 02-03-PLAN.md — Syntax highlighting with Shiki ✅
-- [x] 02-04-PLAN.md — Search and filter functionality (client-side) ✅
+- [x] 02-01-PLAN.md — Astro Content Collections with Zod schemas for articles
+- [x] 02-02-PLAN.md — Article list and individual article pages with layouts
+- [x] 02-03-PLAN.md — Syntax highlighting with Shiki
+- [x] 02-04-PLAN.md — Search and filter functionality (client-side)
 
 ### Phase 3: Newsletter & Backend
 **Goal**: Users can subscribe to the newsletter and receive confirmation, with emails stored securely in Neon Postgres.
@@ -65,12 +65,11 @@ Plans:
   2. User receives a confirmation message after successful subscription
   3. User can request a resend of confirmation email
   4. Subscriber emails are stored in Neon Postgres database with duplicate prevention
-**Plans**: 4 plans in 2 waves
+**Plans**: 3 plans in 2 waves
 
 Plans:
 - [ ] 03-01-PLAN.md — Neon Postgres database setup with Drizzle ORM
 - [ ] 03-02-PLAN.md — Newsletter subscription form (React island) and API endpoints
-- [ ] 03-03-PLAN.md — Subscribe API endpoint with error handling
 - [ ] 03-04-PLAN.md — Confirmation and resend email functionality
 
 ### Phase 4: SEO & Launch
@@ -96,12 +95,12 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & Bento Grid | 5/5 | ✅ Complete | 2026-03-28 |
-| 2. Content System | 4/4 | ✅ Complete | 2026-03-28 |
-| 3. Newsletter & Backend | 0/4 | Not started | - |
+| 1. Foundation & Bento Grid | 5/5 | Complete | 2026-03-28 |
+| 2. Content System | 4/4 | Complete | 2026-03-28 |
+| 3. Newsletter & Backend | 0/3 | Not started | - |
 | 4. SEO & Launch | 0/4 | Not started | - |
 
 ---
 *Roadmap created: 2026-03-27*
-*Roadmap updated: 2026-03-29 (Phase 3 plans created)*
+*Roadmap updated: 2026-03-29 (Phase 3 plan revision — removed duplicate 03-03)*
 *Granularity: coarse*
