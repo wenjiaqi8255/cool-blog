@@ -14,8 +14,8 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Bento Grid** ✅ COMPLETE (2026-03-28) — Project setup, Cloudflare deployment, responsive Bento Grid with card variants
 - [x] **Phase 2: Content System** ✅ COMPLETE (2026-03-28) — Articles system with markdown, syntax highlighting, search/filter, and tab navigation (4/4 complete)
-- [ ] **Phase 3: Newsletter & Backend** - Newsletter subscription with Neon Postgres integration
-- [ ] **Phase 4: SEO & Launch** - Meta tags, RSS, sitemap, and final deployment polish
+- [ ] **Phase 3: Newsletter & Backend** — Newsletter subscription with Neon Postgres integration
+- [ ] **Phase 4: SEO & Launch** — Meta tags, RSS, sitemap, and final deployment polish
 
 ## Phase Details
 
@@ -65,13 +65,13 @@ Plans:
   2. User receives a confirmation message after successful subscription
   3. User can request a resend of confirmation email
   4. Subscriber emails are stored in Neon Postgres database with duplicate prevention
-**Plans**: TBD
+**Plans**: 4 plans in 2 waves
 
 Plans:
-- [ ] 03-01: Neon Postgres database setup with Drizzle ORM
-- [ ] 03-02: Newsletter subscription form (React island)
-- [ ] 03-03: Subscribe API endpoint with error handling
-- [ ] 03-04: Confirmation and resend email functionality
+- [ ] 03-01-PLAN.md — Neon Postgres database setup with Drizzle ORM
+- [ ] 03-02-PLAN.md — Newsletter subscription form (React island) and API endpoints
+- [ ] 03-03-PLAN.md — Subscribe API endpoint with error handling
+- [ ] 03-04-PLAN.md — Confirmation and resend email functionality
 
 ### Phase 4: SEO & Launch
 **Goal**: The site is discoverable by search engines and social platforms with proper metadata and feeds.
@@ -103,5 +103,5 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 ---
 *Roadmap created: 2026-03-27*
-*Roadmap updated: 2026-03-28 (Phase 1 plans created)*
+*Roadmap updated: 2026-03-29 (Phase 3 plans created)*
 *Granularity: coarse*
