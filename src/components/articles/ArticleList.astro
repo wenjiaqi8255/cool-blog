@@ -15,7 +15,7 @@ const articles = allArticles
 // Prepare article data for search index
 const searchArticles: ArticleSearchItem[] = articles.map((article) => ({
   id: article.id,
-  slug: article.slug,
+  slug: article.id.replace(/\.md$/, ''),
   title: article.data.title,
   excerpt: article.data.excerpt || '',
   content: article.body || '',
@@ -37,15 +37,9 @@ const PAGE_SIZE = 6;
       client:load
       availableTags={['ML', 'Systems', 'Tutorial', 'Project', 'Notes']}
       selectedTags={[]}
-      onChange={(tags) => {
-        window.dispatchEvent(new CustomEvent('tag-filter-change', { detail: tags }));
-      }}
     />
     <SearchInput
       client:load
-      onSearch={(query) => {
-        window.dispatchEvent(new CustomEvent('search-change', { detail: query }));
-      }}
     />
   </div>
 
@@ -54,7 +48,7 @@ const PAGE_SIZE = 6;
   <div id="article-list-container">
     <BentoGrid>
       {articles.slice(0, PAGE_SIZE).map((article) => (
-        <div class="col-span-1 article-item" data-tags={JSON.stringify(article.data.tags || [])} data-title={article.data.title.toLowerCase()} data-excerpt={(article.data.excerpt || '').toLowerCase()} data-content={(article.body || '').toLowerCase()}>
+        <div class="col-span-1 bento-card article-item" data-tags={JSON.stringify(article.data.tags || [])} data-title={article.data.title.toLowerCase()} data-excerpt={(article.data.excerpt || '').toLowerCase()} data-content={(article.body || '').toLowerCase()}>
           <ArticleCard article={article} />
         </div>
       ))}

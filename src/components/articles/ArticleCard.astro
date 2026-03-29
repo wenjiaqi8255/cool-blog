@@ -6,7 +6,9 @@ interface Props {
 }
 
 const { article } = Astro.props;
-const { data, slug } = article;
+const { data, id } = article;
+// Strip .md extension for URL slug
+const slug = id.replace(/\.md$/, '');
 const { title, date, tags, excerpt, coverImage } = data;
 
 // Calculate reading time: words / 200 WPM

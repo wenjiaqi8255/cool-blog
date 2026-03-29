@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { cards = portfolioCards } = Astro.props;
+const hasChildren = Boolean(Astro.slots.has('default'));
 
 // Map card types to components
 const cardComponents = {
@@ -21,28 +22,32 @@ const cardComponents = {
 ---
 
 <div class="bento-grid">
-  {cards.map((card) => {
-    const Component = cardComponents[card.type];
-    const isReactComponent = card.type === 'stats';
+  {hasChildren ? (
+    <slot />
+  ) : (
+    cards.map((card) => {
+      const Component = cardComponents[card.type];
+      const isReactComponent = card.type === 'stats';
 
-    return (
-      <div
-        class:list={[
-          'bento-card',
-          `col-span-${card.span}`,
-          card.row === 2 && 'row-span-2'
-        ]}
-        data-card-id={card.id}
-        data-card-type={card.type}
-      >
-        {isReactComponent ? (
-          <Component client:load {...card.props} />
-        ) : (
-          <Component {...card.props} variant={card.variant} />
-        )}
-      </div>
-    );
-  })}
+      return (
+        <div
+          class:list={[
+            'bento-card',
+            `col-span-${card.span}`,
+            card.row === 2 && 'row-span-2'
+          ]}
+          data-card-id={card.id}
+          data-card-type={card.type}
+        >
+          {isReactComponent ? (
+            <Component client:load {...card.props} />
+          ) : (
+            <Component {...card.props} variant={card.variant} />
+          )}
+        </div>
+      );
+    })
+  )}
 </div>
 
 <style>

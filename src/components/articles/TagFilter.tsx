@@ -3,12 +3,12 @@ import { useState } from 'react';
 interface TagFilterProps {
   availableTags: string[];
   selectedTags: string[];
-  onChange: (tags: string[]) => void;
+  eventName?: string;
 }
 
 const AVAILABLE_TAGS = ['ML', 'Systems', 'Tutorial', 'Project', 'Notes'] as const;
 
-export default function TagFilter({ selectedTags, onChange }: TagFilterProps) {
+export default function TagFilter({ selectedTags, eventName = 'tag-filter-change' }: TagFilterProps) {
   const [localSelected, setLocalSelected] = useState<string[]>(selectedTags);
 
   const handleTagClick = (tag: string) => {
@@ -17,7 +17,7 @@ export default function TagFilter({ selectedTags, onChange }: TagFilterProps) {
       : [...localSelected, tag];
 
     setLocalSelected(newSelected);
-    onChange(newSelected);
+    window.dispatchEvent(new CustomEvent(eventName, { detail: newSelected }));
   };
 
   return (

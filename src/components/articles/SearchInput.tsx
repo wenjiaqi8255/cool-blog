@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 
 interface SearchInputProps {
-  onSearch: (query: string) => void;
+  eventName?: string;
 }
 
-export default function SearchInput({ onSearch }: SearchInputProps) {
+export default function SearchInput({ eventName = 'search-change' }: SearchInputProps) {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
 
@@ -17,16 +17,16 @@ export default function SearchInput({ onSearch }: SearchInputProps) {
     return () => clearTimeout(timer);
   }, [query]);
 
-  // Trigger search when debounced query changes
+  // Dispatch search event when debounced query changes
   useEffect(() => {
-    onSearch(debouncedQuery);
-  }, [debouncedQuery, onSearch]);
+    window.dispatchEvent(new CustomEvent(eventName, { detail: debouncedQuery }));
+  }, [debouncedQuery, eventName]);
 
   const handleClear = useCallback(() => {
     setQuery('');
     setDebouncedQuery('');
-    onSearch('');
-  }, [onSearch]);
+    window.dispatchEvent(new CustomEvent(eventName, { detail: '' }));
+  }, [eventName]);
 
   return (
     <div className="search-input-wrapper">
