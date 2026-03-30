@@ -37,12 +37,12 @@ Requirements for content management milestone. Each maps to roadmap phases.
 
 ### Database
 
-- [ ] **DATA-01**: Database has `articles` table with: id, title, slug, date, tags, excerpt, body, status, deleted_at, created_at, updated_at
-- [ ] **DATA-02**: Slugs are unique across all articles
-- [ ] **DATA-03**: Soft deletes use `deleted_at` timestamp (NULL = visible, non-NULL = hidden)
-- [ ] **DATA-04**: Article status is enum: 'draft' | 'published'
-- [ ] **DATA-05**: Tags stored as array in database
-- [ ] **DATA-06**: Migration does not affect existing `subscribers` table
+- [x] **DATA-01**: Database has `articles` table with: id, title, slug, date, tags, excerpt, body, status, deleted_at, created_at, updated_at
+- [x] **DATA-02**: Slugs are unique across all articles
+- [x] **DATA-03**: Soft deletes use `deleted_at` timestamp (NULL = visible, non-NULL = hidden)
+- [x] **DATA-04**: Article status is enum: 'draft' | 'published'
+- [x] **DATA-05**: Tags stored as array in database
+- [x] **DATA-06**: Migration does not affect existing `subscribers` table
 
 ### Astro Integration
 
@@ -103,12 +103,12 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DATA-01 | Phase 5 | Pending |
-| DATA-02 | Phase 5 | Pending |
-| DATA-03 | Phase 5 | Pending |
-| DATA-04 | Phase 5 | Pending |
-| DATA-05 | Phase 5 | Pending |
-| DATA-06 | Phase 5 | Pending |
+| DATA-01 | Phase 5 | Complete |
+| DATA-02 | Phase 5 | Complete |
+| DATA-03 | Phase 5 | Complete |
+| DATA-04 | Phase 5 | Complete |
+| DATA-05 | Phase 5 | Complete |
+| DATA-06 | Phase 5 | Complete |
 | MIGR-01 | Phase 5 | Pending |
 | MIGR-02 | Phase 5 | Pending |
 | MIGR-03 | Phase 5 | Pending |

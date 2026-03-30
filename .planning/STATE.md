@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Content Management & Automation
-status: planning
-stopped_at: Phase 5 context gathered
-last_updated: "2026-03-30T23:29:47.863Z"
-last_activity: 2026-03-30 — v1.1 roadmap created
+status: completed
+stopped_at: Completed 05-01-PLAN.md
+last_updated: "2026-03-30T23:59:06.286Z"
+last_activity: 2026-03-31 — Plan 05-01 complete
 progress:
   total_phases: 4
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 53
+  total_plans: 2
+  completed_plans: 1
+  percent: 58
 ---
 
 # Project State
@@ -25,14 +25,14 @@ See: .planning/PROJECT.md (updated 2026-03-30 for v1.1 milestone)
 
 ## Current Position
 
-**Milestone: v1.1 Content Management & Automation — READY TO PLAN**
+**Milestone: v1.1 Content Management & Automation — IN PROGRESS**
 
-Phase: 5 of 8 (Database Schema & Notion Migration)
-Plan: 0 of 2 in current phase
-Status: Ready to plan
-Last activity: 2026-03-30 — v1.1 roadmap created
+Phase: 5 of 4 (Database Schema & Notion Migration)
+Plan: 1 of 2 in current phase
+Status: Plan 1 complete, ready for Plan 2
+Last activity: 2026-03-31 — Plan 05-01 complete
 
-Progress: [████████░░░░░░░░░░] 53% (10 of 19 plans complete)
+Progress: [█████████░░░░░░░░░] 58% (11 of 19 plans complete)
 
 ## Performance Metrics
 
@@ -55,6 +55,7 @@ Progress: [████████░░░░░░░░░░] 53% (10 of 19
 - Trend: Stable
 
 *Updated after each plan completion*
+| Phase 05 P01 | 8 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -66,6 +67,9 @@ Recent decisions affecting current work:
 - **v1.1 Scope**: New articles only — article updates deferred to v1.2
 - **Database-only mode**: Existing Markdown file articles will NOT be displayed (ASTRO-04)
 - **MCP Server**: Required for mobile workflow priority (Claude on phone)
+- [Phase 05]: Use text type for article status instead of enum - simpler with Neon HTTP connection
+- [Phase 05]: Soft delete via deleted_at timestamp - preserves data for audit trail
+- [Phase 05]: Unique constraint on slug - ensures URL-safe identifiers are unique
 
 ### Pending Todos
 
@@ -80,9 +84,9 @@ Research flags from SUMMARY.md to address during planning:
 
 ## Session Continuity
 
-Last session: 2026-03-30T23:29:47.859Z
-Stopped at: Phase 5 context gathered
-Resume file: .planning/phases/05-database-schema-notion-migration/05-CONTEXT.md
+Last session: 2026-03-30T23:59:06.282Z
+Stopped at: Completed 05-01-PLAN.md
+Resume file: None
 
 ---
 
