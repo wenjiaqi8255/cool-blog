@@ -20,7 +20,9 @@
     "@astrojs/tailwind": "^6.0.2",
     "@fontsource/inter": "^5.0.0",
     "@fontsource/jetbrains-mono": "^5.0.0",
+    "@neondatabase/serverless": "^1.0.2",
     "astro": "^6.1.1",
+    "drizzle-orm": "^0.45.2",
     "fuse.js": "^7.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -34,6 +36,7 @@
     "@testing-library/react": "^16.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "drizzle-kit": "^0.31.10",
     "happy-dom": "^17.0.0",
     "jsdom": "^26.0.0",
     "vitest": "^3.0.0"
