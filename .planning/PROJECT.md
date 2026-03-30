@@ -10,6 +10,16 @@ The design embraces minimalist brutalism — monochrome palette, terminal aesthe
 
 **Visual impact meets content depth.** The portfolio tab showcases work through striking visuals and micro-interactions. The articles tab provides deep technical content with excellent readability. Both should feel cohesive yet serve their distinct purposes perfectly.
 
+## Current Milestone: v1.1 Content Management & Automation
+
+**Goal:** Streamline blog content workflow with automated publishing via MCP server and one-time Notion migration
+
+**Target features:**
+- Notion database migration to Neon Postgres (one-time import)
+- Blog submission workflow: Markdown → metadata extraction → preview → publish
+- MCP server for database operations (mobile-friendly publishing via Claude)
+- Minimal manual work — no SQL editing, no direct database manipulation
+
 ## Requirements
 
 ### Validated
@@ -42,12 +52,12 @@ All v1.0 requirements shipped and validated:
 
 ### Active (v1.1 Planning)
 
-Next milestone will address:
+Current milestone scope:
 
-- **Analytics**: Page view tracking, article read time, newsletter conversion
-- **Enhanced Content**: Table of contents, related articles, article series
-- **Social**: Share buttons, comments (third-party), webmentions
-- **Performance**: Image lazy loading, critical CSS inlining, service worker
+- **Content Migration**: Import existing blog content from Notion database
+- **Blog Publishing**: Automated workflow for new articles (not updates)
+- **MCP Integration**: Custom MCP server for database operations
+- **Mobile Workflow**: Enable publishing from mobile Claude instances
 
 ### Out of Scope
 
@@ -57,6 +67,8 @@ Next milestone will address:
 - **Multi-language** — English only for v1
 - **Social login** — No OAuth needed for newsletter-only subscription
 - **Admin dashboard** — Content managed via Git, no CMS backend needed
+- **Article updates** — v1.1 focuses on new article publishing only
+- **Rich media uploads** — Images handled via Git, not database workflow
 
 ## Context
 
@@ -74,6 +86,22 @@ Next milestone will address:
 **Files:**
 - 44 files modified
 - 4,658 lines added
+
+### v1.1 Context
+
+**User workflow goal:**
+- Write blog posts on mobile (phone + Claude)
+- Send Markdown to Claude
+- Claude extracts metadata (title, date, tags, excerpt)
+- Preview and confirm
+- MCP server writes to Neon Postgres
+- Article appears on blog automatically
+
+**Migration context:**
+- Existing blog content lives in Notion database
+- Need one-time import into current Neon Postgres
+- Content includes articles with title, date, tags, body
+- Markdown format preferred
 
 ### Original Context (Pre-v1.0)
 
@@ -103,16 +131,19 @@ Next milestone will address:
 | Newsletter-only subscription | No auth complexity, captures intent, can add features later | ✅ Validated — simple MVP |
 | Tailwind v4 CSS-first | @astrojs/tailwind incompatible with Astro 6 | ✅ Validated — better than planned |
 | SVG over PNG for OG images | @vercel/og incompatible with Cloudflare prerender | ✅ Validated — works on Cloudflare |
+| MCP Server over Direct Skill | Mobile workflow priority (Claude on phone) | — Pending validation |
 
 ## Constraints
 
 - **Framework**: Astro required — best for content sites, SSG/SSR flexibility
 - **Database**: Neon Postgres required — user preference, edge-compatible
 - **Hosting**: Cloudflare Pages required — fast global CDN, edge functions
-- **Content**: Markdown + Git — no headless CMS, files in repo
+- **Content**: Markdown + Git — no headless CMS, files in repo (v1.0), database for v1.1 workflow
 - **Typography**: Inter + JetBrains Mono — defined in design mockup
 - **Layout**: Bento Grid with 4-column base, 4px gaps — non-negotiable visual identity
+- **Publishing**: MCP Server — enables mobile workflow via Claude
+- **Scope**: New articles only — article updates deferred to future milestone
 
 ---
 
-*Last updated: 2026-03-30 after v1.0 milestone*
+*Last updated: 2026-03-30 after v1.1 milestone started*
