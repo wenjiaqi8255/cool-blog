@@ -38,6 +38,7 @@ const { Content } = await render(entry);
   title={`KERNEL_PANIC / ${title}`}
   description={excerpt || title}
   type="article"
+  image={`/og/${entry.id}.svg`}
 >
   <div class="layout-wrapper">
     <Header currentPath={currentPath} />

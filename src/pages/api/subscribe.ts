@@ -4,7 +4,8 @@ import { createSubscriber } from '../../lib/db';
 import { sendConfirmationEmail } from '../../lib/email';
 import { DUPLICATE_ERROR } from '../../lib/db';
 
-export const prerender = false;
+// Note: In production, add to astro.config.js:
+// routes: { extend: { include: [{ pattern: '/api/*' }] } }
 
 const subscribeSchema = z.object({
   email: z.string().email('Please enter a valid email address'),

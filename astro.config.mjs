@@ -2,11 +2,6 @@ import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 export default defineConfig({
   site: 'https://kernel-panic.dev',
@@ -20,6 +15,13 @@ export default defineConfig({
   adapter: cloudflare({
     platformProxy: {
       enabled: true
+    },
+    imageService: 'cloudflare',
+    // Enable on-demand API routes in production
+    routes: {
+      extend: {
+        include: [{ pattern: '/api/*' }]
+      }
     }
   }),
   integrations: [
@@ -32,6 +34,9 @@ export default defineConfig({
   vite: {
     ssr: {
       noExternal: ['@fontsource/inter', '@fontsource/jetbrains-mono']
+    },
+    optimizeDeps: {
+      exclude: ['drizzle-orm', '@neondatabase/serverless']
     }
   }
 });
