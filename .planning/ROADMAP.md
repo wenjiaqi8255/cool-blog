@@ -14,7 +14,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Foundation & Bento Grid** — Project setup, Cloudflare deployment, responsive Bento Grid with card variants
 - [x] **Phase 2: Content System** — Articles system with markdown, syntax highlighting, search/filter, and tab navigation (4/4 complete)
-- [ ] **Phase 3: Newsletter & Backend** — Newsletter subscription with Neon Postgres integration
+- [x] **Phase 3: Newsletter & Backend** — Newsletter subscription with Neon Postgres integration (completed 2026-03-30)
 - [ ] **Phase 4: SEO & Launch** — Meta tags, RSS, sitemap, and final deployment polish
 
 ## Phase Details
@@ -97,7 +97,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation & Bento Grid | 5/5 | Complete | 2026-03-28 |
 | 2. Content System | 4/4 | Complete | 2026-03-28 |
-| 3. Newsletter & Backend | 2/3 | In Progress | 2026-03-30 |
+| 3. Newsletter & Backend | 3/3 | Complete   | 2026-03-30 |
 | 4. SEO & Launch | 0/4 | Not started | - |
 
 ---
