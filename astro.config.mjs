@@ -3,7 +3,8 @@ import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
 
 export default defineConfig({
-  output: 'hybrid',
+  site: 'https://kernel-panic.dev',
+  output: 'static',
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
