@@ -103,42 +103,42 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MIGR-01 | Phase 1 | Pending |
-| MIGR-02 | Phase 1 | Pending |
-| MIGR-03 | Phase 1 | Pending |
-| MIGR-04 | Phase 1 | Pending |
-| MIGR-05 | Phase 1 | Pending |
-| DATA-01 | Phase 1 | Pending |
-| DATA-02 | Phase 1 | Pending |
-| DATA-03 | Phase 1 | Pending |
-| DATA-04 | Phase 1 | Pending |
-| DATA-05 | Phase 1 | Pending |
-| DATA-06 | Phase 1 | Pending |
-| MCP-01 | Phase 2 | Pending |
-| MCP-02 | Phase 2 | Pending |
-| MCP-03 | Phase 2 | Pending |
-| MCP-04 | Phase 2 | Pending |
-| MCP-05 | Phase 2 | Pending |
-| MCP-06 | Phase 2 | Pending |
-| MCP-07 | Phase 2 | Pending |
-| WORK-01 | Phase 3 | Pending |
-| WORK-02 | Phase 3 | Pending |
-| WORK-03 | Phase 3 | Pending |
-| WORK-04 | Phase 3 | Pending |
-| WORK-05 | Phase 3 | Pending |
-| WORK-06 | Phase 3 | Pending |
-| WORK-07 | Phase 3 | Pending |
-| ERR-01 | Phase 3 | Pending |
-| ERR-02 | Phase 3 | Pending |
-| ERR-03 | Phase 3 | Pending |
-| ERR-05 | Phase 3 | Pending |
-| ASTRO-01 | Phase 4 | Pending |
-| ASTRO-02 | Phase 4 | Pending |
-| ASTRO-03 | Phase 4 | Pending |
-| ASTRO-04 | Phase 4 | Pending |
-| ASTRO-05 | Phase 4 | Pending |
-| ASTRO-06 | Phase 4 | Pending |
-| ERR-04 | Phase 1 | Pending |
+| DATA-01 | Phase 5 | Pending |
+| DATA-02 | Phase 5 | Pending |
+| DATA-03 | Phase 5 | Pending |
+| DATA-04 | Phase 5 | Pending |
+| DATA-05 | Phase 5 | Pending |
+| DATA-06 | Phase 5 | Pending |
+| MIGR-01 | Phase 5 | Pending |
+| MIGR-02 | Phase 5 | Pending |
+| MIGR-03 | Phase 5 | Pending |
+| MIGR-04 | Phase 5 | Pending |
+| MIGR-05 | Phase 5 | Pending |
+| ERR-04 | Phase 5 | Pending |
+| MCP-01 | Phase 6 | Pending |
+| MCP-02 | Phase 6 | Pending |
+| MCP-03 | Phase 6 | Pending |
+| MCP-04 | Phase 6 | Pending |
+| MCP-05 | Phase 6 | Pending |
+| MCP-06 | Phase 6 | Pending |
+| MCP-07 | Phase 6 | Pending |
+| WORK-01 | Phase 7 | Pending |
+| WORK-02 | Phase 7 | Pending |
+| WORK-03 | Phase 7 | Pending |
+| WORK-04 | Phase 7 | Pending |
+| WORK-05 | Phase 7 | Pending |
+| WORK-06 | Phase 7 | Pending |
+| WORK-07 | Phase 7 | Pending |
+| ERR-01 | Phase 7 | Pending |
+| ERR-02 | Phase 7 | Pending |
+| ERR-03 | Phase 7 | Pending |
+| ERR-05 | Phase 7 | Pending |
+| ASTRO-01 | Phase 8 | Pending |
+| ASTRO-02 | Phase 8 | Pending |
+| ASTRO-03 | Phase 8 | Pending |
+| ASTRO-04 | Phase 8 | Pending |
+| ASTRO-05 | Phase 8 | Pending |
+| ASTRO-06 | Phase 8 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 36 total
@@ -148,4 +148,4 @@ Which phases cover which requirements. Updated during roadmap creation.
 ---
 
 *Requirements defined: 2026-03-30*
-*Last updated: 2026-03-30 after milestone scoping*
+*Last updated: 2026-03-30 after roadmap creation*
