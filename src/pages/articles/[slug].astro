@@ -35,8 +35,9 @@ const { Content } = await render(entry);
 ---
 
 <BaseLayout
-  title={`${title} — KERNEL_PANIC`}
+  title={`KERNEL_PANIC / ${title}`}
   description={excerpt || title}
+  type="article"
 >
   <div class="layout-wrapper">
     <Header currentPath={currentPath} />

@@ -13,8 +13,9 @@ const articleCount = allArticles.filter(a => !a.data.draft).length;
 ---
 
 <BaseLayout
-  title="Articles — KERNEL_PANIC"
+  title="KERNEL_PANIC / ARTICLES | Articles"
   description={`${articleCount} technical articles on machine learning, systems engineering, and software craftsmanship`}
+  type="website"
 >
   <div class="layout-wrapper">
     <Header currentPath={currentPath} />
