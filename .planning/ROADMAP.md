@@ -80,13 +80,14 @@ Plans:
   1. User sharing a link on social media sees proper Open Graph and Twitter Card previews
   2. User can subscribe to an RSS feed of articles
   3. Search engines can crawl the site via sitemap.xml
-**Plans**: 4 plans in 3 waves
+**Plans**: 5 plans in 4 waves
 
 Plans:
 - [x] 04-01-PLAN.md — Meta tags, Open Graph, and Twitter Cards
 - [x] 04-02-PLAN.md — RSS feed generation
 - [x] 04-03-PLAN.md — Sitemap and robots.txt
 - [x] 04-04-PLAN.md — Dynamic OG image generation
+- [ ] 04-05-PLAN.md — Gap closure: Wire article OG images
 
 ## Progress
 
@@ -98,9 +99,9 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation & Bento Grid | 5/5 | Complete | 2026-03-28 |
 | 2. Content System | 4/4 | Complete | 2026-03-28 |
 | 3. Newsletter & Backend | 3/3 | Complete   | 2026-03-30 |
-| 4. SEO & Launch | 4/4 | Complete | 2026-03-30 |
+| 4. SEO & Launch | 4/5 | In Progress | 2026-03-30 |
 
 ---
 *Roadmap created: 2026-03-27*
-*Roadmap updated: 2026-03-30 (Plan 04-04 complete)*
+*Roadmap updated: 2026-03-30 (Gap closure plan added)*
 *Granularity: coarse*
