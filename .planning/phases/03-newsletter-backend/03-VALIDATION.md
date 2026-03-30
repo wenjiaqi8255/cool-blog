@@ -41,10 +41,9 @@ created: 2026-03-29
 | 03-01-01 | 01 | 1 | NEWS-02 | unit | `vitest run src/tests/unit/lib/db.test.ts` | Will be created | ⬜ pending |
 | 03-02-01 | 02 | 1 | NEWS-01 | unit | `vitest run src/tests/unit/components/SubscribeModal.test.tsx` | Will be updated | ⬜ pending |
 | 03-02-02 | 02 | 1 | NEWS-03 | e2e | `playwright test src/tests/e2e/newsletter.spec.ts` | Will be created | ⬜ pending |
-| 03-03-01 | 03 | 2 | NEWS-01, NEWS-02 | unit | `vitest run src/tests/unit/lib/api.test.ts` | Will be created | ⬜ pending |
 | 03-04-01 | 04 | 2 | NEWS-04 | unit | `vitest run src/tests/unit/lib/email.test.ts` | Will be created | ⬜ pending |
 
-*Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
+*Status: ⬜ pending / ✅ green / ❌ red / ⚠️ flaky*
 
 ---
 
@@ -52,7 +51,6 @@ created: 2026-03-29
 
 - [ ] `src/tests/unit/lib/db.test.ts` — unit tests for subscriber repository (duplicate prevention, schema)
 - [ ] `src/tests/unit/lib/email.test.ts` — unit tests for Resend email sending (mock Resend client)
-- [ ] `src/tests/unit/lib/api.test.ts` — unit tests for API route handlers (mock DB + email)
 - [ ] `src/tests/unit/components/SubscribeModal.test.tsx` — unit tests for form validation and API integration
 - [ ] `src/tests/e2e/newsletter.spec.ts` — E2E test for full subscription flow
 
