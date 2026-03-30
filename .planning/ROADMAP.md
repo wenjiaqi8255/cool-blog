@@ -68,7 +68,7 @@ Plans:
 **Plans**: 3 plans in 2 waves
 
 Plans:
-- [ ] 03-01-PLAN.md — Neon Postgres database setup with Drizzle ORM
+- [x] 03-01-PLAN.md — Neon Postgres database setup with Drizzle ORM
 - [ ] 03-02-PLAN.md — Newsletter subscription form (React island) and API endpoints
 - [ ] 03-04-PLAN.md — Confirmation and resend email functionality
 
@@ -97,7 +97,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 |-------|----------------|--------|-----------|
 | 1. Foundation & Bento Grid | 5/5 | Complete | 2026-03-28 |
 | 2. Content System | 4/4 | Complete | 2026-03-28 |
-| 3. Newsletter & Backend | 0/3 | Not started | - |
+| 3. Newsletter & Backend | 1/3 | In Progress | 2026-03-30 |
 | 4. SEO & Launch | 0/4 | Not started | - |
 
 ---

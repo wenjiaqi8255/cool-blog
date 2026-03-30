@@ -28,7 +28,7 @@ Requirements for initial release. Each maps to roadmap phases.
 ### Newsletter (Newsletter tab)
 
 - [ ] **NEWS-01**: Newsletter subscription form with email capture
-- [ ] **NEWS-02**: Email storage in Neon Postgres database
+- [x] **NEWS-02**: Email storage in Neon Postgres database
 - [ ] **NEWS-03**: Subscription confirmation and thank you message
 - [ ] **NEWS-04**: Resend confirmation email to subscriber
 
@@ -117,7 +117,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | ART-04 | Phase 2 | Pending |
 | ART-05 | Phase 2 | Pending |
 | NEWS-01 | Phase 3 | Pending |
-| NEWS-02 | Phase 3 | Pending |
+| NEWS-02 | Phase 3 | Complete |
 | NEWS-03 | Phase 3 | Pending |
 | NEWS-04 | Phase 3 | Pending |
 | SEO-01 | Phase 4 | Pending |
