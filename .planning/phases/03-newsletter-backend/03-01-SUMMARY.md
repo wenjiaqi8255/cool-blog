@@ -21,7 +21,7 @@ key_files:
     - .env.example
 decisions:
   - Use neon-http driver (not WebSocket) - faster for single-query serverless
-  - Use output: 'hybrid' in Astro - enables server API routes
+  - Use output: 'static' in Astro with `export const prerender = false` for API routes (Astro 6 pattern)
   - Store confirmed subscribers immediately (no email verification click)
   - DB UNIQUE constraint on email for duplicate prevention
 metrics:
