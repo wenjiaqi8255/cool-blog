@@ -1,278 +1,325 @@
-# Pitfalls Research
+# Pitfalls Research: Blog Automation & MCP Integration (v1.1)
 
-**Domain:** Astro + Cloudflare Workers + Neon Postgres
-**Researched:** 2026-03-27
-**Confidence:** HIGH
+**Domain:** Production blog with Notion migration, MCP server, AI-generated content, mobile publishing
+**Researched:** 2026-03-30
+**Confidence:** MEDIUM (WebSearch-based, verified with multiple sources where possible)
+
+---
+
+## Executive Summary
+
+Adding MCP server and blog automation to an existing production system (Astro 6.1.1 + Neon Postgres + Cloudflare Pages, v1.0 shipped successfully) introduces risks across four critical areas:
+
+1. **Notion Migration** — Data loss, duplicate content, rate limiting
+2. **MCP Server Security** — SQL injection, authentication failures, shadow servers
+3. **AI-Generated Content** — XSS via markdown, metadata extraction failures, injection attacks
+4. **Mobile Publishing** — Network interruptions, partial submissions, idempotency failures
+
+**Critical finding:** 36% of AI agent skills contain security flaws (Snyk, 2026), and 8,000+ MCP servers are publicly exposed with 492 having zero authentication. This is not theoretical risk — it's widespread production reality.
+
+**Context:** The v1.0 system is working. Do not break it. All v1.1 additions must be additive, not disruptive.
 
 ---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Sharp Image Service Incompatibility
+### Pitfall 1: Notion Migration Data Loss & Corruption
 
 **What goes wrong:**
-The default Astro image service (Sharp) uses native Node.js modules that cannot run in Cloudflare's `workerd` edge runtime. Deployments fail with cryptic compilation errors or images simply don't render.
+- Content truncated during export (Notion API limits)
+- Duplicate pages created unexpectedly (synced blocks issue)
+- Metadata lost (tags, dates, author information)
+- Markdown formatting broken (Notion's non-standard export)
+- Rate limiting causes incomplete migration
 
 **Why it happens:**
-Sharp depends on native bindings (libvips) that require a full Node.js environment. Cloudflare Workers run on V8 isolates, not Node.js, making Sharp incompatible with on-demand rendered routes.
+Notion's API has strict rate limits. Attempting to migrate large content databases in bulk triggers rate limiting errors, leaving migration incomplete. Additionally, Notion's synced blocks feature can create duplicate pages unexpectedly during export operations.
 
 **How to avoid:**
-Configure the Cloudflare adapter with the correct `imageService` option:
-```javascript
-// astro.config.mjs
-export default defineConfig({
-  adapter: cloudflare({
-    imageService: 'cloudflare-binding', // default in Astro 6+
-  }),
-});
-```
-Or for build-time-only image processing:
-```javascript
-adapter: cloudflare({
-  imageService: { build: 'compile', runtime: 'cloudflare-binding' }
-}),
-```
+1. **Pre-migration audit** — Count articles, verify metadata completeness in Notion
+2. **Staged migration** — Migrate in batches of 10-20 articles with delays between batches
+3. **Checksum validation** — Compare article counts, character counts before/after migration
+4. **Dry run first** — Test migration on copy of Notion database, not production
+5. **One-time script approach** — Build disposable migration script, not reusable system
 
 **Warning signs:**
-- Build errors mentioning `sharp`, `libvips`, or native modules
-- Images working locally but failing in production
-- `Error: Cannot find module 'sharp'` in Cloudflare logs
+- Migration script shows rate limit errors (HTTP 429)
+- Article count in Postgres < article count in Notion
+- Random articles missing tags or dates
+- Markdown rendering shows broken formatting
 
-**Phase to address:** Phase 1 (Foundation) - Set correct adapter configuration from the start.
+**Phase to address:**
+Phase 1 (Notion Migration) — This is the migration phase's primary risk
+
+**Recovery:**
+- HIGH cost — Requires re-running migration, manual content verification
+- Keep Notion database intact until migration validated in production
+- Backup Neon database before migration, enable point-in-time recovery
 
 ---
 
-### Pitfall 2: Astro.locals.runtime API Removed (Astro 6 Breaking Change)
+### Pitfall 2: MCP Server SQL Injection via LLM Input
 
 **What goes wrong:**
-Code accessing `Astro.locals.runtime.env` throws runtime errors. This API was removed in Astro 6 / @astrojs/cloudflare v13.
+MCP server receives malicious SQL disguised as article content or metadata. Claude (or any LLM client) passes user input directly to database queries, enabling SQL injection attacks.
 
 **Why it happens:**
-The adapter was refactored to use Cloudflare's Vite plugin directly, changing how environment variables and bindings are accessed.
+LLMs generate unpredictable input. Even with good intentions, Claude can send malformed data. Without strict input validation and parameterized queries, this becomes a SQL injection vector.
+
+**Real-world evidence:**
+- 36.7% of MCP servers vulnerable to SSRF (Server-Side Request Forgery)
+- OWASP MCP Top 10 lists "Tool Poisoning" and "Privilege Abuse" as critical risks
+- MCP servers often lack authentication standards
 
 **How to avoid:**
-Use the new import patterns:
-```javascript
-// OLD (removed in Astro 6)
-const { env } = Astro.locals.runtime;
-const { cf } = Astro.locals.runtime;
-
-// NEW (Astro 6+)
-import { env } from 'cloudflare:workers';
-const cf = Astro.request.cf;
-const ctx = Astro.locals.cfContext;
-```
+1. **Never trust LLM input** — Validate every field (title, date, tags, body)
+2. **Use parameterized queries** — Drizzle ORM provides this by default, ensure all queries use it
+3. **Schema validation** — Use Zod or similar to validate input structure before database operations
+4. **Principle of least privilege** — MCP server database user should only INSERT into articles table, no DROP/ALTER
+5. **No raw SQL** — Never use `db.execute(sql\`...\`)` with user input
 
 **Warning signs:**
-- `Cannot read properties of undefined (reading 'env')`
-- Code that worked in Astro 5 breaks after upgrade
-- Environment variables returning undefined
+- MCP server logs show SQL syntax errors from malformed input
+- Unexpected database queries in Neon query logs
+- Article content contains suspicious SQL-like patterns
 
-**Phase to address:** Phase 1 (Foundation) - Use correct patterns from the start.
+**Phase to address:**
+Phase 2 (MCP Server Development) — Core security architecture
+
+**Recovery:**
+- HIGH cost — If injection succeeds, requires forensic analysis, potential data restoration
+- Prevention is far cheaper than recovery
 
 ---
 
-### Pitfall 3: Neon Cold Starts Causing Timeouts
+### Pitfall 3: XSS via AI-Generated Markdown
 
 **What goes wrong:**
-First requests to the newsletter subscription endpoint timeout or feel sluggish. Users may see "Network Error" or 504 Gateway Timeout.
+Claude generates markdown content containing malicious payloads:
+- Inline SVG with `<script>` tags
+- JavaScript in image `alt` attributes (CVE-2026-32626 pattern)
+- HTML injection via malformed markdown
+- Prompt injection leading to malicious content generation
 
 **Why it happens:**
-Neon scales compute to zero after 5 minutes of inactivity by default. Waking up an idle compute takes 300-500ms, which can exceed default timeout settings in serverless environments.
+OWASP LLM02 "Insecure Output Handling" — 45% of AI-generated content may be susceptible to XSS when improperly handled. LLMs don't understand security context; they complete patterns.
+
+**Real-world evidence:**
+- CVE-2026-32626: AnythingLLM Desktop XSS via markdown-it image renderer
+- CVE-2026-1721: AI Playground XSS vulnerability
+- Markdown + SVG combination enables script execution
 
 **How to avoid:**
-1. **Increase connection timeouts** in your database client:
-   ```javascript
-   const sql = neon(process.env.DATABASE_URL, {
-     fetchOptions: { signal: AbortSignal.timeout(10000) }
-   });
-   ```
-
-2. **Implement retry logic with exponential backoff:**
-   ```javascript
-   import retry from 'async-retry';
-   const result = await retry(
-     async () => sql`SELECT * FROM emails WHERE id = ${id}`,
-     { retries: 3, minTimeout: 1000, randomize: true }
-   );
-   ```
-
-3. **Configure longer suspend timeout** (paid plans):
-   ```bash
-   curl -X PATCH "https://console.neon.tech/api/v2/projects/{project_id}/endpoints/{endpoint_id}" \
-     -d '{"endpoint":{"suspend_timeout_seconds":3600}}'
-   ```
-
-4. **Use same region** for app and database to minimize latency.
+1. **Sanitize all markdown** — Use `sanitize-html` or `DOMPurify` before rendering
+2. **Disable dangerous markdown features** — No inline HTML, no SVG, no `<script>` tags
+3. **Content Security Policy** — Implement CSP headers on Cloudflare Pages
+4. **Sandbox rendering** — Render user content in iframe with restricted permissions
+5. **Validate image URLs** — Only allow relative paths or whitelisted domains
 
 **Warning signs:**
-- First request of the day is slow, subsequent requests are fast
-- Intermittent timeout errors on low-traffic endpoints
-- "Connection timeout" errors in logs
+- Article content contains `<script>`, `<svg>`, or `javascript:` patterns
+- Unexpected network requests when viewing article preview
+- Browser console shows CSP violations
 
-**Phase to address:** Phase 2 (Newsletter Backend) - Implement from the start.
+**Phase to address:**
+Phase 2 (MCP Server) + Phase 3 (Content Workflow) — Shared responsibility
+
+**Recovery:**
+- MEDIUM cost — Requires identifying and removing malicious articles
+- Implement CSP immediately, then audit all AI-generated content
 
 ---
 
-### Pitfall 4: Environment Variables Not Loading Correctly
+### Pitfall 4: Metadata Extraction Failure
 
 **What goes wrong:**
-`process.env.DATABASE_URL` is undefined in production, or values differ between local dev and deployed environments.
+Claude fails to extract or incorrectly extracts:
+- Title (extracts first paragraph instead)
+- Date (uses current date instead of article date)
+- Tags (extracts words from body, not actual tags)
+- Excerpt (too long, too short, or missing)
 
 **Why it happens:**
-Cloudflare Workers don't use `process.env`. Environment variables must be configured through Wrangler and accessed via `cloudflare:workers` import.
+Frontmatter parsing is strict. YAML syntax errors (missing colons, improper indentation) cause parsing failures. LLMs don't reliably generate valid YAML frontmatter.
+
+**Real-world evidence:**
+- Astro docs: "Failed to parse Markdown frontmatter" errors from syntax mistakes
+- GitHub issues: YAML parsers cannot handle inline/flow-style arrays
+- Special characters in frontmatter values cause parsing crashes
 
 **How to avoid:**
-1. **Define non-sensitive vars in `wrangler.jsonc`:**
-   ```json
-   {
-     "vars": {
-       "MY_VARIABLE": "test"
-     }
-   }
-   ```
-
-2. **Set secrets via CLI (never in config):**
-   ```bash
-   npx wrangler secret put DATABASE_URL
-   ```
-
-3. **Create `.dev.vars` for local development:**
-   ```env
-   DATABASE_URL=postgresql://...
-   MY_VARIABLE=local_value
-   ```
-
-4. **Access correctly in code:**
-   ```javascript
-   import { env } from 'cloudflare:workers';
-   const dbUrl = env.DATABASE_URL;
-   ```
+1. **Explicit prompt structure** — Require Claude to confirm metadata before submission
+2. **Validation step** — Verify frontmatter parses correctly before database insert
+3. **Fallback values** — If extraction fails, prompt user for manual input
+4. **Preview workflow** — Always show preview before publish confirmation
+5. **Zod schema validation** — Define strict schema for metadata structure
 
 **Warning signs:**
-- "undefined" appearing where env values should be
-- Different behavior in `astro dev` vs production
-- Secrets visible in wrangler.jsonc (security issue!)
+- Astro build fails with "Failed to parse Markdown frontmatter"
+- Articles appear with missing titles or wrong dates
+- Tags show as comma-separated string instead of array
 
-**Phase to address:** Phase 1 (Foundation) - Set up env handling correctly from day one.
+**Phase to address:**
+Phase 3 (Content Workflow) — Metadata extraction is core workflow feature
+
+**Recovery:**
+- LOW cost — Manual metadata correction, re-run preview
+- Worst case: delete article and resubmit with correct metadata
 
 ---
 
-### Pitfall 5: Node.js Dependencies Failing in Edge Runtime
+### Pitfall 5: Mobile Network Interruption & Partial Submission
 
 **What goes wrong:**
-Packages using `require()`, `node:fs`, `node:path`, or other Node.js APIs throw errors in Cloudflare Workers.
+- User submits article on mobile
+- Network fails mid-request
+- Article partially saved (metadata without body, or body without metadata)
+- Retry creates duplicate article
+- User doesn't know if submission succeeded
 
 **Why it happens:**
-Cloudflare's `workerd` runtime doesn't support all Node.js APIs. CommonJS syntax and Node-specific modules fail.
+Mobile networks are unreliable. HTTP requests can fail at any point. Without idempotency keys and proper transaction handling, retries cause duplicates or partial data.
 
 **How to avoid:**
-1. **Enable Node.js compatibility flag:**
-   ```json
-   // wrangler.jsonc
-   {
-     "compatibility_flags": ["nodejs_compat"]
-   }
-   ```
-
-2. **Pre-compile problematic dependencies** via Vite:
-   ```javascript
-   // astro.config.mjs
-   function noExternalPlugin() {
-     return {
-       name: "optimize-dependencies",
-       configEnvironment(environment) {
-         if (environment !== 'client') {
-           return {
-             optimizeDeps: {
-               include: ["postcss"]
-             }
-           };
-         }
-       }
-     }
-   }
-   ```
-
-3. **Use `prerenderEnvironment: 'node'`** if prerendered pages need Node.js APIs:
-   ```javascript
-   adapter: cloudflare({
-     prerenderEnvironment: 'node',
-   }),
-   ```
+1. **Idempotency keys** — Generate unique ID client-side, include in all retry attempts
+2. **Atomic transactions** — Metadata and body insert in single database transaction
+3. **Confirmation response** — Return success only after full commit
+4. **Retry with backoff** — Client retries with exponential backoff, same idempotency key
+5. **Status query endpoint** — Allow checking if article with ID exists
 
 **Warning signs:**
-- `require is not defined` errors
-- `Cannot find module 'node:fs'` errors
-- Packages working locally but failing in production
+- Database shows articles with NULL body or missing required fields
+- Duplicate articles with same title/similar content
+- User reports "I don't know if it worked"
 
-**Phase to address:** Phase 1 (Foundation) - Configure compatibility early.
+**Phase to address:**
+Phase 4 (Mobile Workflow) — Mobile-specific failure mode
+
+**Recovery:**
+- MEDIUM cost — Identify partial/duplicate submissions, manual cleanup
+- Implement deduplication logic using idempotency keys
 
 ---
 
-### Pitfall 6: Server Island Hydration Failures
+### Pitfall 6: MCP Server Authentication Failure
 
 **What goes wrong:**
-React components wrapped in server islands throw `hydrate(...) is not available on the server` or show hydration mismatch errors.
+- MCP server deployed without authentication
+- Database credentials hardcoded in MCP server code
+- API keys committed to Git repository
+- Multiple "shadow MCP servers" operating without governance
 
 **Why it happens:**
-Server islands have specific constraints around when and how they hydrate. Lifecycle functions and browser APIs aren't available during SSR.
+492 MCP servers found with zero authentication (2026 research). Developers prioritize functionality over security during prototyping. MCP servers often run locally during development, authentication skipped.
+
+**Real-world evidence:**
+- 8,000+ MCP servers publicly exposed
+- OWASP MCP Top 10: "Lack of authentication standards"
+- Shadow MCP servers = major enterprise risk
 
 **How to avoid:**
-1. **Don't use browser APIs in server component body:**
-   ```javascript
-   // WRONG
-   const width = window.innerWidth;
-
-   // RIGHT - use client:* directive
-   <ClientComponent client:visible />
-   ```
-
-2. **Ensure server/client HTML matches:**
-   - Don't use `Date.now()` or `Math.random()` in render
-   - Don't conditionally render based on browser state
-
-3. **Use correct hydration directive:**
-   - `client:load` - hydrate immediately (interactive above fold)
-   - `client:visible` - hydrate when visible (below fold)
-   - `client:idle` - hydrate on browser idle (non-critical)
+1. **Never deploy without auth** — MCP server requires authentication from day 1
+2. **Environment variables** — All secrets via Cloudflare Pages Secrets, never hardcoded
+3. **API key rotation** — Document rotation process, test before deployment
+4. **Audit logging** — Log all MCP server operations with timestamp and source
+5. **Network isolation** — MCP server should not be publicly accessible if possible
 
 **Warning signs:**
-- "Hydration failed" console errors
-- UI "flash" or layout shift after load
-- Interactive elements not responding
+- MCP server URL accessible without credentials
+- Database logs show connections from unexpected IPs
+- Git repository contains `.env` files or hardcoded keys
 
-**Phase to address:** Phase 2 (Core UI) - Follow island patterns from the start.
+**Phase to address:**
+Phase 2 (MCP Server Development) — Authentication is foundational
+
+**Recovery:**
+- HIGH cost — Rotate all exposed credentials, audit access logs, potentially forensics
+- If database credentials exposed: immediate password rotation, connection string update
 
 ---
 
-### Pitfall 7: Neon Free Tier Limits Exceeded
+## Moderate Pitfalls
+
+### Pitfall 7: Astro Content Collection Build Time Explosion
 
 **What goes wrong:**
-Application stops working mid-month with database connection errors. No warning emails received.
-
-**Why it happens:**
-Neon free tier has strict limits (100 compute hours/month, 5GB data transfer) that can be exceeded without notification.
+Adding database-backed articles to Astro content collections causes build times to explode (30+ minutes for 200+ pages). Each build re-fetches all database content.
 
 **How to avoid:**
-1. **Monitor usage** in Neon Console dashboard
-2. **Use connection pooling** to reduce compute time
-3. **Cache frequently accessed data** to reduce queries
-4. **Set up billing alerts** if available
+- Use Astro's live content collections (Astro 5+) for dynamic content
+- Cache database queries between builds
+- Consider hybrid rendering: static portfolio, dynamic articles
+- Limit content collection size with pagination
 
-**Free Tier Limits:**
-| Resource | Limit |
-|----------|-------|
-| Compute Hours | 100 CU-hrs/month |
-| Data Transfer | 5 GB/month |
-| Storage | 0.5 GB |
+**Phase to address:**
+Phase 3 (Content Workflow) — Architecture decision
 
-**Warning signs:**
-- Sudden database connection failures
-- Errors only appearing late in the month
-- "Compute quota exceeded" messages
+---
 
-**Phase to address:** Ongoing - Monitor from Phase 2 onwards.
+### Pitfall 8: Neon Postgres Connection Exhaustion
+
+**What goes wrong:**
+Serverless functions (Cloudflare Pages Functions) open database connections without pooling. Under load, connection limit reached, subsequent requests fail.
+
+**How to avoid:**
+- Use Neon's pooled connection URL (`-pooler` suffix)
+- Use `@neondatabase/serverless` driver with connection pooling
+- Connect, query, close within same function invocation
+- Monitor connection usage in Neon dashboard
+
+**Phase to address:**
+Phase 2 (MCP Server Development) — Database connection architecture
+
+---
+
+### Pitfall 9: Missing Rollback Strategy for Migration
+
+**What goes wrong:**
+Notion migration fails halfway, leaving database in inconsistent state. No rollback plan. Production blog shows incomplete content or errors.
+
+**How to avoid:**
+- Backup Neon database before migration
+- Test migration on database branch (Neon feature)
+- Define rollback criteria before starting
+- Keep Notion database intact until production validation
+
+**Phase to address:**
+Phase 1 (Notion Migration) — Pre-migration preparation
+
+---
+
+### Pitfall 10: Cloudflare Pages Secrets Exposure
+
+**What goes wrong:**
+Environment variables hardcoded in code or committed to Git. Sensitive credentials (database URL, API keys) exposed in repository.
+
+**How to avoid:**
+- Use Cloudflare Pages Secrets for all production credentials
+- Never commit `.env` files
+- Use different secrets for preview vs. production deployments
+- Audit repository for accidentally committed secrets
+
+**Phase to address:**
+Phase 2 (MCP Server Deployment) — Deployment security
+
+---
+
+### Pitfall 11: Breaking Existing Blog During Migration
+
+**What goes wrong:**
+Migration script modifies existing database schema or data, breaking v1.0 newsletter functionality. Production users see errors when subscribing.
+
+**Why it happens:**
+Migration adds new tables/columns without considering existing dependencies. ALTER TABLE operations lock tables, causing timeouts.
+
+**How to avoid:**
+1. **Additive changes only** — New tables, don't modify existing newsletter table
+2. **Test on database branch** — Neon supports branching for testing
+3. **Migration in maintenance window** — Low-traffic time reduces impact
+4. **Verify existing functionality** — Test newsletter signup after migration
+
+**Phase to address:**
+Phase 1 (Notion Migration) — Database changes must be non-destructive
 
 ---
 
@@ -280,11 +327,15 @@ Neon free tier has strict limits (100 compute hours/month, 5GB data transfer) th
 
 | Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
 |----------|-------------------|----------------|-----------------|
-| Skip retry logic | Faster initial implementation | Users see timeouts on cold starts | Never for production |
-| Hardcode env values | Works locally immediately | Security risk, breaks in prod | Never |
-| Use `client:load` everywhere | Simpler mental model | Larger JS bundle, slower loads | MVP only, refactor before launch |
-| Skip TypeScript for DB queries | Faster prototyping | Runtime SQL errors | Never - use Drizzle from start |
-| Ignore cold start handling | Simpler code | 500ms+ latency on first request | Acceptable for internal tools |
+| Skip MCP authentication | Faster prototyping | Security breach, credential rotation | Never in production |
+| No input validation | Simpler MCP server code | SQL injection, XSS attacks | Never |
+| Direct SQL queries | Faster development | Injection vulnerabilities, maintenance nightmare | Never |
+| No idempotency keys | Simpler API | Duplicate articles on retry | Never for writes |
+| Skip content sanitization | Faster rendering | XSS vulnerabilities | Never |
+| No rollback plan | Faster migration start | Data loss, extended downtime | Never for production migration |
+| Hardcoded metadata | Skip extraction logic | Manual editing for every article | MVP only, fix immediately |
+| No preview step | Faster publishing | Publishing broken/malformed content | Never |
+| Modify existing tables | Simpler schema | Breaks v1.0 functionality | Never — additive only |
 
 ---
 
@@ -292,12 +343,14 @@ Neon free tier has strict limits (100 compute hours/month, 5GB data transfer) th
 
 | Integration | Common Mistake | Correct Approach |
 |-------------|----------------|------------------|
-| **Wrangler** | Running `wrangler pages dev` instead of `astro dev` | Use `astro dev` which now uses workerd runtime |
-| **Neon** | Using `pg` package instead of `@neondatabase/serverless` | Use the Neon serverless driver for edge compatibility |
-| **Environment vars** | Using `process.env` directly | Import from `cloudflare:workers` |
-| **Secrets** | Adding secrets to wrangler.jsonc | Use `wrangler secret put` CLI command |
-| **Images** | Using Sharp directly | Use `imageService: 'cloudflare-binding'` |
-| **Sessions** | Forgetting KV binding for session storage | KV is auto-provisioned, but verify binding exists |
+| Notion API | Bulk migration without rate limiting | Batch requests with delays, handle 429 errors |
+| Neon Postgres | Direct connections without pooling | Use pooled connection URL, manage connection lifecycle |
+| Drizzle ORM | Raw SQL with user input | Parameterized queries via Drizzle API |
+| Cloudflare Pages | Hardcoded secrets in code | Cloudflare Pages Secrets dashboard |
+| MCP Protocol | No authentication on server | OAuth 2.0 or API key authentication |
+| Astro Content Collections | Mixed live and build-time collections | Choose one approach, don't mix (issue #14088) |
+| Markdown Rendering | Direct rendering without sanitization | DOMPurify or sanitize-html before render |
+| v1.0 Newsletter Table | ALTER TABLE during migration | Create new articles table, leave newsletter untouched |
 
 ---
 
@@ -305,11 +358,11 @@ Neon free tier has strict limits (100 compute hours/month, 5GB data transfer) th
 
 | Trap | Symptoms | Prevention | When It Breaks |
 |------|----------|------------|----------------|
-| No connection pooling | Slow queries, connection timeouts | Use Neon's pooled connection string | 100+ concurrent users |
-| Missing cache headers | High compute usage, slow responses | Set appropriate cache headers | 1000+ daily users |
-| Large client bundles | Slow Time to Interactive (TTI) | Use `client:visible`, code splitting | Any production launch |
-| No pagination on articles | Slow page loads, high memory | Implement pagination (50 items/page) | 100+ articles |
-| Unoptimized images | Large payloads, slow LCP | Use Astro's image optimization | Any images in content |
+| Content collection rebuild on every deploy | 10-30+ minute builds | Live collections, caching, incremental builds | 100+ articles |
+| Database connection exhaustion | "Too many connections" errors | Connection pooling, connection lifecycle management | 10+ concurrent requests |
+| Unbounded article queries | Slow page loads, timeout errors | Pagination, limit queries | 1000+ articles |
+| No query indexing | Slow searches, filter operations | Add indexes on queried columns (tags, date) | 500+ articles |
+| Large markdown bodies | Slow page renders | Lazy load article content, excerpt-only lists | 50KB+ articles |
 
 ---
 
@@ -317,11 +370,13 @@ Neon free tier has strict limits (100 compute hours/month, 5GB data transfer) th
 
 | Mistake | Risk | Prevention |
 |---------|------|------------|
-| Database URL in git | Credential exposure | Use `wrangler secret put`, never commit `.dev.vars` |
-| No input validation on newsletter | SQL injection, spam | Validate email format server-side |
-| Missing rate limiting | Abuse, quota exhaustion | Implement per-IP rate limiting |
-| Exposing stack traces | Information disclosure | Use error boundaries, generic error messages |
-| Using neondb_owner role with RLS | Bypasses security policies | Create restricted role for app connections |
+| MCP server without authentication | Database breach, data theft, deletion | OAuth 2.0 or API keys, never deploy without auth |
+| SQL via string concatenation | SQL injection, data breach | Parameterized queries via Drizzle |
+| No content sanitization | XSS, malware injection | DOMPurify, CSP headers |
+| Hardcoded credentials | Credential exposure via Git | Cloudflare Pages Secrets |
+| No audit logging | Undetected breaches, no forensics | Log all MCP operations with timestamp/source |
+| Trust LLM input without validation | Injection attacks, data corruption | Zod schema validation, strict type checking |
+| Public MCP server endpoint | Unauthorized database access | Network isolation, authentication required |
 
 ---
 
@@ -329,23 +384,29 @@ Neon free tier has strict limits (100 compute hours/month, 5GB data transfer) th
 
 | Pitfall | User Impact | Better Approach |
 |---------|-------------|-----------------|
-| No loading states on async | Confusion, double-clicks | Show skeleton/spinner during data fetch |
-| Slow cold start without feedback | "Broken" perception | Show "warming up" message, implement retry |
-| No error feedback on form | User doesn't know if submitted | Show success/error toast messages |
-| Missing hover states | Feels unpolished | Add subtle transitions matching design system |
-| No mobile optimization | Poor experience on phones | Test touch targets, responsive grid |
+| No submission confirmation | User doesn't know if article published | Clear success/error response, status query endpoint |
+| No preview before publish | Published broken/malformed content | Preview step showing rendered article |
+| Metadata extraction errors silently saved | Wrong dates, missing tags | Validation step, require user confirmation |
+| Mobile workflow requires desktop fix | Can't publish from phone | Full mobile workflow, no desktop dependency |
+| No error messages | User confused when things fail | Specific error messages with recovery steps |
+| Broken v1.0 features after migration | Existing users lose newsletter | Test all v1.0 functionality after migration |
 
 ---
 
 ## "Looks Done But Isn't" Checklist
 
-- [ ] **Newsletter signup:** Often missing error handling — verify all error paths tested
-- [ ] **Environment variables:** Often hardcoded in dev — verify `.dev.vars` used locally
-- [ ] **Images:** Often work in dev but fail in prod — verify `imageService` config
-- [ ] **Sessions:** Often missing KV binding — verify `wrangler.jsonc` has kv_namespaces
-- [ ] **Secrets:** Often committed to git — run `git diff` before any commit
-- [ ] **Cold start handling:** Often skipped — verify retry logic implemented
-- [ ] **TypeScript types for env:** Often missing — run `wrangler types` after config changes
+Things that appear complete but are missing critical pieces:
+
+- [ ] **MCP Server Authentication:** Often missing authentication in production — verify API key validation works
+- [ ] **Content Sanitization:** Often missing sanitization step — verify XSS test cases pass
+- [ ] **Idempotency:** Often missing idempotency keys — verify retry creates single article
+- [ ] **Rollback Plan:** Often missing rollback documentation — verify backup exists, restore tested
+- [ ] **Metadata Validation:** Often missing Zod schema — verify malformed metadata rejected
+- [ ] **Connection Pooling:** Often using direct connection — verify pooled URL in production
+- [ ] **Audit Logging:** Often missing operation logs — verify MCP operations logged
+- [ ] **Preview Workflow:** Often missing preview step — verify preview renders before publish
+- [ ] **v1.0 Functionality:** Often breaks during migration — verify newsletter signup still works
+- [ ] **CSP Headers:** Often missing content security policy — verify CSP prevents inline scripts
 
 ---
 
@@ -353,47 +414,88 @@ Neon free tier has strict limits (100 compute hours/month, 5GB data transfer) th
 
 | Pitfall | Recovery Cost | Recovery Steps |
 |---------|---------------|----------------|
-| Wrong imageService config | LOW | Change adapter config, redeploy |
-| Missing Node.js compat | LOW | Add flag to wrangler.jsonc, redeploy |
-| Astro.locals.runtime usage | MEDIUM | Refactor to new import patterns |
-| No retry logic | MEDIUM | Add retry wrapper around all DB calls |
-| Hardcoded secrets | HIGH | Rotate all credentials, update all services |
-| Missing error boundaries | MEDIUM | Add error.tsx files at route levels |
+| Notion migration data loss | HIGH | 1. Restore from backup 2. Re-run migration 3. Manual verification |
+| SQL injection | HIGH | 1. Rotate credentials 2. Forensic analysis 3. Restore clean data 4. Fix code |
+| XSS in published article | MEDIUM | 1. Remove article 2. Audit all AI-generated content 3. Implement CSP |
+| Metadata extraction failure | LOW | 1. Edit metadata manually 2. Fix extraction prompt |
+| Partial mobile submission | MEDIUM | 1. Query for partial articles 2. Manual cleanup or completion |
+| MCP auth failure | HIGH | 1. Rotate all credentials 2. Audit access logs 3. Implement auth |
+| Build time explosion | MEDIUM | 1. Switch to live collections 2. Implement caching |
+| Breaking v1.0 features | HIGH | 1. Restore from backup 2. Use additive-only migrations 3. Re-test all features |
 
 ---
 
 ## Pitfall-to-Phase Mapping
 
+How roadmap phases should address these pitfalls:
+
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| Sharp incompatibility | Phase 1 (Foundation) | Build succeeds, images render in prod |
-| Astro.locals.runtime | Phase 1 (Foundation) | Env vars accessible via `cloudflare:workers` |
-| Neon cold starts | Phase 2 (Newsletter) | First request after idle completes < 3s |
-| Environment variables | Phase 1 (Foundation) | `wrangler types` generates correct types |
-| Node.js dependencies | Phase 1 (Foundation) | All imports resolve in `workerd` |
-| Server island hydration | Phase 2 (Core UI) | No hydration errors in console |
-| Free tier limits | Ongoing | Monthly usage check in Neon Console |
+| Notion migration data loss | Phase 1: Notion Migration | Count validation, checksum comparison, backup restore test |
+| MCP SQL injection | Phase 2: MCP Server | Security testing with malicious inputs, SQL injection test cases |
+| XSS via markdown | Phase 2 + Phase 3 | XSS test suite, CSP validation, sanitization verification |
+| Metadata extraction failure | Phase 3: Content Workflow | Frontmatter parsing tests, malformed input handling |
+| Mobile network interruption | Phase 4: Mobile Workflow | Idempotency testing, retry scenario testing |
+| MCP authentication failure | Phase 2: MCP Server | Auth required validation, credential rotation test |
+| Build time explosion | Phase 3: Content Workflow | Build time monitoring, load testing with 500+ articles |
+| Connection exhaustion | Phase 2: MCP Server | Connection pool monitoring, load testing |
+| Missing rollback strategy | Phase 1: Notion Migration | Rollback documentation, restore procedure test |
+| Secrets exposure | Phase 2: MCP Deployment | Repository audit, secrets scanning |
+| Breaking v1.0 features | Phase 1: Notion Migration | Full regression test of v1.0 features |
+
+---
+
+## Phase-Specific Warnings
+
+| Phase Topic | Likely Pitfall | Mitigation |
+|-------------|----------------|------------|
+| Notion Migration | Data loss, incomplete migration, breaking v1.0 | Pre-migration audit, staged batches, backup, regression test |
+| MCP Server Development | SQL injection, auth failure | Parameterized queries, mandatory authentication |
+| MCP Server Deployment | Secrets exposure | Cloudflare Pages Secrets, repo audit |
+| Content Workflow | Metadata extraction failure, XSS | Zod validation, content sanitization |
+| Mobile Workflow | Network interruption, duplicates | Idempotency keys, retry strategy |
+| Integration Testing | Mixed collection types | Use single approach (live or build-time) |
 
 ---
 
 ## Sources
 
-### Official Documentation
-- [Astro Cloudflare Adapter Docs](https://docs.astro.build/en/guides/integrations-guide/cloudflare/) - HIGH confidence
-- [Neon Connection Latency Docs](https://neon.com/docs/connect/connection-latency) - HIGH confidence
-- [Neon Serverless Driver Docs](https://neon.com/docs/serverless/serverless-driver) - HIGH confidence
-- [Cloudflare Workers Environment Variables](https://developers.cloudflare.com/workers/configuration/environment-variables/) - HIGH confidence
+**Notion Migration:**
+- [Notion Help: Common Errors](https://www.notion.com/help/notion-error-messages) — Rate limiting on duplicate operations (HIGH confidence)
+- [Reddit: Duplicate Pages Issue](https://www.reddit.com/r/Notion/comments/17r906h/) — Synced blocks creating duplicates (MEDIUM confidence)
+- [AWS: Migration Rollback Strategies](https://aws.amazon.com/blogs/migration-and-modernization/migration-rollback-strategies-when-your-migration-doesnt-go-as-planned/) — Rollback best practices (HIGH confidence)
 
-### GitHub Issues & Discussions
-- [Astro #9059 - Sharp incompatibility](https://github.com/withastro/astro/issues/9059) - HIGH confidence
-- [Astro #15796 - SSR build issues](https://github.com/withastro/astro/issues/15796) - HIGH confidence
-- [Astro #15946 - Server island runtime access](https://github.com/withastro/astro/issues/15946) - HIGH confidence
-- [Adapters #337 - Runtime environment access](https://github.com/withastro/adapters/issues/337) - HIGH confidence
+**MCP Server Security:**
+- [Xebia: MCP Development Best Practices](https://tech.xebia.ms/2025-07-28-MCP-Development-Best-Practices.html?section=security) — Input validation, injection prevention (MEDIUM confidence)
+- [Grizzly Peak Software: Security Considerations](https://www.grizzlypeaksoftware.com/library/security-considerations-for-mcp-servers-q30qi665) — LLM input validation (MEDIUM confidence)
+- [OWASP MCP Top 10](https://genai.owasp.org/) — Authentication, tool poisoning risks (HIGH confidence)
+- Snyk Research: 36% of AI agent skills contain flaws, 1,467 malicious payloads found (HIGH confidence)
 
-### Community Resources
-- [Reddit - Cloudflare support discussion](https://www.reddit.com/r/astrojs/comments/1k7gfv6/is_hosting_astro_on_cloudflare_fully_supported_no/) - MEDIUM confidence
-- [Neon Free Tier Limits Discussion](https://www.answeroverflow.com/m/1278237121207078935) - MEDIUM confidence
+**AI-Generated Content Security:**
+- [OWASP LLM02: Insecure Output Handling](https://genai.owasp.org/llmrisk2023-24/llm02-insecure-output-handling/) — 45% susceptible to XSS (HIGH confidence)
+- [CVE-2026-32626](https://nvd.nist.gov/vuln/detail/CVE-2026-32626) — AnythingLLM XSS via markdown (HIGH confidence)
+- [OWASP LLM Security Guide 2026](https://cloudinsight.cc/en/blog/llm-owasp-security) — Content sanitization requirements (MEDIUM confidence)
+
+**Markdown Metadata:**
+- [Astro Docs: Frontmatter Parsing Errors](https://docs.astro.build/en/guides/content-collections/) — Common syntax mistakes (HIGH confidence)
+- [GitHub: YAML Parser Issues](https://github.com/copilot-org/copilot-cli/issues/893) — Inline array parsing failures (MEDIUM confidence)
+
+**Mobile & Idempotency:**
+- [devmio: Idempotent API Design](https://devm.io/php/making-apis-idempotent-by-design) — Retry strategies, idempotency keys (MEDIUM confidence)
+- [Keyhole Software: Preventing Retry Storms](https://keyholesoftware.com/preventing-retry-storms-with-responsible-client-policies/) — Client-side retry policies (MEDIUM confidence)
+
+**Database & Infrastructure:**
+- [Neon Serverless Guide](https://pulse.support/kb/neon-postgres) — Cold start behavior (HIGH confidence)
+- [Drizzle ORM Serverless Guide](https://www.mintlify.com/drizzle-team/drizzle-orm/guides/serverless) — Connection pooling best practices (MEDIUM confidence)
+- Cloudflare Pages Secrets — Secrets management (general reference, HIGH confidence)
+
+**Astro Content Collections:**
+- [Astro Docs: Content Collections](https://docs.astro.build/en/guides/content-collections/) — Live vs build-time limitations (HIGH confidence)
+- [GitHub Issue #14088](https://github.com/withastro/astro/issues/14088) — Mixed collection types issue (HIGH confidence)
+- [Medium: Astro Build Optimization](https://medium.com/@mohdkhan.mk99/how-we-cut-astro-build-time-from-30-minutes-to-5-minutes-83-faster-115349727060) — Build time reduction strategies (MEDIUM confidence)
 
 ---
-*Pitfalls research for: Astro + Cloudflare + Neon deployment stack*
-*Researched: 2026-03-27*
+
+*Pitfalls research for: Cool Blog v1.1 Content Management & Automation*
+*Researched: 2026-03-30*
+*Confidence: MEDIUM (WebSearch-based, cross-verified with multiple sources)*

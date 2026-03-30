@@ -1,169 +1,179 @@
 # Project Research Summary
 
-**Project:** cool-blog
-**Domain:** Technical Blog / Portfolio with Bento Grid Design
-**Researched:** 2026-03-27
+**Project:** Cool Blog (Technical Blog/Portfolio with Bento Grid Layout)
+**Domain:** Developer-centric blog content management with MCP-powered automation
+**Researched:** 2026-03-27 (v1.0), 2026-03-30 (v1.1 additions)
 **Confidence:** HIGH
+
+---
 
 ## Executive Summary
 
-This project is a technical blog and portfolio site featuring a modern Bento Grid layout. Experts build such content-first sites using Astro for static generation with selective hydration, paired with a serverless database for dynamic features like newsletter subscriptions. The recommended approach uses Astro 5.x with React islands, Tailwind CSS 4.x for the Bento Grid styling, Neon Postgres for subscriber storage, and Cloudflare Pages for edge deployment.
+This is a production Astro blog (v1.0 already shipped) adding MCP-powered content management for a mobile-first publishing workflow. The core innovation is enabling developers to write articles on mobile via Claude, have AI extract metadata automatically, preview the rendered content, and publish directly to Neon Postgres - no Git, no desktop dependency.
 
-The architecture prioritizes performance through islands architecture - only hydrating interactive components while keeping content static. Key risks include Cloudflare edge runtime incompatibilities (Sharp images, Node.js APIs) and Neon cold start latency. These are mitigated by using the correct adapter configuration (`imageService: 'cloudflare-binding'`), enabling `nodejs_compat` flag, and implementing retry logic with increased timeouts for database calls.
+**Recommended approach:** Extend the existing Astro 6.1.1 + React 19 + Neon Postgres + Cloudflare Pages stack with three new packages: `@notionhq/client` for one-time migration, `gray-matter` for frontmatter parsing, and `@modelcontextprotocol/sdk` for the MCP server. Use Drizzle ORM (already installed) for database operations. The MCP server runs as a separate Node.js process, authenticating via OAuth2/JWT, and stores articles in a new `articles` table alongside the existing `subscribers` table.
+
+**Key risks:** MCP server security (36% of AI agent skills have flaws per Snyk), XSS via AI-generated markdown (45% susceptible per OWASP), and Notion migration data loss. Mitigation requires: mandatory authentication, content sanitization with DOMPurify, parameterized queries via Drizzle, staged migration batches, and rollback planning.
+
+---
 
 ## Key Findings
 
 ### Recommended Stack
 
-Astro 5.x is the clear choice for this content-first site, offering superior performance through static generation and island architecture. React 19 provides interactive components (newsletter form, search/filter) only where needed. Tailwind CSS 4.x with its new Vite plugin architecture enables rapid Bento Grid prototyping. Neon Postgres with pooled connections handles newsletter subscriptions in serverless environments.
+**v1.0 (Shipped & Validated):** Astro 6.1.1 + React 19 + TypeScript + Tailwind CSS 4.2 + Neon Postgres + Drizzle ORM, deployed to Cloudflare Pages.
+
+**v1.1 Additions (Content Management):**
+- `@notionhq/client` (2.2.x) - Official Notion API client for one-time migration
+- `gray-matter` (4.0.x) - Battle-tested YAML frontmatter parser (2M+ weekly downloads)
+- `@modelcontextprotocol/sdk` (1.0.x) - Official MCP TypeScript SDK with Zod integration
 
 **Core technologies:**
-- **Astro 5.x**: Static site generator with SSR capability - purpose-built for content sites, native Cloudflare adapter
-- **React 19.x**: Interactive components - use only for islands needing client-side state
-- **TypeScript 5.x**: Type safety - essential for content collection schemas and Drizzle queries
-- **Tailwind CSS 4.x**: Styling - official Bento Grid components, new Vite plugin architecture
-- **Neon Postgres**: Serverless database - edge-compatible, generous free tier, use pooled connections
-- **Drizzle ORM**: Type-safe database queries - lighter than Prisma, edge-native
+- **Astro 6.1.1:** Static site generator with SSR capability - Best-in-class content collections, island architecture, excellent Cloudflare support
+- **React 19:** Interactive components - Required for client-side interactivity (search, newsletter form)
+- **Neon Postgres:** Serverless database - Edge-compatible, generous free tier, pooled connections essential
+- **Drizzle ORM 0.45.x:** TypeScript ORM - Edge-native, tree-shakeable, parameterized queries prevent SQL injection
+- **Tailwind CSS 4.2:** Styling - Official Bento Grid components, new Vite plugin architecture
 
 ### Expected Features
 
 **Must have (table stakes):**
-- Responsive Bento Grid layout - users browse on mobile/tablet/desktop
-- Article list with metadata (title, date, excerpt, tags) - standard blog navigation
-- Individual article pages with syntax highlighting - technical audience expectation
-- SEO meta tags (OG tags, Twitter cards) - discoverability required
-- Newsletter subscription form - audience building CTA
+- Database schema for articles - Must store title, date, tags, excerpt, body, slug, status
+- MCP server with article creation tool - Single tool: `create_article(metadata, body)` writes to Neon
+- Metadata extraction via Claude - Prompt engineering to extract structured metadata from raw Markdown
+- Preview generation - Render article with extracted metadata using existing article components
+- Confirm/reject workflow - User reviews preview, confirms to publish or rejects to edit
+- Error handling - Clear messages for missing fields, invalid Markdown, database errors
 
 **Should have (competitive):**
-- Tab navigation (Portfolio/Articles) with SPA feel - smooth transitions
-- Tag-based article filtering - content discoverability
-- Dark/light card variants - visual interest without dark mode toggle
-- Grayscale-to-color hover effects - subtle interactivity
-- RSS feed - developer audience expects it
+- AI-assisted metadata extraction - Claude extracts title, date, tags, excerpt from raw Markdown automatically
+- MCP server integration - Enables publishing from any Claude instance (mobile, desktop, API)
+- Notion one-time migration - Import existing content from Notion database in single operation
+- Preview + confirm workflow - Show extracted metadata and rendered preview before committing
+- Zero-SQL content management - No direct database manipulation required
 
 **Defer (v2+):**
-- Comments system - adds moderation burden, use external links instead
-- Multi-language support - scope creep for v1
-- Full-text search - tag filtering provides baseline, add later if needed
-- Dark mode toggle - contradicts intentional light theme design
+- Article update workflow - Edit existing articles via same workflow
+- Draft management - Save drafts to database, list drafts, publish draft
+- Scheduled publishing - Set `published_at` date for future release
+- Image upload to CDN - Integrate with Cloudinary for image management
 
 ### Architecture Approach
 
-The architecture follows Astro's islands pattern: static content renders as zero-JS HTML, while only interactive elements (newsletter form, search/filter) hydrate as React islands. Content is managed through Astro Content Collections with Zod schemas for type safety. The Bento Grid uses pure CSS Grid with span variants - no JavaScript layout libraries needed.
+The architecture follows Astro's islands pattern: static content renders as zero-JS HTML, while only interactive elements (newsletter form, search/filter) hydrate as React islands. The v1.1 MCP server runs as a separate Node.js process, authenticating via OAuth2/JWT, and stores articles in a new `articles` table.
 
 **Major components:**
-1. **BentoGrid.astro** - CSS Grid container with responsive columns (4 col desktop -> 2 col tablet -> 1 col mobile)
-2. **BentoCard.astro variants** - Cards with span attributes (col-2, col-4, row-2) and dark/light variants
-3. **Content Collections** - Type-safe Markdown management with Zod validation at build time
-4. **NewsletterForm.tsx** - React island (`client:visible`) for email capture with client-side validation
-5. **SubscribeAPI** - Cloudflare Pages Function connecting to Neon via `@neondatabase/serverless`
+1. **MCP Server** - Accepts article content from Claude, validates via Zod, stores in Neon via Drizzle
+2. **Articles Table** - New Postgres table with slug, title, content, tags, draft status, timestamps
+3. **Notion Migration Script** - One-time import using `@notionhq/client`, runs locally, outputs to database
+4. **Preview Workflow** - Reuses existing ArticleContent component for rendering preview
 
 ### Critical Pitfalls
 
-1. **Sharp image service incompatibility** - Configure `imageService: 'cloudflare-binding'` in adapter from day one; Sharp uses native Node.js modules incompatible with Cloudflare's workerd runtime.
+1. **MCP Server SQL Injection** - LLMs generate unpredictable input. Prevention: Never trust LLM input, use Drizzle parameterized queries, Zod schema validation, principle of least privilege.
 
-2. **Astro.locals.runtime API removed (Astro 6)** - Use `import { env } from 'cloudflare:workers'` instead of `Astro.locals.runtime.env`; the old API was removed in the adapter refactor.
+2. **XSS via AI-Generated Markdown** - 45% of AI-generated content susceptible to XSS (OWASP LLM02). Prevention: Sanitize all markdown with DOMPurify, disable inline HTML/SVG, implement CSP headers.
 
-3. **Neon cold starts causing timeouts** - Implement retry logic with exponential backoff and increase connection timeouts (10s+); first requests after idle can take 300-500ms.
+3. **Notion Migration Data Loss** - Rate limiting causes incomplete migration, synced blocks create duplicates. Prevention: Pre-migration audit, staged batches of 10-20 articles with delays, checksum validation.
 
-4. **Environment variables not loading** - Cloudflare Workers don't use `process.env`; configure via `wrangler.jsonc` for non-secrets, `wrangler secret put` for secrets, access via `cloudflare:workers` import.
+4. **Metadata Extraction Failure** - YAML syntax errors cause parsing failures. Prevention: Explicit prompt structure, validation step before database insert, fallback to manual input.
 
-5. **Node.js dependencies failing in edge runtime** - Enable `nodejs_compat` flag in wrangler.jsonc; workerd doesn't support all Node.js APIs natively.
+5. **MCP Authentication Failure** - 492 MCP servers found with zero authentication (2026 research). Prevention: Never deploy without OAuth2/JWT auth, all secrets via environment variables.
+
+---
 
 ## Implications for Roadmap
 
-Based on research, suggested phase structure:
+Based on research, suggested phase structure for v1.1:
 
-### Phase 1: Foundation
-**Rationale:** Establish correct infrastructure configuration from the start to avoid costly refactoring. All subsequent phases depend on proper Astro + Cloudflare setup.
-**Delivers:** Working Astro project deployed to Cloudflare Pages with correct adapter configuration, global styles, and Bento Grid CSS.
-**Addresses:** Responsive design, fast page loads
-**Avoids:** Sharp incompatibility (Pitfall 1), Astro.locals.runtime issues (Pitfall 2), Environment variable issues (Pitfall 4), Node.js compat issues (Pitfall 5)
+### Phase 1: Database Schema & Notion Migration
+**Rationale:** Foundation must exist before MCP server or content workflow. Migration is independent and can run early.
+**Delivers:** Articles table in Neon Postgres, one-time Notion import script
+**Addresses:** Database schema, Notion migration data loss (with staged batches, backup)
+**Avoids:** Breaking v1.0 newsletter functionality (additive-only changes)
 
-### Phase 2: Content System
-**Rationale:** Content is the core value - establish Content Collections before building UI that depends on article data. Zod schemas ensure type safety.
-**Delivers:** Article and portfolio content collections with Zod schemas, article list page, individual article pages with syntax highlighting.
-**Uses:** Astro Content Collections, Shiki syntax highlighting
-**Implements:** BaseLayout.astro, ArticleLayout.astro, ArticleCard.astro, ArticleList.astro
+### Phase 2: MCP Server Development & Security
+**Rationale:** Core infrastructure for mobile publishing workflow. Security must be built in from day 1.
+**Delivers:** MCP server with `create_article` tool, OAuth2/JWT authentication, Zod validation, rate limiting
+**Uses:** `@modelcontextprotocol/sdk`, existing Drizzle ORM, existing Neon connection
+**Implements:** Parameterized queries, input validation, audit logging
+**Avoids:** SQL injection, authentication failure, shadow MCP servers
 
-### Phase 3: Bento Grid UI
-**Rationale:** Visual identity depends on Bento Grid - build after content system so portfolio cards can display real data. Uses pure CSS Grid.
-**Delivers:** Responsive Bento Grid with card variants (span-2, span-4, row-2), dark/light card variants, hover animations, grayscale-to-color image effects.
-**Uses:** Tailwind CSS 4.x, CSS Grid with data attributes
-**Implements:** BentoGrid.astro, BentoCard.astro, ImageCard.astro, TerminalCard.astro
+### Phase 3: Content Workflow & Metadata Extraction
+**Rationale:** User-facing workflow depends on MCP server being functional.
+**Delivers:** Metadata extraction prompts, preview generation (reuse ArticleContent component), confirm/reject UI, content sanitization
+**Uses:** `gray-matter` for frontmatter parsing, existing article rendering components
+**Implements:** XSS prevention via DOMPurify, CSP headers
+**Avoids:** Metadata extraction failure, XSS via AI-generated content
 
-### Phase 4: Interactivity
-**Rationale:** React islands depend on foundation being stable. Only hydrate what needs interactivity to maintain performance.
-**Delivers:** Tab navigation (Portfolio/Articles), newsletter subscription form with validation, tag-based article filtering.
-**Uses:** React 19, `client:visible` and `client:load` directives
-**Implements:** NewsletterForm.tsx, TabNavigation.astro, SearchFilter.tsx
-**Avoids:** Server island hydration failures (Pitfall 6)
-
-### Phase 5: Backend & Newsletter
-**Rationale:** Database integration comes after UI is stable. Newsletter storage requires Neon setup and API routes.
-**Delivers:** Neon Postgres database, subscribe API endpoint, email storage with duplicate prevention, error handling with user feedback.
-**Uses:** @neondatabase/serverless, Drizzle ORM, Cloudflare Pages Functions
-**Avoids:** Neon cold starts (Pitfall 3), Neon free tier limits (Pitfall 7)
-
-### Phase 6: Polish & Launch
-**Rationale:** SEO and performance optimization come after features are complete. Final verification before public launch.
-**Delivers:** SEO meta tags, sitemap, RSS feed, robots.txt, performance audit (Lighthouse), final deployment configuration.
-**Uses:** @astrojs/rss, @astrojs/sitemap
-**Implements:** SEOLayout.astro, rss.xml.js
+### Phase 4: Mobile Workflow & Integration Testing
+**Rationale:** End-to-end mobile publishing depends on all previous phases.
+**Delivers:** Idempotency keys, retry strategies, full regression test of v1.0 features, mobile workflow validation
+**Avoids:** Network interruption, partial submissions, breaking existing newsletter
 
 ### Phase Ordering Rationale
 
-- **Foundation first** because incorrect adapter configuration (imageService, nodejs_compat) causes cryptic failures that are expensive to debug later
-- **Content before UI** because content collections define data shapes that components consume; building UI without data leads to refactoring
-- **Bento Grid before interactivity** because the grid is the primary visual identity; islands add enhancements but don't define structure
-- **Backend last among features** because database integration is independent of static content; can launch with UI-only newsletter form
-- **Polish last** because SEO and performance audits require the complete application
+- **Database first** because MCP server and content workflow both require the articles table schema
+- **MCP server second** because it provides the core infrastructure for mobile publishing
+- **Content workflow third** because it depends on MCP server being functional
+- **Mobile workflow last** because it validates the complete end-to-end flow
 
 ### Research Flags
 
 Phases likely needing deeper research during planning:
-- **Phase 5:** Complex integration with Neon - may need to research specific error handling patterns and retry library options
+- **Phase 2:** MCP HTTP transport specifics - official SDK docs focus on stdio; HTTP transport for Claude mobile requires additional research
+- **Phase 3:** Claude mobile OAuth2 flow - how Claude mobile app authenticates with custom MCP servers
 
 Phases with standard patterns (skip research-phase):
-- **Phase 1:** Well-documented Astro + Cloudflare setup, official adapter documentation is comprehensive
-- **Phase 2:** Content Collections are thoroughly documented with examples in Astro docs
-- **Phase 3:** CSS Grid Bento patterns are standard CSS, Tailwind documentation covers all needs
-- **Phase 4:** React islands are well-documented, hydration patterns are standard
+- **Phase 1:** Well-documented Drizzle migrations and Notion API
+- **Phase 4:** Standard idempotency and retry patterns
+
+---
 
 ## Confidence Assessment
 
 | Area | Confidence | Notes |
 |------|------------|-------|
-| Stack | HIGH | All technologies have excellent official documentation, widely adopted, stable APIs |
-| Features | HIGH | Bento Grid trends well-documented, feature priorities clear from competitor analysis |
-| Architecture | HIGH | Islands architecture is mature pattern, Astro + Cloudflare integration well-supported |
-| Pitfalls | HIGH | Pitfalls sourced from official docs, GitHub issues, and community discussions with verification |
+| Stack | HIGH | All v1.0 packages shipped and validated; v1.1 additions are official SDKs with comprehensive docs |
+| Features | HIGH | Based on official docs, established tools (gray-matter 2M+ downloads), industry CMS patterns |
+| Architecture | HIGH | Official Astro/Neon/Cloudflare docs, MCP SDK reference implementations available |
+| Pitfalls | MEDIUM | WebSearch-based research, cross-verified with multiple sources (OWASP, Snyk, CVE databases) |
 
 **Overall confidence:** HIGH
 
 ### Gaps to Address
 
-- **Neon free tier monitoring:** No automated alerts mentioned - implement manual monitoring or third-party alerting during Phase 5
-- **Image optimization strategy:** While `cloudflare-binding` solves Sharp incompatibility, specific image sizing/optimization decisions deferred to implementation
-- **Rate limiting for newsletter:** Security research identified need but implementation pattern not specified - research during Phase 5 planning
+- **MCP HTTP transport specifics:** Official SDK docs focus on stdio; HTTP transport for Claude mobile requires additional research during Phase 2 implementation
+- **Claude mobile OAuth2 flow:** How Claude mobile app authenticates with custom MCP servers - may need Claude Desktop documentation review
+- **Astro live collections with database:** Mixed collection types (file-based + database) has known issues (GitHub #14088) - choose single approach during Phase 3
+
+---
 
 ## Sources
 
 ### Primary (HIGH confidence)
 - [Astro Documentation](https://docs.astro.build) - Core framework, content collections, Cloudflare adapter
-- [Tailwind CSS + Astro Guide](https://tailwindcss.com/docs/installation/framework-guides/astro) - Official integration
 - [Neon Documentation](https://neon.com/docs) - Serverless driver, connection pooling, cold start handling
-- [Cloudflare Workers Docs](https://developers.cloudflare.com/workers/) - Environment variables, runtime compatibility
 - [Drizzle ORM Docs](https://orm.drizzle.team/docs) - Neon integration patterns
+- [Model Context Protocol](https://modelcontextprotocol.io/) - Official MCP documentation, SDK reference
+- [Notion JavaScript SDK](https://github.com/makenotion/notion-sdk-js) - Official GitHub repository
+- [gray-matter (NPM)](https://www.npmjs.com/package/gray-matter) - 2M+ weekly downloads
 
 ### Secondary (MEDIUM confidence)
-- [Bento Grid Design Guide 2026](https://landdding.com/blog/blog-bento-grid-design-guide) - Design trends and implementation patterns
-- [Patterns.dev - Islands Architecture](https://www.patterns.dev/vanilla/islands-architecture/) - Architectural pattern explanation
-- [GitHub Issues - Astro](https://github.com/withastro/astro/issues) - Sharp incompatibility, SSR build issues
+- [OWASP MCP Top 10](https://genai.owasp.org/) - Authentication, tool poisoning risks
+- [OWASP LLM02: Insecure Output Handling](https://genai.owasp.org/llmrisk2023-24/llm02-insecure-output-handling/) - XSS statistics
+- [Snyk Research](https://snyk.io) - 36% AI agent skills contain flaws
+- [Xebia: MCP Development Best Practices](https://tech.xebia.ms/2025-07-28-MCP-Development-Best-Practices.html) - Security patterns
+- [Medium: Astro Build Optimization](https://medium.com/@mohdkhan.mk99/how-we-cut-astro-build-time-from-30-minutes-to-5-minutes-83-faster-115349727060) - Build time strategies
+
+- [Notion Help: Common Errors](https://www.notion.com/help/notion-error-messages) - Rate limiting errors
+- [Whalesync Blog: Export Notion to Markdown](https://www.whalesync.com/blog/how-to-export-notion-pages-to-markdown) - Migration tutorial
+
+- [devmio: Idempotent API Design](https://devm.io/php/making-apis-idempotent-by-design) - Retry strategies
 
 ### Tertiary (LOW confidence)
-- [Reddit - Cloudflare support discussion](https://www.reddit.com/r/astrojs/comments/1k7gfv6/) - Community experiences, unverified
+- [Reddit: Notion Duplicate Pages](https://www.reddit.com/r/Notion/comments/17r906h/) - Synced blocks issue (unverified)
 
 ---
-*Research completed: 2026-03-27*
+*Research completed: 2026-03-30*
 *Ready for roadmap: yes*
