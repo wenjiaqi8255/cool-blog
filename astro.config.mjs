@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://kernel-panic.dev',
@@ -17,7 +18,11 @@ export default defineConfig({
     }
   }),
   integrations: [
-    react()
+    react(),
+    sitemap({
+      filter: (page) => !page.includes('/draft/'),
+      customPages: ['/articles/'],
+    })
   ],
   vite: {
     ssr: {
