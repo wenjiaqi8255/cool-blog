@@ -8,3 +8,25 @@ export const subscribers = pgTable('subscribers', {
   confirmationSentAt: timestamp('confirmation_sent_at'),
   confirmationToken: text('confirmation_token'),
 });
+
+// Article status enum values (Postgres doesn't have native enum in Drizzle, use text with constraint)
+export const ArticleStatus = {
+  DRAFT: 'draft',
+  PUBLISHED: 'published'
+} as const;
+
+export type ArticleStatusType = typeof ArticleStatus[keyof typeof ArticleStatus];
+
+export const articles = pgTable('articles', {
+  id: serial('id').primaryKey(),
+  title: text('title').notNull(),
+  slug: text('slug').notNull().unique(), // URL-safe identifier, unique constraint
+  date: timestamp('date').notNull(), // Publication date
+  tags: text('tags').array(), // PostgreSQL array type for tags
+  excerpt: text('excerpt'), // Short description for article cards
+  body: text('body').notNull(), // Full Markdown content
+  status: text('status').notNull().default(ArticleStatus.DRAFT), // 'draft' | 'published'
+  deleted_at: timestamp('deleted_at'), // Soft delete (NULL = visible, non-NULL = hidden)
+  created_at: timestamp('created_at').defaultNow().notNull(),
+  updated_at: timestamp('updated_at').defaultNow().notNull(),
+});
