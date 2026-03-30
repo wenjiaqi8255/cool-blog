@@ -84,7 +84,7 @@ Plans:
 
 Plans:
 - [x] 04-01-PLAN.md — Meta tags, Open Graph, and Twitter Cards
-- [ ] 04-02-PLAN.md — RSS feed generation
+- [x] 04-02-PLAN.md — RSS feed generation
 - [ ] 04-03-PLAN.md — Sitemap and robots.txt
 - [ ] 04-04-PLAN.md — Dynamic OG image generation
 
