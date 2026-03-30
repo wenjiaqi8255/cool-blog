@@ -1,82 +1,84 @@
-# Requirements: Cool Blog — Bento Grid Portfolio
+# Requirements: Cool Blog v1.1 — Content Management & Automation
 
-**Defined:** 2026-03-27
-**Core Value:** Visual impact meets content depth — Portfolio showcases work through striking visuals; Articles provide deep technical content with excellent readability.
+**Defined:** 2026-03-30
+**Core Value:** Visual impact meets content depth — now with mobile-first publishing via Claude
 
----
+## v1.1 Requirements
 
-## v1 Requirements
+Requirements for content management milestone. Each maps to roadmap phases.
 
-Requirements for initial release. Each maps to roadmap phases.
+### Notion Migration
 
-### Portfolio (Portfolio Tab)
+- [ ] **MIGR-01**: User can connect to Notion database via API key
+- [ ] **MIGR-02**: System converts Notion pages to Markdown format
+- [ ] **MIGR-03**: System extracts metadata from Notion properties (Title, Date, Tags)
+- [ ] **MIGR-04**: System imports all published articles into Neon Postgres
+- [ ] **MIGR-05**: User receives migration summary (article count, success/errors)
 
-- [x] **PORT-01**: Bento Grid layout with varying card sizes (span-2, span-4, row-2)
-- [ ] **PORT-02**: Dark and light card variants with smooth hover transitions
-- [ ] **PORT-03**: Image cards with grayscale-to-color effect on hover
-- [ ] **PORT-04**: Terminal/code block styling within cards
-- [x] **PORT-05**: Tab navigation between Portfolio and Articles views
+### MCP Server
 
-### Articles (Articles Tab)
+- [ ] **MCP-01**: Claude can create new article via `create_article(metadata, body)` tool
+- [ ] **MCP-02**: Claude can list articles via `list_articles(status?)` tool
+- [ ] **MCP-03**: Claude can retrieve article via `get_article(slug)` tool
+- [ ] **MCP-04**: Claude can soft-delete article via `delete_article(slug)` tool (adds `deleted_at` field)
+- [ ] **MCP-05**: MCP server authenticates requests (OAuth2/JWT or API key)
+- [ ] **MCP-06**: All MCP tools validate input via Zod schemas
+- [ ] **MCP-07**: MCP server uses Drizzle ORM for database operations (parameterized queries)
 
-- [ ] **ART-01**: Article list with title, excerpt, date, and tags
-- [ ] **ART-02**: Individual article page with full content rendering
-- [x] **ART-03**: Markdown content from Git-managed files
-- [ ] **ART-04**: Syntax highlighting for code blocks
-- [ ] **ART-05**: Search and filter functionality (by tag, title)
+### Content Workflow
 
-### Newsletter (Newsletter tab)
+- [ ] **WORK-01**: Claude extracts metadata (title, date, tags, excerpt) from raw Markdown
+- [ ] **WORK-02**: Claude generates URL-safe slug from title
+- [ ] **WORK-03**: User sees preview of rendered article before publishing
+- [ ] **WORK-04**: User confirms or rejects article before database write
+- [ ] **WORK-05**: User can save article as draft (status: 'draft')
+- [ ] **WORK-06**: User can publish draft article (status: 'published')
+- [ ] **WORK-07**: System validates required fields (title, date, body) before publish
 
-- [x] **NEWS-01**: Newsletter subscription form with email capture
-- [x] **NEWS-02**: Email storage in Neon Postgres database
-- [x] **NEWS-03**: Subscription confirmation and thank you message
-- [x] **NEWS-04**: Resend confirmation email to subscriber
+### Database
 
-### Deployment (Deployment Tab)
+- [ ] **DATA-01**: Database has `articles` table with: id, title, slug, date, tags, excerpt, body, status, deleted_at, created_at, updated_at
+- [ ] **DATA-02**: Slugs are unique across all articles
+- [ ] **DATA-03**: Soft deletes use `deleted_at` timestamp (NULL = visible, non-NULL = hidden)
+- [ ] **DATA-04**: Article status is enum: 'draft' | 'published'
+- [ ] **DATA-05**: Tags stored as array in database
+- [ ] **DATA-06**: Migration does not affect existing `subscribers` table
 
-- [x] **DEPLOY-01**: Deployment to Cloudflare Pages
-- [x] **DEPLOY-02**: Custom domain support (optional)
-- [x] **DEPLOY-03**: Environment variables configuration
-- [ ] **DEPLOY-04**: HTTPS with Let's Encrypt (SSL certificates auto, custom domain DNS)
+### Astro Integration
 
-### SEO & Metadata (SEO Tab)
+- [ ] **ASTRO-01**: Blog displays articles from Neon Postgres database
+- [ ] **ASTRO-02**: Article list page shows all published (non-deleted) articles
+- [ ] **ASTRO-03**: Individual article page renders Markdown body with syntax highlighting
+- [ ] **ASTRO-04**: Existing Markdown file articles are NOT displayed (database-only mode)
+- [ ] **ASTRO-05**: Article queries filter out soft-deleted articles (WHERE deleted_at IS NULL)
+- [ ] **ASTRO-06**: Article queries filter by status (WHERE status = 'published' for public pages)
 
-- [x] **SEO-01**: Meta tags, Open Graph, Twitter Cards
-- [ ] **SEO-02**: RSS feed generation
-- [ ] **SEO-03**: Sitemap.xml for search engines (clean URLs, mobile-responsive design)
+### Error Handling
 
-### Responsive (Responsive Tab)
+- [ ] **ERR-01**: System returns clear error when title extraction fails
+- [ ] **ERR-02**: System returns clear error when slug collision detected
+- [ ] **ERR-03**: System returns clear error when database write fails
+- [ ] **ERR-04**: System returns clear error when Notion API rate-limited
+- [ ] **ERR-05**: System validates Markdown format before processing
 
-- [x] **RESP-01**: Fully responsive design (mobile, tablet, desktop)
-- [x] **RESP-02**: Touch-friendly interactions on mobile (swipe gestures, tap targets, readable typography)
-
-## v2 Requirements
+## v1.2 Requirements
 
 Deferred to future release. Tracked but not in current roadmap.
 
-### Analytics
+### Article Editing
 
-- **ANAL-01**: Page view tracking
-- **ANAL-02**: Article read time analytics
-- **ANAL-03**: Newsletter conversion rate
+- **EDIT-01**: Claude can update existing article via `update_article(slug, metadata?, body?)` tool
+- **EDIT-02**: User can edit article metadata (title, tags, excerpt)
+- **EDIT-03**: User can edit article body content
+- **EDIT-04**: System preserves original creation date on update
 
-### Enhanced Content
+### Advanced Features
 
-- **CONT-05**: Table of contents for long articles
-- **CONT-06**: Related articles suggestions
-- **CONT-07**: Article series/grouping
-
-### Social
-
-- **SOC-01**: Social share buttons
-- **SOC-02**: Comment system integration (third-party)
-- **SOC-03**: Webmentions support
-
-### Performance
-
-- **PERF-01**: Image lazy loading optimization
-- **PERF-02**: Critical CSS inlining
-- **PERF-03**: Service worker for offline reading
+- **ADV-01**: Bulk operations for article import/export
+- **ADV-02**: Article version history tracking
+- **ADV-03**: Scheduled publishing (set `published_at` future date)
+- **ADV-04**: Full-text search across article body
+- **ADV-05**: Article analytics (view count, reading time)
 
 ## Out of Scope
 
@@ -84,15 +86,16 @@ Explicitly excluded. Documented to prevent scope creep.
 
 | Feature | Reason |
 |---------|--------|
-| User authentication | Newsletter only requires email, no accounts |
-| Comments system | Deferred to v2, adds moderation complexity |
-| Dark mode toggle | Intentional light theme; dark cards provide contrast within portfolio view |
-| Mobile app | v1 is web-first, mobile later |
-| OAuth login | Not needed for newsletter-only subscription |
-| CMS backend | Markdown files in repo, no API needed |
-| Table of contents | v1 scope control, performance issues |
-| Service Worker | Complexity for v1, defer to v2 |
-| Social features | Deferred to v2+ |
+| Real-time collaborative editing | CRDT complexity overkill for single-author blog |
+| Rich text editor | Markdown-only is acceptable for developer blog |
+| Admin dashboard UI | MCP server provides natural language interface |
+| Image upload system | Images stay in Git repository (v1.0 approach) |
+| Multi-author support | Single-author blog aligned with newsletter-only auth |
+| OAuth user login | No user accounts needed - newsletter-only model |
+| Article export to Git | Database-only mode selected |
+| Hybrid DB + Git files | Database-only mode selected |
+| Scheduled publishing | Manual publish sufficient for MVP |
+| Comments system | Deferred to v2 (third-party service integration) |
 
 ## Traceability
 
@@ -100,35 +103,49 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| PORT-01 | Phase 1 | Complete |
-| PORT-02 | Phase 1 | Pending |
-| PORT-03 | Phase 1 | Pending |
-| PORT-04 | Phase 1 | Pending |
-| PORT-05 | Phase 1 | Complete |
-| RESP-01 | Phase 1 | Complete |
-| RESP-02 | Phase 1 | Complete |
-| DEPLOY-01 | Phase 1 | Complete |
-| DEPLOY-02 | Phase 1 | Complete |
-| DEPLOY-03 | Phase 1 | Complete |
-| DEPLOY-04 | Phase 1 | Pending |
-| ART-01 | Phase 2 | Pending |
-| ART-02 | Phase 2 | Pending |
-| ART-03 | Phase 2 | Complete |
-| ART-04 | Phase 2 | Pending |
-| ART-05 | Phase 2 | Pending |
-| NEWS-01 | Phase 3 | Complete |
-| NEWS-02 | Phase 3 | Complete |
-| NEWS-03 | Phase 3 | Complete |
-| NEWS-04 | Phase 3 | Complete |
-| SEO-01 | Phase 4 | Complete |
-| SEO-02 | Phase 4 | Pending |
-| SEO-03 | Phase 4 | Pending |
+| MIGR-01 | Phase 1 | Pending |
+| MIGR-02 | Phase 1 | Pending |
+| MIGR-03 | Phase 1 | Pending |
+| MIGR-04 | Phase 1 | Pending |
+| MIGR-05 | Phase 1 | Pending |
+| DATA-01 | Phase 1 | Pending |
+| DATA-02 | Phase 1 | Pending |
+| DATA-03 | Phase 1 | Pending |
+| DATA-04 | Phase 1 | Pending |
+| DATA-05 | Phase 1 | Pending |
+| DATA-06 | Phase 1 | Pending |
+| MCP-01 | Phase 2 | Pending |
+| MCP-02 | Phase 2 | Pending |
+| MCP-03 | Phase 2 | Pending |
+| MCP-04 | Phase 2 | Pending |
+| MCP-05 | Phase 2 | Pending |
+| MCP-06 | Phase 2 | Pending |
+| MCP-07 | Phase 2 | Pending |
+| WORK-01 | Phase 3 | Pending |
+| WORK-02 | Phase 3 | Pending |
+| WORK-03 | Phase 3 | Pending |
+| WORK-04 | Phase 3 | Pending |
+| WORK-05 | Phase 3 | Pending |
+| WORK-06 | Phase 3 | Pending |
+| WORK-07 | Phase 3 | Pending |
+| ERR-01 | Phase 3 | Pending |
+| ERR-02 | Phase 3 | Pending |
+| ERR-03 | Phase 3 | Pending |
+| ERR-05 | Phase 3 | Pending |
+| ASTRO-01 | Phase 4 | Pending |
+| ASTRO-02 | Phase 4 | Pending |
+| ASTRO-03 | Phase 4 | Pending |
+| ASTRO-04 | Phase 4 | Pending |
+| ASTRO-05 | Phase 4 | Pending |
+| ASTRO-06 | Phase 4 | Pending |
+| ERR-04 | Phase 1 | Pending |
 
 **Coverage:**
-- v1 requirements: 23 total
-- Mapped to phases: 23
-- Unmapped: 0
+- v1.1 requirements: 36 total
+- Mapped to phases: 36
+- Unmapped: 0 ✓
 
 ---
-*Requirements defined: 2026-03-27*
-*Last updated: 2026-03-27 after roadmap creation*
+
+*Requirements defined: 2026-03-30*
+*Last updated: 2026-03-30 after milestone scoping*
