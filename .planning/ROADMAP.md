@@ -85,7 +85,7 @@ Plans:
 Plans:
 - [x] 04-01-PLAN.md — Meta tags, Open Graph, and Twitter Cards
 - [x] 04-02-PLAN.md — RSS feed generation
-- [ ] 04-03-PLAN.md — Sitemap and robots.txt
+- [x] 04-03-PLAN.md — Sitemap and robots.txt
 - [ ] 04-04-PLAN.md — Dynamic OG image generation
 
 ## Progress
@@ -98,7 +98,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 | 1. Foundation & Bento Grid | 5/5 | Complete | 2026-03-28 |
 | 2. Content System | 4/4 | Complete | 2026-03-28 |
 | 3. Newsletter & Backend | 3/3 | Complete   | 2026-03-30 |
-| 4. SEO & Launch | 1/4 | In Progress | 2026-03-30 |
+| 4. SEO & Launch | 3/4 | In Progress | 2026-03-30 |
 
 ---
 *Roadmap created: 2026-03-27*
