@@ -70,7 +70,7 @@ Plans:
 Plans:
 - [x] 03-01-PLAN.md — Neon Postgres database setup with Drizzle ORM
 - [x] 03-02-PLAN.md — Newsletter subscription form (React island) and API endpoints
-- [ ] 03-04-PLAN.md — Confirmation and resend email functionality
+- [x] 03-04-PLAN.md — Confirmation and resend email functionality
 
 ### Phase 4: SEO & Launch
 **Goal**: The site is discoverable by search engines and social platforms with proper metadata and feeds.
@@ -80,13 +80,13 @@ Plans:
   1. User sharing a link on social media sees proper Open Graph and Twitter Card previews
   2. User can subscribe to an RSS feed of articles
   3. Search engines can crawl the site via sitemap.xml
-**Plans**: TBD
+**Plans**: 4 plans in 3 waves
 
 Plans:
-- [ ] 04-01: Meta tags, Open Graph, and Twitter Cards
-- [ ] 04-02: RSS feed generation
-- [ ] 04-03: Sitemap and robots.txt
-- [ ] 04-04: Final launch verification
+- [ ] 04-01-PLAN.md — Meta tags, Open Graph, and Twitter Cards
+- [ ] 04-02-PLAN.md — RSS feed generation
+- [ ] 04-03-PLAN.md — Sitemap and robots.txt
+- [ ] 04-04-PLAN.md — Dynamic OG image generation
 
 ## Progress
 
