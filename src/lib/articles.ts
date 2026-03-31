@@ -1,6 +1,6 @@
 import { db } from '../db';
 import { articles } from '../db/schema';
-import { eq, and, isNull, isNotNull, desc } from 'drizzle-orm';
+import { eq, and, isNull, isNotNull, desc, sql } from 'drizzle-orm';
 
 /**
  * Article interface matching database schema
@@ -54,4 +54,23 @@ export async function getPublishedArticleBySlug(slug: string): Promise<Article |
     .limit(1);
 
   return result[0];
+}
+
+/**
+ * Returns all published, non-deleted articles with portfolio tag
+ */
+export async function listPortfolioArticles(): Promise<Article[]> {
+  const result = await db
+    .select()
+    .from(articles)
+    .where(
+      and(
+        eq(articles.status, 'published'),
+        isNull(articles.deleted_at),
+        sql`${articles.tags} @> '{"portfolio"}'`
+      )
+    )
+    .orderBy(desc(articles.date));
+
+  return result;
 }
