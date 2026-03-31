@@ -12,7 +12,8 @@
     "deploy": "astro build && wrangler pages deploy ./dist/client --project-name=cool-blog --branch=main",
     "deploy:preview": "astro build && wrangler pages deploy ./dist/client --project-name=cool-blog --branch=preview",
     "cf:login": "wrangler login",
-    "cf:whoami": "wrangler whoami"
+    "cf:whoami": "wrangler whoami",
+    "migrate:notion": "tsx scripts/migrate-notion.ts"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.1.4",
@@ -22,10 +23,12 @@
     "@astrojs/tailwind": "^6.0.2",
     "@fontsource/inter": "^5.0.0",
     "@fontsource/jetbrains-mono": "^5.0.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "@neondatabase/serverless": "^1.0.2",
     "astro": "^6.1.1",
     "drizzle-orm": "^0.45.2",
     "fuse.js": "^7.1.0",
+    "gray-matter": "^4.0.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "resend": "^6.9.4",
@@ -37,11 +40,14 @@
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.0.0",
+    "@types/node": "^20.11.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "csv-parse": "^5.5.3",
     "drizzle-kit": "^0.31.10",
     "happy-dom": "^17.0.0",
     "jsdom": "^26.0.0",
+    "tsx": "^4.7.0",
     "vitest": "^3.0.0"
   }
 }
