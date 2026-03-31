@@ -3,7 +3,7 @@
 ## Milestones
 
 - ✅ **v1.0 MVP** — Phases 1-4 (shipped 2026-03-30)
-- 🚧 **v1.1 Content Management & Automation** — Phases 5-8 (in progress)
+- ✅ **v1.1 Content Management & Automation** — Phases 5-6 complete, Phases 7-8 remaining
 
 ## Phases
 
@@ -52,12 +52,12 @@ Plans:
 
 </details>
 
-### 🚧 v1.1 Content Management & Automation (In Progress)
+### ✅ v1.1 Content Management & Automation (Phase 5-6 Complete)
 
 **Milestone Goal:** Streamline blog content workflow with automated publishing via MCP server and one-time Notion migration
 
-- [ ] **Phase 5: Database Schema & Notion Migration** - Articles table foundation and one-time content import
-- [ ] **Phase 6: MCP Server Development** - Claude-accessible article management tools
+- [x] **Phase 5: Database Schema & Notion Migration** - Articles table foundation and one-time content import
+- [x] **Phase 6: MCP Server Development** - Claude-accessible article management tools (COMPLETE)
 - [ ] **Phase 7: Content Workflow** - Metadata extraction, preview, and publishing workflow
 - [ ] **Phase 8: Astro Integration** - Database-driven article rendering
 
@@ -93,7 +93,7 @@ Plans:
 
 Plans:
 - [x] 06-01: MCP server setup with authentication
-- [ ] 06-02: Article CRUD tools with Drizzle ORM
+- [x] 06-02: Article CRUD tools with Drizzle ORM
 
 ### Phase 7: Content Workflow
 **Goal**: User can submit Markdown, preview rendered article, and publish to database
@@ -140,7 +140,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 3. Newsletter & Backend | v1.0 | 3/3 | Complete | 2026-03-30 |
 | 4. SEO & Launch | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 6. MCP Server Development | v1.1 | 1/2 | In progress | - |
+| 6. MCP Server Development | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 7. Content Workflow | v1.1 | 0/3 | Not started | - |
 | 8. Astro Integration | v1.1 | 0/2 | Not started | - |
 

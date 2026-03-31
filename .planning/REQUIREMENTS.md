@@ -17,13 +17,13 @@ Requirements for content management milestone. Each maps to roadmap phases.
 
 ### MCP Server
 
-- [ ] **MCP-01**: Claude can create new article via `create_article(metadata, body)` tool
-- [ ] **MCP-02**: Claude can list articles via `list_articles(status?)` tool
-- [ ] **MCP-03**: Claude can retrieve article via `get_article(slug)` tool
-- [ ] **MCP-04**: Claude can soft-delete article via `delete_article(slug)` tool (adds `deleted_at` field)
+- [x] **MCP-01**: Claude can create new article via `create_article(metadata, body)` tool
+- [x] **MCP-02**: Claude can list articles via `list_articles(status?)` tool
+- [x] **MCP-03**: Claude can retrieve article via `get_article(slug)` tool
+- [x] **MCP-04**: Claude can soft-delete article via `delete_article(slug)` tool (adds `deleted_at` field)
 - [x] **MCP-05**: MCP server authenticates requests (OAuth2/JWT or API key)
 - [x] **MCP-06**: All MCP tools validate input via Zod schemas
-- [ ] **MCP-07**: MCP server uses Drizzle ORM for database operations (parameterized queries)
+- [x] **MCP-07**: MCP server uses Drizzle ORM for database operations (parameterized queries)
 
 ### Content Workflow
 
@@ -115,13 +115,13 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MIGR-04 | Phase 5 | Complete |
 | MIGR-05 | Phase 5 | Complete |
 | ERR-04 | Phase 5 | Pending |
-| MCP-01 | Phase 6 | Pending |
-| MCP-02 | Phase 6 | Pending |
-| MCP-03 | Phase 6 | Pending |
-| MCP-04 | Phase 6 | Pending |
+| MCP-01 | Phase 6 | Complete |
+| MCP-02 | Phase 6 | Complete |
+| MCP-03 | Phase 6 | Complete |
+| MCP-04 | Phase 6 | Complete |
 | MCP-05 | Phase 6 | Complete |
 | MCP-06 | Phase 6 | Complete |
-| MCP-07 | Phase 6 | Pending |
+| MCP-07 | Phase 6 | Complete |
 | WORK-01 | Phase 7 | Pending |
 | WORK-02 | Phase 7 | Pending |
 | WORK-03 | Phase 7 | Pending |
