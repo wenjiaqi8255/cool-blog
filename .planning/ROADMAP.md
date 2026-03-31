@@ -3,7 +3,8 @@
 ## Milestones
 
 - ✅ **v1.0 MVP** — Phases 1-4 (shipped 2026-03-30)
-- ✅ **v1.1 Content Management & Automation** — Phases 5-6 complete, Phases 7-8 remaining
+- ✅ **v1.1 Content Management & Automation** — Phases 5-8 complete (2026-03-31)
+- 🔄 **v1.2 UI/UX Polish and Content Management** — Phase 9 in progress
 
 ## Phases
 
@@ -144,8 +145,52 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 7. Content Workflow | v1.1 | 3/3 | Complete | 2026-03-31 |
 | 8. Astro Integration | v1.1 | Complete    | 2026-03-31 | 2026-03-31 |
 
+### Phase 9: UI/UX Polish and Content Management
+
+**Goal**: Polish UI styling, fix layout issues, implement variable-driven content management, and enhance interactions
+**Depends on**: Phase 8
+**Requirements**:
+  - UI-01: Header with frosted glass (毛玻璃) effect
+  - UI-02: Code block styling (gray background, black text)
+  - UI-03: Image display in article content
+  - UI-04: Tag styling with capsule shape and border
+  - UI-05: Articles page margin and spacing consistency
+  - UI-06: Variable-driven content management (titles, descriptions)
+  - UI-07: Portfolio data sourced from Articles database
+  - UI-08: Tab selection state (black background, white text)
+  - UI-09: Portfolio detail modal instead of page navigation
+  - UI-10: Modular Portfolio component with parameters (image, size, etc.)
+  - UI-11: Photo-based card variant with parameter control
+**Success Criteria** (what must be TRUE):
+  1. Header displays frosted glass effect on scroll
+  2. Code blocks have gray background with black text (readable)
+  3. Images display correctly in article content
+  4. Tags appear as capsules with borders
+  5. Articles page has proper margins and consistent left alignment
+  6. Page titles and descriptions are variable-driven (config file)
+  7. Portfolio shows selected articles from database
+  8. Selected tab clearly indicates active state (black/white)
+  9. Portfolio details open in modal (no page navigation)
+  10. Portfolio component is modular with configurable parameters
+  11. Photo cards available as optional variant
+**Plans**: 6 plans
+
+**Wave Structure:**
+- Wave 0: Test infrastructure setup
+- Wave 1: UI styling (09-01, 09-02) — depends on 09-00
+- Wave 2: Content management + portfolio components (09-03, 09-04) — depends on 09-00, 09-01, 09-02
+- Wave 3: Homepage integration (09-05) — depends on 09-00, 09-04
+
+Plans:
+- [ ] 09-00: Test infrastructure setup (Wave 0)
+- [ ] 09-01: UI styling fixes (header, code blocks, images, tags)
+- [ ] 09-02: Layout and spacing improvements (margins, alignment)
+- [ ] 09-03: Variable-driven content management system
+- [ ] 09-04: Interaction enhancements (tabs, modal, modular portfolio)
+- [ ] 09-05: Photo card feature implementation
+
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-03-31 (Phase 8 planned)*
+*Last updated: 2026-03-31 (Phase 9 revised with test infrastructure)*
 *Granularity: coarse*
