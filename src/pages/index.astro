@@ -4,8 +4,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
 import BentoGrid from '../components/layout/BentoGrid.astro';
 import Footer from '../components/layout/Footer.astro';
+import PortfolioCard from '../components/portfolio/PortfolioCard.astro';
+import PortfolioModal from '../components/interactive/PortfolioModal';
+import { listPortfolioArticles, type Article } from '../lib/articles';
 
 const currentPath = Astro.url.pathname;
+
+// Fetch portfolio articles (those with 'portfolio' tag)
+const portfolioArticles: Article[] = await listPortfolioArticles();
 ---
 
 <BaseLayout
@@ -15,12 +21,66 @@ const currentPath = Astro.url.pathname;
 >
   <div class="layout-wrapper">
     <Header currentPath={currentPath} />
+
+    <!-- Portfolio Section -->
+    {portfolioArticles.length > 0 && (
+      <section class="portfolio-section">
+        <h2 class="section-title">Portfolio</h2>
+        <div class="portfolio-grid">
+          {portfolioArticles.map((article, index) => (
+            <PortfolioCard
+              title={article.title}
+              description={article.excerpt || ''}
+              tags={article.tags || []}
+              slug={article.slug}
+              date={article.date}
+              size={index === 0 ? 'large' : 'medium'}
+              variant="standard"
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
     <main class="bento-grid-container">
       <BentoGrid />
     </main>
+
     <Footer />
   </div>
 </BaseLayout>
+
+<!-- Portfolio Modal: Client-side component for modal interactivity -->
+<PortfolioModal
+  client:load
+  id="portfolio-modal"
+  articles={portfolioArticles.map(a => ({
+    ...a,
+    date: a.date instanceof Date ? a.date.toISOString() : a.date
+  }))}
+/>
+
+<script>
+  // Client-side interactivity for portfolio cards
+  document.querySelectorAll('.portfolio-card').forEach((card) => {
+    card.addEventListener('click', () => {
+      const slug = card.getAttribute('data-slug');
+      if (slug) {
+        window.dispatchEvent(new CustomEvent('open-portfolio-modal', { detail: { slug } }));
+      }
+    });
+
+    card.addEventListener('keydown', (e) => {
+      if (e instanceof KeyboardEvent && (e.key === 'Enter' || e.key === ' ')) {
+        e.preventDefault();
+        const slug = card.getAttribute('data-slug');
+        if (slug) {
+          window.dispatchEvent(new CustomEvent('open-portfolio-modal', { detail: { slug } }));
+        }
+      }
+    });
+  });
+</script>
 
 <style>
   .layout-wrapper {
@@ -33,6 +93,27 @@ const currentPath = Astro.url.pathname;
     margin-top: 40px;
   }
 
+  /* Portfolio section styles */
+  .portfolio-section {
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--text-muted, #6a6a7a);
+    margin-bottom: 24px;
+    padding-left: 4px;
+  }
+
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+  }
+
   @media (max-width: 768px) {
     .layout-wrapper {
       padding: 16px;
@@ -40,6 +121,11 @@ const currentPath = Astro.url.pathname;
 
     .bento-grid-container {
       margin-top: 24px;
+    }
+
+    .portfolio-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
     }
   }
 </style>
