@@ -82,16 +82,13 @@ None yet for v1.1.
 
 ### Blockers/Concerns
 
-Research flags from SUMMARY.md to address during planning:
-
-- **Phase 6**: MCP HTTP transport specifics — official SDK docs focus on stdio; HTTP transport for Claude mobile requires additional research
-- **Phase 7**: Claude mobile OAuth2 flow — how Claude mobile app authenticates with custom MCP servers
+None at this time. MCP-05 and MCP-06 requirements satisfied.
 
 ## Session Continuity
 
-Last session: 2026-03-31T00:54:52.133Z
-Stopped at: Phase 6 context gathered
-Resume file: .planning/phases/06-mcp-server/06-CONTEXT.md
+Last session: 2026-03-31T01:30:00.000Z
+Stopped at: Plan 06-01 complete
+Resume file: .planning/phases/06-mcp-server/06-02-PLAN.md
 
 ---
 
