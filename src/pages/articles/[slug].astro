@@ -223,14 +223,15 @@ const currentPath = Astro.url.pathname;
   .article-body :global(code) {
     font-family: 'JetBrains Mono', monospace;
     font-size: 14px;
-    background: var(--color-ink-black);
-    color: var(--color-canvas-white);
+    background: #1f1f1f;
+    color: #111111;
     padding: 2px 6px;
     border-radius: 4px;
   }
 
   .article-body :global(pre) {
-    background: var(--color-ink-black);
+    background: #1f1f1f;
+    color: #111111;
     border-radius: 8px;
     padding: 24px;
     overflow-x: auto;
@@ -240,6 +241,7 @@ const currentPath = Astro.url.pathname;
 
   .article-body :global(pre code) {
     background: transparent;
+    color: inherit;
     padding: 0;
     font-size: 14px;
     line-height: 1.5;
@@ -250,9 +252,9 @@ const currentPath = Astro.url.pathname;
     position: absolute;
     top: 8px;
     right: 8px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #888;
+    background: rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    color: #666;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 12px;
@@ -262,12 +264,12 @@ const currentPath = Astro.url.pathname;
   }
 
   .article-body :global(.copy-button:hover) {
-    background: rgba(255, 255, 255, 0.2);
-    color: #fff;
+    background: rgba(0, 0, 0, 0.15);
+    color: #111;
   }
 
   .article-body :global(.copy-button.copied) {
-    color: #4ade80;
+    color: #16a34a;
   }
 
   .article-body :global(blockquote) {

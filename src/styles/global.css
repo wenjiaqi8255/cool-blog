@@ -375,7 +375,8 @@ body {
 
 /* Code blocks - Terminal card aesthetic */
 pre {
-  background: #111 !important;
+  background: #1f1f1f !important;
+  color: #111111;
   border-radius: 8px;
   padding: 16px;
   overflow-x: auto;

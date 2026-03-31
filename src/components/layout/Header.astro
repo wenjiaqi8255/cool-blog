@@ -9,7 +9,7 @@ interface Props {
 const { currentPath = '/' } = Astro.props;
 ---
 
-<header class="header">
+<header class="header" id="main-header">
   <div class="header-content">
     <a href="/" class="brand">
       <span class="brand-text">KERNEL_PANIC</span>
@@ -24,6 +24,31 @@ const { currentPath = '/' } = Astro.props;
   </div>
 </header>
 
+<script>
+  function initScrollEffect() {
+    const header = document.getElementById('main-header');
+    if (!header) return;
+
+    const handleScroll = () => {
+      if (window.scrollY > 20) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    };
+
+    // Initial check
+    handleScroll();
+
+    // Add listener with passive option for performance
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  }
+
+  // Initialize on page load and after view transitions
+  document.addEventListener('DOMContentLoaded', initScrollEffect);
+  document.addEventListener('astro:page-load', initScrollEffect);
+</script>
+
 <style>
   .header {
     position: sticky;
@@ -31,6 +56,14 @@ const { currentPath = '/' } = Astro.props;
     z-index: 100;
     background: var(--color-canvas-white);
     border-bottom: 1px solid #EEEEEE;
+    transition: background 0.3s, backdrop-filter 0.3s, border-color 0.3s;
+  }
+
+  .header.scrolled {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(238, 238, 238, 0.5);
   }
 
   .header-content {
