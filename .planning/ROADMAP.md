@@ -76,8 +76,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 05-01: Database schema (articles table with Drizzle ORM)
-- [ ] 05-02: Notion migration script with staged batches
+- [x] 05-01: Database schema (articles table with Drizzle ORM)
+- [x] 05-02: Notion migration script with staged batches
 
 ### Phase 6: MCP Server Development
 **Goal**: Claude can create, list, retrieve, and soft-delete articles via MCP tools
@@ -139,7 +139,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 2. Content System | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 3. Newsletter & Backend | v1.0 | 3/3 | Complete | 2026-03-30 |
 | 4. SEO & Launch | v1.0 | 2/2 | Complete | 2026-03-30 |
-| 5. Database Schema & Notion Migration | v1.1 | 0/2 | Not started | - |
+| 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 6. MCP Server Development | v1.1 | 0/2 | Not started | - |
 | 7. Content Workflow | v1.1 | 0/3 | Not started | - |
 | 8. Astro Integration | v1.1 | 0/2 | Not started | - |
