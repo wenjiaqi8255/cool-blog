@@ -1,44 +1,54 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getPublishedArticleBySlug } from '../../lib/articles';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
+import MarkdownIt from 'markdown-it';
 
-export async function getStaticPaths() {
-  const articles = await getCollection('articles');
-  return articles
-    .filter((article) => !article.data.draft)
-    .map((article) => ({
-      params: { slug: article.id },
-      props: { entry: article },
-    }));
+// Enable SSR mode
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/articles');
 }
 
-interface Props {
-  entry: Awaited<ReturnType<typeof getCollection<'articles'>>>[number];
+const article = await getPublishedArticleBySlug(slug);
+
+if (!article) {
+  return Astro.redirect('/404');
 }
 
-const { entry } = Astro.props;
-const { data, id } = entry;
-const { title, date, tags, excerpt } = data;
+const { title, date, tags, excerpt, body } = article;
 
-// Get raw markdown body to estimate word count
-const wordCount = entry.body ? entry.body.split(/\s+/).length : 0;
+// Calculate reading time
+const wordCount = body ? body.split(/\s+/).length : 0;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
-// Format date
-const formattedDate = date.toISOString().split('T')[0];
-const currentPath = Astro.url.pathname;
+// Format date as "March 31, 2026"
+const formattedDate = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric'
+}).format(date);
 
-// Render markdown content
-const { Content } = await render(entry);
+// Render markdown
+const md = new MarkdownIt({
+  html: false,
+  linkify: true,
+  typographer: true
+});
+const renderedContent = md.render(body);
+
+const currentPath = Astro.url.pathname;
 ---
 
 <BaseLayout
   title={`KERNEL_PANIC / ${title}`}
   description={excerpt || title}
   type="article"
-  image={`/og/${entry.id}.svg`}
+  image={`/og/${article.slug}.svg`}
 >
   <div class="layout-wrapper">
     <Header currentPath={currentPath} />
@@ -50,14 +60,16 @@ const { Content } = await render(entry);
             <span class="reading-time">{readingTime} min read</span>
             <span class="separator">·</span>
             <time datetime={formattedDate}>{formattedDate}</time>
-            <span class="separator">·</span>
-            <span class="tags">{tags.join(', ')}</span>
+            {tags && tags.length > 0 && (
+              <>
+                <span class="separator">·</span>
+                <span class="tags">{tags.join(', ')}</span>
+              </>
+            )}
           </div>
         </header>
 
-        <div class="article-body">
-          <Content />
-        </div>
+        <div class="article-body" set:html={renderedContent} />
       </article>
     </main>
     <Footer />

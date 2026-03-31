@@ -1,15 +1,18 @@
 ---
+import { listPublishedArticles } from '../../lib/articles';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
 import Footer from '../../components/layout/Footer.astro';
-import ArticleList from '../../components/articles/ArticleList.astro';
+import ArticleCard from '../../components/articles/ArticleCard.astro';
+import BentoGrid from '../../components/layout/BentoGrid.astro';
 
 const currentPath = Astro.url.pathname;
 
-// Fetch article count for metadata
-const { getCollection } = await import('astro:content');
-const allArticles = await getCollection('articles');
-const articleCount = allArticles.filter(a => !a.data.draft).length;
+// Fetch published articles from database
+const articles = await listPublishedArticles();
+const articleCount = articles.length;
+
+const PAGE_SIZE = 6;
 ---
 
 <BaseLayout
@@ -27,7 +30,22 @@ const articleCount = allArticles.filter(a => !a.data.draft).length;
         </p>
       </div>
 
-      <ArticleList />
+      {articleCount === 0 ? (
+        <div class="empty-state">
+          <h2>No articles yet</h2>
+          <p>Articles will appear here once published.</p>
+        </div>
+      ) : (
+        <div class="article-count">{articleCount} articles</div>
+      )}
+
+      {articleCount > 0 && (
+        <BentoGrid>
+          {articles.slice(0, PAGE_SIZE).map((article) => (
+            <ArticleCard article={article} />
+          ))}
+        </BentoGrid>
+      )}
     </main>
     <Footer />
   </div>
@@ -62,6 +80,32 @@ const articleCount = allArticles.filter(a => !a.data.draft).length;
     color: var(--color-ink-gray);
     margin: 0;
     max-width: 600px;
+  }
+
+  .article-count {
+    font-size: 14px;
+    color: var(--color-ink-gray);
+    margin-bottom: 16px;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 80px 24px;
+    background: var(--color-card-light);
+    border-radius: 12px;
+    color: var(--color-ink-gray);
+  }
+
+  .empty-state h2 {
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0 0 8px 0;
+    color: var(--color-ink-black);
+  }
+
+  .empty-state p {
+    font-size: 16px;
+    margin: 0;
   }
 
   @media (max-width: 768px) {
