@@ -6,7 +6,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server';
 import { z } from 'zod';
 import type { Implementation } from '@modelcontextprotocol/sdk/types.js';
-import { generateSlug } from './slugify.js';
+import { createArticle, listArticles, getArticle, deleteArticle } from './db.js';
 
 // Server info
 const serverInfo: Implementation = {
@@ -42,72 +42,107 @@ const deleteArticleSchema = z.object({
   slug: z.string().min(1, 'Slug is required'),
 });
 
-// Tool handlers - will be connected to database in Plan 2
-// For now, these are placeholders that return informative messages
+// Tool handlers - connected to database
 async function handleCreateArticle(params: z.infer<typeof createArticleSchema>) {
-  const { title, body, date, tags, excerpt, status = 'draft' } = params;
-  const slug = generateSlug(title);
+  try {
+    const { title, body, date, tags, excerpt, status = 'draft' } = params;
 
-  // TODO: Connect to database in Plan 2
-  // const article = await createArticle({ title, slug, body, date, tags, excerpt, status });
+    const article = await createArticle({ title, body, date, tags, excerpt, status });
 
-  return {
-    success: true,
-    message: 'Article created (database connection pending - Plan 2)',
-    article: {
-      title,
-      slug,
-      body: body.substring(0, 100) + (body.length > 100 ? '...' : ''),
-      date: date || new Date().toISOString(),
-      tags: tags || [],
-      excerpt: excerpt || '',
-      status,
-    },
-  };
+    return {
+      success: true,
+      message: 'Article created successfully',
+      article,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      message: `Failed to create article: ${message}`,
+    };
+  }
 }
 
 async function handleListArticles(params: z.infer<typeof listArticlesSchema>) {
-  const { status, limit = 20, offset = 0, order_by = 'date_DESC' } = params;
+  try {
+    const { status, limit = 20, offset = 0, order_by = 'date_DESC' } = params;
 
-  // TODO: Connect to database in Plan 2
-  // const articles = await listArticles({ status, limit, offset, orderBy: order_by });
+    const articles = await listArticles({ status, limit, offset, order_by });
 
-  return {
-    success: true,
-    message: 'Articles retrieved (database connection pending - Plan 2)',
-    articles: [],
-    meta: {
-      total: 0,
-      limit,
-      offset,
-      order_by,
-    },
-  };
+    return {
+      success: true,
+      message: 'Articles retrieved successfully',
+      articles,
+      meta: {
+        total: articles.length,
+        limit,
+        offset,
+        order_by,
+      },
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      message: `Failed to list articles: ${message}`,
+      articles: [],
+    };
+  }
 }
 
 async function handleGetArticle(params: z.infer<typeof getArticleSchema>) {
-  const { slug } = params;
+  try {
+    const { slug } = params;
 
-  // TODO: Connect to database in Plan 2
-  // const article = await getArticleBySlug(slug);
+    const article = await getArticle(slug);
 
-  return {
-    success: true,
-    message: 'Article retrieved (database connection pending - Plan 2)',
-    article: null,
-  };
+    if (!article) {
+      return {
+        success: false,
+        message: `Article not found: ${slug}`,
+        article: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Article retrieved successfully',
+      article,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      message: `Failed to get article: ${message}`,
+      article: null,
+    };
+  }
 }
 
 async function handleDeleteArticle(params: z.infer<typeof deleteArticleSchema>) {
-  const { slug } = params;
+  try {
+    const { slug } = params;
 
-  // TODO: Connect to database in Plan 2
-  // const article = await softDeleteArticle(slug);
+    const deleted = await deleteArticle(slug);
 
-  return {
-    success: true,
-    message: `Article "${slug}" deleted (database connection pending - Plan 2)`,
-  };
+    if (!deleted) {
+      return {
+        success: false,
+        message: `Article not found or already deleted: ${slug}`,
+      };
+    }
+
+    return {
+      success: true,
+      message: `Article "${slug}" deleted successfully`,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      message: `Failed to delete article: ${message}`,
+    };
+  }
 }
 
 // Register all 4 tools with Zod validation schemas (MCP-01 to MCP-04, MCP-06)
