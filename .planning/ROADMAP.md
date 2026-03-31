@@ -92,7 +92,7 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 06-01: MCP server setup with authentication
+- [x] 06-01: MCP server setup with authentication
 - [ ] 06-02: Article CRUD tools with Drizzle ORM
 
 ### Phase 7: Content Workflow
@@ -140,7 +140,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 3. Newsletter & Backend | v1.0 | 3/3 | Complete | 2026-03-30 |
 | 4. SEO & Launch | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 6. MCP Server Development | v1.1 | 2/2 | Planned | - |
+| 6. MCP Server Development | v1.1 | 1/2 | In progress | - |
 | 7. Content Workflow | v1.1 | 0/3 | Not started | - |
 | 8. Astro Integration | v1.1 | 0/2 | Not started | - |
 

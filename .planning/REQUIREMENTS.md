@@ -9,8 +9,8 @@ Requirements for content management milestone. Each maps to roadmap phases.
 
 ### Notion Migration
 
-- [ ] **MIGR-01**: User can connect to Notion database via API key
-- [ ] **MIGR-02**: System converts Notion pages to Markdown format
+- [x] **MIGR-01**: User can connect to Notion export folder (CSV + Markdown files) via NOTION_EXPORT_PATH
+- [x] **MIGR-02**: System parses pre-exported Markdown files and converts to article body format
 - [ ] **MIGR-03**: System extracts metadata from Notion properties (Title, Date, Tags)
 - [ ] **MIGR-04**: System imports all published articles into Neon Postgres
 - [ ] **MIGR-05**: User receives migration summary (article count, success/errors)
@@ -21,8 +21,8 @@ Requirements for content management milestone. Each maps to roadmap phases.
 - [ ] **MCP-02**: Claude can list articles via `list_articles(status?)` tool
 - [ ] **MCP-03**: Claude can retrieve article via `get_article(slug)` tool
 - [ ] **MCP-04**: Claude can soft-delete article via `delete_article(slug)` tool (adds `deleted_at` field)
-- [ ] **MCP-05**: MCP server authenticates requests (OAuth2/JWT or API key)
-- [ ] **MCP-06**: All MCP tools validate input via Zod schemas
+- [x] **MCP-05**: MCP server authenticates requests (OAuth2/JWT or API key)
+- [x] **MCP-06**: All MCP tools validate input via Zod schemas
 - [ ] **MCP-07**: MCP server uses Drizzle ORM for database operations (parameterized queries)
 
 ### Content Workflow
@@ -109,18 +109,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DATA-04 | Phase 5 | Complete |
 | DATA-05 | Phase 5 | Complete |
 | DATA-06 | Phase 5 | Complete |
-| MIGR-01 | Phase 5 | Pending |
-| MIGR-02 | Phase 5 | Pending |
-| MIGR-03 | Phase 5 | Pending |
-| MIGR-04 | Phase 5 | Pending |
-| MIGR-05 | Phase 5 | Pending |
+| MIGR-01 | Phase 5 | Complete |
+| MIGR-02 | Phase 5 | Complete |
+| MIGR-03 | Phase 5 | Complete |
+| MIGR-04 | Phase 5 | Complete |
+| MIGR-05 | Phase 5 | Complete |
 | ERR-04 | Phase 5 | Pending |
 | MCP-01 | Phase 6 | Pending |
 | MCP-02 | Phase 6 | Pending |
 | MCP-03 | Phase 6 | Pending |
 | MCP-04 | Phase 6 | Pending |
-| MCP-05 | Phase 6 | Pending |
-| MCP-06 | Phase 6 | Pending |
+| MCP-05 | Phase 6 | Complete |
+| MCP-06 | Phase 6 | Complete |
 | MCP-07 | Phase 6 | Pending |
 | WORK-01 | Phase 7 | Pending |
 | WORK-02 | Phase 7 | Pending |
