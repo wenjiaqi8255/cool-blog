@@ -6,6 +6,7 @@
 import { parseMarkdown, type ParsedArticle } from './parser';
 import { articleSchema, validateArticle } from './validator';
 import { generateSlug } from '../mcp/slugify';
+import { createArticle, updateArticleStatus } from '../mcp/db';
 
 /**
  * Processed article result with all metadata.
@@ -77,4 +78,110 @@ export function processMarkdown(rawMarkdown: string): {
       slug
     }
   };
+}
+
+/**
+ * Generate a formatted preview of an article for display in Claude chat.
+ * Shows all metadata and full body content.
+ *
+ * @param meta - Article metadata
+ * @param body - Article body content
+ * @param slug - Article slug
+ * @returns Formatted preview string
+ */
+export function generatePreview(
+  meta: ProcessedArticle['meta'],
+  body: string,
+  slug: string
+): string {
+  const tags = meta.tags?.join(', ') || 'none';
+  const date = meta.date || new Date().toISOString().split('T')[0];
+  const excerpt = meta.excerpt || body.slice(0, 200) + '...';
+
+  return `
+# ${meta.title}
+
+**Date:** ${date}
+**Tags:** ${tags}
+**Slug:** ${slug}
+**Status:** Preview (not yet saved)
+
+---
+
+## Excerpt
+${excerpt}
+
+---
+
+## Body
+${body}
+`.trim();
+}
+
+/**
+ * Publish a new article to the database.
+ *
+ * @param meta - Article metadata
+ * @param body - Article body content
+ * @param status - Article status (draft or published)
+ * @returns Result with article or error
+ */
+export async function publishArticle(
+  meta: ProcessedArticle['meta'],
+  body: string,
+  status: 'draft' | 'published' = 'draft'
+): Promise<{ success: boolean; article?: unknown; error?: string }> {
+  try {
+    const article = await createArticle({
+      title: meta.title,
+      body,
+      date: meta.date,
+      tags: meta.tags,
+      excerpt: meta.excerpt,
+      status,
+    });
+
+    return {
+      success: true,
+      article,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: message,
+    };
+  }
+}
+
+/**
+ * Publish a draft article (change status from draft to published).
+ *
+ * @param slug - Article slug
+ * @returns Result with article or error
+ */
+export async function publishDraft(
+  slug: string
+): Promise<{ success: boolean; article?: unknown; error?: string }> {
+  try {
+    const article = await updateArticleStatus(slug, 'published');
+
+    if (!article) {
+      return {
+        success: false,
+        error: `Article not found: ${slug}`,
+      };
+    }
+
+    return {
+      success: true,
+      article,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: message,
+    };
+  }
 }
