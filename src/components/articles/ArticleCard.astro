@@ -1,19 +1,21 @@
 ---
-import type { CollectionEntry } from 'astro:content';
-
 interface Props {
-  article: CollectionEntry<'articles'>;
+  article: {
+    id: number;
+    title: string;
+    slug: string;
+    date: Date;
+    tags: string[] | null;
+    excerpt: string | null;
+    body: string;
+  };
 }
 
 const { article } = Astro.props;
-const { data, id } = article;
-// Strip .md extension for URL slug
-const slug = id.replace(/\.md$/, '');
-const { title, date, tags, excerpt, coverImage } = data;
+const { id: _id, title, slug, date, tags, excerpt, body } = article;
 
 // Calculate reading time: words / 200 WPM
-// Estimate: average 5 characters per word
-const wordCount = article.body ? article.body.split(/\s+/).length : 0;
+const wordCount = body ? body.split(/\s+/).length : 0;
 const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
 // Format date as YYYY-MM-DD
@@ -22,11 +24,6 @@ const formattedDate = date.toISOString().split('T')[0];
 
 <article class="article-card">
   <a href={`/articles/${slug}`} class="card-link">
-    {coverImage && (
-      <div class="cover-image">
-        <img src={coverImage} alt={title} />
-      </div>
-    )}
     <div class="card-content">
       <h3 class="title">{title}</h3>
       {excerpt && <p class="excerpt">{excerpt}</p>}
@@ -36,7 +33,7 @@ const formattedDate = date.toISOString().split('T')[0];
         <time datetime={formattedDate}>{formattedDate}</time>
       </div>
       <div class="tags">
-        {tags.map((tag) => (
+        {tags && tags.map((tag) => (
           <span class="tag">{tag}</span>
         ))}
       </div>
@@ -65,24 +62,6 @@ const formattedDate = date.toISOString().split('T')[0];
     height: 100%;
     text-decoration: none;
     color: inherit;
-  }
-
-  .cover-image {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    overflow: hidden;
-    background: var(--color-ink-black);
-  }
-
-  .cover-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.4s var(--ease-out);
-  }
-
-  .article-card:hover .cover-image img {
-    transform: scale(1.05);
   }
 
   .card-content {
