@@ -140,12 +140,12 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 3. Newsletter & Backend | v1.0 | 3/3 | Complete | 2026-03-30 |
 | 4. SEO & Launch | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 6. MCP Server Development | v1.1 | 0/2 | Not started | - |
+| 6. MCP Server Development | v1.1 | 2/2 | Planned | - |
 | 7. Content Workflow | v1.1 | 0/3 | Not started | - |
 | 8. Astro Integration | v1.1 | 0/2 | Not started | - |
 
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-03-30 (v1.1 roadmap created)*
+*Last updated: 2026-03-31 (Phase 6 planned)*
 *Granularity: coarse*
