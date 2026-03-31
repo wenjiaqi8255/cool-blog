@@ -125,8 +125,8 @@ Plans:
 **Plans**: 2 plans
 
 Plans:
-- [ ] 08-01: Database-driven article rendering
-- [ ] 08-02: Filtering and status-based display
+- [x] 08-01-PLAN.md — Database query layer and ArticleCard adaptation (PLANNED)
+- [x] 08-02-PLAN.md — Article list and detail pages with 404 handling (PLANNED)
 
 ## Progress
 
@@ -142,10 +142,10 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 6. MCP Server Development | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 7. Content Workflow | v1.1 | Complete    | 2026-03-31 | 2026-03-31 |
-| 8. Astro Integration | v1.1 | 0/2 | Not started | - |
+| 8. Astro Integration | v1.1 | 2/2 | Planned | - |
 
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-03-31 (Phase 7 planned)*
+*Last updated: 2026-03-31 (Phase 8 planned)*
 *Granularity: coarse*
