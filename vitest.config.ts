@@ -11,7 +11,6 @@ export default getViteConfig({
       reporter: ['text', 'json', 'html'],
       exclude: [
         'node_modules/',
-        'src/config/',
         'src/tests/'
       ]
     }
