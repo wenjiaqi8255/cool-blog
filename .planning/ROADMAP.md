@@ -183,12 +183,12 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 - Wave 4: Homepage integration (09-05) — depends on 09-00, 09-04
 
 Plans:
-- [ ] 09-00: Test infrastructure setup (Wave 0)
-- [ ] 09-01: UI styling fixes (header, code blocks, images, tags)
-- [ ] 09-02: Layout and spacing improvements (margins, alignment)
-- [ ] 09-03: Variable-driven content management system
-- [ ] 09-04: Interaction enhancements (tabs, modal, modular portfolio) (Wave 3)
-- [ ] 09-05: Photo card feature implementation
+- [x] 09-00: Test infrastructure setup (Wave 0)
+- [x] 09-01: UI styling fixes (header, code blocks, images, tags)
+- [x] 09-02: Layout and spacing improvements (margins, alignment)
+- [x] 09-03: Variable-driven content management system
+- [x] 09-04: Interaction enhancements (tabs, modal, modular portfolio) (Wave 3)
+- [x] 09-05: Photo card feature implementation
 
 ---
 
