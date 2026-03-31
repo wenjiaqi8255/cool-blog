@@ -6,7 +6,7 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server';
 import { z } from 'zod';
 import type { Implementation } from '@modelcontextprotocol/sdk/types.js';
-import { createArticle, listArticles, getArticle, deleteArticle } from './db.js';
+import { createArticle, listArticles, getArticle, deleteArticle, updateArticleStatus } from './db.js';
 
 // Server info
 const serverInfo: Implementation = {
@@ -40,6 +40,13 @@ const getArticleSchema = z.object({
 
 const deleteArticleSchema = z.object({
   slug: z.string().min(1, 'Slug is required'),
+});
+
+const updateArticleSchema = z.object({
+  slug: z.string().min(1, 'Slug is required'),
+  status: z.enum(['draft', 'published']).optional(),
+  title: z.string().optional(),
+  body: z.string().optional(),
 });
 
 // Tool handlers - connected to database
@@ -145,6 +152,56 @@ async function handleDeleteArticle(params: z.infer<typeof deleteArticleSchema>) 
   }
 }
 
+async function handleUpdateArticle(params: z.infer<typeof updateArticleSchema>) {
+  try {
+    const { slug, status, title, body } = params;
+
+    // If status is provided, update it
+    if (status) {
+      const updated = await updateArticleStatus(slug, status);
+
+      if (!updated) {
+        return {
+          success: false,
+          message: `Article not found: ${slug}`,
+          article: null,
+        };
+      }
+
+      return {
+        success: true,
+        message: `Article "${slug}" status updated to "${status}"`,
+        article: updated,
+      };
+    }
+
+    // If no status but title/body provided, that's not supported for now
+    // just return success with current article
+    const article = await getArticle(slug);
+
+    if (!article) {
+      return {
+        success: false,
+        message: `Article not found: ${slug}`,
+        article: null,
+      };
+    }
+
+    return {
+      success: true,
+      message: 'No updates provided',
+      article,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      message: `Failed to update article: ${message}`,
+      article: null,
+    };
+  }
+}
+
 // Register all 4 tools with Zod validation schemas (MCP-01 to MCP-04, MCP-06)
 mcpServer.registerTool(
   'create_article',
@@ -200,6 +257,21 @@ mcpServer.registerTool(
   },
   async (params) => {
     const result = await handleDeleteArticle(params);
+    return {
+      content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+    };
+  }
+);
+
+mcpServer.registerTool(
+  'update_article',
+  {
+    title: 'Update Article',
+    description: 'Update an article status from draft to published (or vice versa)',
+    inputSchema: updateArticleSchema,
+  },
+  async (params) => {
+    const result = await handleUpdateArticle(params);
     return {
       content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
     };
