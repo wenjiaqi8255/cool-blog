@@ -58,7 +58,7 @@ Plans:
 
 - [x] **Phase 5: Database Schema & Notion Migration** - Articles table foundation and one-time content import
 - [x] **Phase 6: MCP Server Development** - Claude-accessible article management tools (COMPLETE)
-- [ ] **Phase 7: Content Workflow** - Metadata extraction, preview, and publishing workflow
+- [x] **Phase 7: Content Workflow** - Metadata extraction, preview, and publishing workflow (completed 2026-03-31)
 - [ ] **Phase 8: Astro Integration** - Database-driven article rendering
 
 ## Phase Details
@@ -141,7 +141,7 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 4. SEO & Launch | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 6. MCP Server Development | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 7. Content Workflow | v1.1 | 3/3 | Complete | 2026-03-31 |
+| 7. Content Workflow | v1.1 | Complete    | 2026-03-31 | 2026-03-31 |
 | 8. Astro Integration | v1.1 | 0/2 | Not started | - |
 
 ---
