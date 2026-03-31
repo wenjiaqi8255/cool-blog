@@ -108,9 +108,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 07-01: Metadata extraction and slug generation
-- [ ] 07-02: Preview and confirm/reject workflow
-- [ ] 07-03: Draft management and error handling
+- [x] 07-01-PLAN.md — Metadata extraction and slug generation (COMPLETE)
+- [ ] 07-02-PLAN.md — Preview and confirm/reject workflow
+- [ ] 07-03-PLAN.md — Draft management and error handling
 
 ### Phase 8: Astro Integration
 **Goal**: Blog displays articles from Neon Postgres with proper filtering
@@ -140,12 +140,12 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 3. Newsletter & Backend | v1.0 | 3/3 | Complete | 2026-03-30 |
 | 4. SEO & Launch | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 6. MCP Server Development | v1.1 | Complete    | 2026-03-31 | 2026-03-31 |
-| 7. Content Workflow | v1.1 | 0/3 | Not started | - |
+| 6. MCP Server Development | v1.1 | 2/2 | Complete | 2026-03-31 |
+| 7. Content Workflow | v1.1 | 1/3 | In Progress | 2026-03-31 |
 | 8. Astro Integration | v1.1 | 0/2 | Not started | - |
 
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-03-31 (Phase 6 planned)*
+*Last updated: 2026-03-31 (Phase 7 planned)*
 *Granularity: coarse*

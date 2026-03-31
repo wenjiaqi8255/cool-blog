@@ -2,16 +2,18 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: Content Management & Automation
-status: completed
-stopped_at: Phase 7 context gathered
-last_updated: "2026-03-31T02:16:31.112Z"
-last_activity: 2026-03-31 — Plan 06-02 complete (phase 6 complete)
+status: in_progress
+phase: 7
+plan: 1
+stopped_at: Plan 07-01 complete
+last_updated: "2026-03-31T05:12:40Z"
+last_activity: 2026-03-31 — Plan 07-01 complete (content parser/validator/workflow)
 progress:
-  total_phases: 4
-  completed_phases: 2
+  total_phases: 7
+  completed_phases: 6
   total_plans: 4
-  completed_plans: 4
-  percent: 100
+  completed_plans: 1
+  percent: 25
 ---
 
 # Project State
@@ -60,12 +62,12 @@ v1.1 Milestone: COMPLETE
 
 ### Decisions
 
-Decisions are logged in PROJECT.md Key Decisions table.
-Recent decisions affecting current work:
-
-- **v1.1 Scope**: New articles only - article updates deferred to v1.2
-- **Database-only mode**: Existing Markdown file articles will NOT be displayed (ASTRO-04)
-- **MCP Server**: Required for mobile workflow priority (Claude on phone)
+- **Parser library**: Used gray-matter for YAML frontmatter parsing (ESM-compatible)
+- **Date handling**: Converts Date objects to YYYY-MM-DD strings
+- **Chinese titles**: Slugify normalizes Unicode characters (Chinese removed, Latin preserved)
+- v1.1 scope: New articles only - article updates deferred to v1.2
+- Database-only mode: Existing Markdown file articles NOT displayed (ASTRO-04)
+- MCP Server: Required for mobile workflow priority (Claude on phone)
 - [Phase 05]: Use text type for article status instead of enum - simpler with Neon HTTP connection
 - [Phase 05]: Soft delete via deleted_at timestamp - preserves data for audit trail
 - [Phase 05]: Unique constraint on slug - ensures URL-safe identifiers are unique
@@ -73,19 +75,22 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-v1.1 complete - pending v1.2 planning.
+Phase 7 content workflow in progress:
+- Plan 1: COMPLETE (parser, validator, slug generation)
+- Plan 2: [pending]
+- Plan 3: [pending]
 
 ### Blockers/Concerns
 
-None at this time. All MCP requirements satisfied (MCP-01 through MCP-07).
+None at this time.
 
 ## Session Continuity
 
-Last session: 2026-03-31T02:16:31.108Z
-Stopped at: Phase 7 context gathered
-Resume file: .planning/phases/07-content-workflow/07-CONTEXT.md
+Last session: 2026-03-31T05:12:40Z
+Stopped at: Plan 07-01 complete
+Resume file: .planning/phases/07-content-workflow/07-02-PLAN.md
 
 ---
 
 *State initialized: 2026-03-27*
-*Last updated: 2026-03-31 (v1.1 complete)*
+*Last updated: 2026-03-31 (Plan 07-01 complete)*
