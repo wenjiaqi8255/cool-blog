@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "dev:local": "dotenv -e .dev.vars -- astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "test": "npm run test:unit && npm run test:e2e",
@@ -45,6 +46,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "csv-parse": "^5.5.3",
+    "dotenv-cli": "^11.0.0",
     "drizzle-kit": "^0.31.10",
     "happy-dom": "^17.0.0",
     "jsdom": "^26.0.0",

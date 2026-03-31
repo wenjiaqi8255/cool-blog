@@ -14,7 +14,7 @@ export default defineConfig({
   },
   adapter: cloudflare({
     platformProxy: {
-      enabled: true
+      enabled: false  // Disable for local dev to use .env.local
     },
     imageService: 'cloudflare',
     // Enable on-demand API routes in production
@@ -37,6 +37,9 @@ export default defineConfig({
     },
     optimizeDeps: {
       exclude: ['drizzle-orm', '@neondatabase/serverless']
+    },
+    define: {
+      'process.env.DATABASE_URL': JSON.stringify(process.env.DATABASE_URL || '')
     }
   }
 });

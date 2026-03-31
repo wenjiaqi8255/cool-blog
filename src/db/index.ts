@@ -3,6 +3,18 @@ import * as schema from './schema';
 
 // Mock DB for development without credentials
 const mockDb = {
+  select: () => ({
+    from: () => ({
+      where: () => ({
+        orderBy: () => Promise.resolve([])
+      })
+    }),
+    _forArticles: (table: unknown) => ({
+      where: () => ({
+        orderBy: () => Promise.resolve([])
+      })
+    })
+  }),
   insert: () => ({
     values: () => ({
       returning: () => Promise.resolve([{ id: 1, email: 'mock@example.com' }])
@@ -10,13 +22,18 @@ const mockDb = {
   })
 };
 
-// Real DB with env var access via Cloudflare platform proxy
+// Real DB with env var access
 let dbInstance: ReturnType<typeof drizzle> | null = null;
 
 function initDb() {
   if (dbInstance) return dbInstance;
 
-  const url = process.env.DATABASE_URL;
+  // Use import.meta.env for Vite/Astro compatibility
+  // Fallback to process.env for Node.js environments
+  const url = import.meta.env?.DATABASE_URL || process.env.DATABASE_URL;
+
+  console.log('[DB] DATABASE_URL value:', url ? 'SET (' + url.substring(0, 30) + '...)' : 'NOT SET');
+
   if (!url) {
     console.warn('[DB] DATABASE_URL not set - using mock mode');
     return mockDb as unknown as ReturnType<typeof drizzle>;

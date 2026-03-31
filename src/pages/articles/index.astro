@@ -11,8 +11,6 @@ const currentPath = Astro.url.pathname;
 // Fetch published articles from database
 const articles = await listPublishedArticles();
 const articleCount = articles.length;
-
-const PAGE_SIZE = 6;
 ---
 
 <BaseLayout
@@ -41,7 +39,7 @@ const PAGE_SIZE = 6;
 
       {articleCount > 0 && (
         <BentoGrid>
-          {articles.slice(0, PAGE_SIZE).map((article) => (
+          {articles.map((article) => (
             <ArticleCard article={article} />
           ))}
         </BentoGrid>
