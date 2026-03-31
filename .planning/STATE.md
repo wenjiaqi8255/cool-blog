@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.1
-milestone_name: Content Management & Automation
-status: completed
-stopped_at: Completed 07-03 plan
-last_updated: "2026-03-31T04:13:16.766Z"
-last_activity: 2026-03-31 — Plan 06-02 complete (phase 6 complete)
+milestone: v1.2
+milestone_name: Astro Integration & Database-Driven Articles
+status: in_progress
+stopped_at: Phase 8 Plan 1 complete
+last_updated: "2026-03-31T15:40:32.000Z"
+last_activity: 2026-03-31 — Plan 08-01 complete
 progress:
-  total_phases: 4
-  completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
-  percent: 100
+  total_phases: 8
+  completed_phases: 6
+  total_plans: 8
+  completed_plans: 1
+  percent: 12
 ---
 
 # Project State
@@ -21,27 +21,27 @@ progress:
 See: .planning/PROJECT.md (updated 2026-03-30 for v1.1 milestone)
 
 **Core value:** Visual impact meets content depth — now with mobile-first publishing via Claude
-**Current focus:** Phase 6: MCP Server Development - COMPLETE
+**Current focus:** Phase 8: Astro Integration - Database-driven articles
 
 ## Current Position
 
-**Milestone: v1.1 Content Management & Automation — COMPLETE**
+**Milestone: v1.2 Astro Integration & Database-Driven Articles — IN PROGRESS**
 
-Phase: 6 of 6 (MCP Server Development)
-Plan: 2 of 2 in current phase
-Status: Phase complete
-Last activity: 2026-03-31 — Plan 06-02 complete (phase 6 complete)
+Phase: 8 of 8 (Astro Integration)
+Plan: 1 of 8 in current phase
+Status: Plan complete
+Last activity: 2026-03-31 — Plan 08-01 complete
 
-Progress: [████████████████████] 100% (13 of 13 plans complete)
+Progress: [█░░░░░░░░░░░░░░] 12% (1 of 8 plans complete)
 
-v1.1 Milestone: COMPLETE
+v1.2 Milestone: IN PROGRESS
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 13 (v1.1)
-- Phase 6: 2 plans completed
-- v1.0 + v1.1 total: 23+ plans
+- Total plans completed: 14 (v1.1 + v1.2 so far)
+- Phase 8: 1 plan completed
+- v1.0 + v1.1 total: 13+ plans
 
 **By Phase:**
 
@@ -53,6 +53,8 @@ v1.1 Milestone: COMPLETE
 | 4. SEO & Launch | 2/2 | Complete | 2026-03-30 |
 | 5. Database Schema | 3/3 | Complete | 2026-03-30 |
 | 6. MCP Server | 2/2 | Complete | 2026-03-31 |
+| 7. Content Workflow | 3/3 | Complete | 2026-03-31 |
+| 8. Astro Integration | 1/8 | In Progress | 2026-03-31 |
 
 *Updated after each plan completion*
 
@@ -71,13 +73,20 @@ v1.1 Milestone: COMPLETE
 - [Phase 05]: Unique constraint on slug - ensures URL-safe identifiers are unique
 - [Phase 06]: Drizzle ORM for all database operations (MCP-07 satisfied)
 - [Phase 07]: Draft management with error handling - listDrafts, saveDraft, discardArticle functions
+- [Phase 08-01]: Database articles use direct slug field instead of derived from .md file id
+- [Phase 08-01]: Removed coverImage from ArticleCard since it's not in database schema
 
 ### Pending Todos
 
-Phase 7 content workflow in progress:
-- Plan 1: COMPLETE (parser, validator, slug generation)
-- Plan 2: COMPLETE (preview and publish workflow)
-- Plan 3: COMPLETE (draft management and error handling)
+Phase 8 Astro Integration in progress:
+- Plan 1: COMPLETE (database query layer, ArticleCard adapter)
+- Plan 2: TODO (article list page)
+- Plan 3: TODO (article detail page)
+- Plan 4: TODO (404 page)
+- Plan 5: TODO (type definitions)
+- Plan 6: TODO (markdown rendering)
+- Plan 7: TODO (remove content collections)
+- Plan 8: TODO (cleanup and verification)
 
 ### Blockers/Concerns
 
@@ -85,11 +94,11 @@ None at this time.
 
 ## Session Continuity
 
-Last session: 2026-03-31T03:27:28.453Z
-Stopped at: Completed 07-03 plan
-Resume file: None
+Last session: 2026-03-31T15:40:32.000Z
+Stopped at: Phase 8 Plan 1 complete
+Resume file: .planning/phases/08-astro-integration/08-02-PLAN.md
 
 ---
 
 *State initialized: 2026-03-27*
-*Last updated: 2026-03-31 (Plan 07-01 complete)*
+*Last updated: 2026-03-31 (Plan 08-01 complete)*
