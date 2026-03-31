@@ -168,3 +168,11 @@ export async function updateArticleStatus(
 
   return updated;
 }
+
+/**
+ * List all draft articles.
+ * Convenience wrapper around listArticles with status filter.
+ */
+export async function listDrafts(): Promise<Article[]> {
+  return listArticles({ status: 'draft', order_by: 'date_DESC' });
+}
