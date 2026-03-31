@@ -27,13 +27,13 @@ Requirements for content management milestone. Each maps to roadmap phases.
 
 ### Content Workflow
 
-- [ ] **WORK-01**: Claude extracts metadata (title, date, tags, excerpt) from raw Markdown
-- [ ] **WORK-02**: Claude generates URL-safe slug from title
+- [x] **WORK-01**: Claude extracts metadata (title, date, tags, excerpt) from raw Markdown
+- [x] **WORK-02**: Claude generates URL-safe slug from title
 - [ ] **WORK-03**: User sees preview of rendered article before publishing
 - [ ] **WORK-04**: User confirms or rejects article before database write
 - [ ] **WORK-05**: User can save article as draft (status: 'draft')
 - [ ] **WORK-06**: User can publish draft article (status: 'published')
-- [ ] **WORK-07**: System validates required fields (title, date, body) before publish
+- [x] **WORK-07**: System validates required fields (title, date, body) before publish
 
 ### Database
 
@@ -46,20 +46,20 @@ Requirements for content management milestone. Each maps to roadmap phases.
 
 ### Astro Integration
 
-- [ ] **ASTRO-01**: Blog displays articles from Neon Postgres database
-- [ ] **ASTRO-02**: Article list page shows all published (non-deleted) articles
-- [ ] **ASTRO-03**: Individual article page renders Markdown body with syntax highlighting
-- [ ] **ASTRO-04**: Existing Markdown file articles are NOT displayed (database-only mode)
+- [x] **ASTRO-01**: Blog displays articles from Neon Postgres database
+- [x] **ASTRO-02**: Article list page shows all published (non-deleted) articles
+- [x] **ASTRO-03**: Individual article page renders Markdown body with syntax highlighting
+- [x] **ASTRO-04**: Existing Markdown file articles are NOT displayed (database-only mode)
 - [ ] **ASTRO-05**: Article queries filter out soft-deleted articles (WHERE deleted_at IS NULL)
 - [ ] **ASTRO-06**: Article queries filter by status (WHERE status = 'published' for public pages)
 
 ### Error Handling
 
-- [ ] **ERR-01**: System returns clear error when title extraction fails
-- [ ] **ERR-02**: System returns clear error when slug collision detected
+- [x] **ERR-01**: System returns clear error when title extraction fails
+- [x] **ERR-02**: System returns clear error when slug collision detected
 - [ ] **ERR-03**: System returns clear error when database write fails
 - [ ] **ERR-04**: System returns clear error when Notion API rate-limited
-- [ ] **ERR-05**: System validates Markdown format before processing
+- [x] **ERR-05**: System validates Markdown format before processing
 
 ## v1.2 Requirements
 
@@ -122,21 +122,21 @@ Which phases cover which requirements. Updated during roadmap creation.
 | MCP-05 | Phase 6 | Complete |
 | MCP-06 | Phase 6 | Complete |
 | MCP-07 | Phase 6 | Complete |
-| WORK-01 | Phase 7 | Pending |
-| WORK-02 | Phase 7 | Pending |
+| WORK-01 | Phase 7 | Complete |
+| WORK-02 | Phase 7 | Complete |
 | WORK-03 | Phase 7 | Pending |
 | WORK-04 | Phase 7 | Pending |
 | WORK-05 | Phase 7 | Pending |
 | WORK-06 | Phase 7 | Pending |
-| WORK-07 | Phase 7 | Pending |
-| ERR-01 | Phase 7 | Pending |
-| ERR-02 | Phase 7 | Pending |
+| WORK-07 | Phase 7 | Complete |
+| ERR-01 | Phase 7 | Complete |
+| ERR-02 | Phase 7 | Complete |
 | ERR-03 | Phase 7 | Pending |
-| ERR-05 | Phase 7 | Pending |
-| ASTRO-01 | Phase 8 | Pending |
-| ASTRO-02 | Phase 8 | Pending |
-| ASTRO-03 | Phase 8 | Pending |
-| ASTRO-04 | Phase 8 | Pending |
+| ERR-05 | Phase 7 | Complete |
+| ASTRO-01 | Phase 8 | Complete |
+| ASTRO-02 | Phase 8 | Complete |
+| ASTRO-03 | Phase 8 | Complete |
+| ASTRO-04 | Phase 8 | Complete |
 | ASTRO-05 | Phase 8 | Pending |
 | ASTRO-06 | Phase 8 | Pending |
 

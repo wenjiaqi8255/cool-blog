@@ -126,7 +126,7 @@ Plans:
 
 Plans:
 - [x] 08-01-PLAN.md — Database query layer and ArticleCard adaptation (COMPLETE)
-- [ ] 08-02-PLAN.md — Article list and detail pages with 404 handling (PLANNED)
+- [x] 08-02-PLAN.md — Article list and detail pages with 404 handling (COMPLETE)
 
 ## Progress
 
@@ -141,8 +141,8 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 4. SEO & Launch | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 6. MCP Server Development | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 7. Content Workflow | v1.1 | Complete    | 2026-03-31 | 2026-03-31 |
-| 8. Astro Integration | v1.1 | 1/8 | In Progress | 2026-03-31 |
+| 7. Content Workflow | v1.1 | 3/3 | Complete | 2026-03-31 |
+| 8. Astro Integration | v1.1 | 2/8 | In Progress | 2026-03-31 |
 
 ---
 
