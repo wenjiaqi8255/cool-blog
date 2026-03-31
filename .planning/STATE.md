@@ -87,6 +87,9 @@ v1.2 Milestone: IN PROGRESS
 - [Phase ?]: Test props interface instead of component rendering for PortfolioCard since Astro component
 - [Phase ?]: Skip React hooks rendering test for PortfolioModal due to jsdom environment limitations
 - [Phase 09-03]: Content config already existed - verified and used existing implementation
+- [Phase 09-04]: Tab active state already matches spec (black bg, white text, 200ms transition)
+- [Phase 09-04]: PortfolioModal uses event-driven pattern with CustomEvent for cross-component communication
+- [Phase 09-04]: PortfolioCard accepts optional link prop with fallback to /portfolio/{slug}
 - [Phase 09-05]: PortfolioModal accepts articles prop, uses custom events for modal interaction
 
 ### Pending Todos
@@ -96,7 +99,7 @@ Phase 9 UI/UX Polish in progress:
 - Plan 2: DONE (Layout and spacing - margins, visual alignment)
 - Plan 3: DONE (Content management - variable-driven content, portfolio data source)
 - Plan 4: DONE (Interaction patterns - tab states, modal, modular design)
-- Plan 5: DONE (Photo card feature - parameter-controlled photo cards)
+- Plan 5: TODO (Photo card feature - parameter-controlled photo cards)
 
 ### Blockers/Concerns
 
