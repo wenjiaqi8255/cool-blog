@@ -82,7 +82,8 @@ Accent reserved for: buttons, links, active states, headings
 | Primary CTA | none (read-only blog) |
 | Empty state heading | "No articles yet" |
 | Empty state body | "Articles will appear here once published." |
-| Error state | "Article not found — The article may have been removed or the URL is incorrect." |
+| Error state heading | "Article not found" |
+| Error state body | "The article may have been removed or the URL is incorrect." |
 | Destructive confirmation | none |
 
 **Source:** Pre-populated from existing patterns. Empty state for database-driven articles.
@@ -95,37 +96,73 @@ Accent reserved for: buttons, links, active states, headings
 |----------|-------------|-------------|
 | Astro built-in | markdown, shiki | not required |
 | Tailwind v4 | @theme tokens | not required |
+| Drizzle ORM | neon-http driver | not required |
 
 ---
 
 ## Component Specifications
 
-### Article Card (Phase 8 New)
+### Article Card (Database-Driven)
 
-From existing `src/components/articles/ArticleCard.astro`:
-- Card background: `var(--color-card-light)` (#F7F7F7)
-- Border radius: 12px
-- Hover: translateY(-4px) with shadow
-- Title: 24px, weight 400, line-height 1.2
-- Excerpt: 14px, color #666666, 3-line clamp
-- Meta: 12px, color #999999
-- Tags: 11px, uppercase, pill style
+Adapted from existing `src/components/articles/ArticleCard.astro`:
 
-**Adapt for Phase 8:** Fetch article data from database instead of content collection.
+| Property | Value |
+|----------|-------|
+| Background | `var(--color-card-light)` (#F7F7F7) |
+| Border radius | 12px |
+| Hover animation | translateY(-4px) with shadow |
+| Title | 24px, weight 400, line-height 1.2 |
+| Excerpt | 14px, color #666666, 3-line clamp |
+| Meta (date, reading time) | 12px, color #999999 |
+| Tags | 11px, uppercase, pill style with border |
 
-### Article List Page
+**Phase 8 adaptation:**
+- Props interface changes from `CollectionEntry<'articles'>` to database article object
+- Fields: `title`, `date`, `tags`, `excerpt`, `slug`
+- Date format: Localized (e.g., "March 31, 2026")
+- Reading time: Calculate from body word count (200 WPM)
 
-- Layout: grid of ArticleCards
-- Grid gap: 4px (from `var(--spacing-card-gap)`)
-- Container max-width: 1600px
-- Container padding: 40px
+### Article List Page (`/articles`)
 
-### Article Detail Page
+| Property | Value |
+|----------|-------|
+| Layout | Grid of ArticleCards |
+| Grid gap | 4px (from `var(--spacing-card-gap)`) |
+| Container max-width | 1600px |
+| Container padding | 40px |
+| Page size | 6 articles per page |
+| **NOT INCLUDED** | Search functionality, tag filtering (deferred to v1.2) |
 
-- Markdown rendering via Astro's built-in (shiki configured)
-- Theme: github-dark
-- Wrap: true
-- Code blocks inherit from `src/styles/global.css` pre styles
+**Database query:** `SELECT * FROM articles WHERE status = 'published' AND deleted_at IS NULL ORDER BY date DESC`
+
+**Note:** Replaces existing `/articles` that uses content collections. Database-only mode — no fallback to Markdown files.
+
+### Article Detail Page (`/articles/[slug]`)
+
+| Property | Value |
+|----------|-------|
+| Markdown rendering | Astro built-in (unified API) |
+| Syntax highlighting | Shiki, theme: github-dark |
+| Code block wrap | true |
+| Container max-width | 800px |
+| Title | 24px, weight 300 |
+| Body | 14px, line-height 1.5 |
+| Date/meta | 12px, color #999999 |
+
+**Database query:** `SELECT * FROM articles WHERE slug = $1 AND status = 'published' AND deleted_at IS NULL`
+
+**Error handling:** 404 page if article not found or filtered out.
+
+---
+
+## Page Routes
+
+| Route | Description |
+|-------|-------------|
+| `/articles` | Article list (server-rendered, SSR per request) |
+| `/articles/[slug]` | Individual article (server-rendered, SSR per request) |
+
+**SSR strategy:** Fetch on each request for freshness — edits appear immediately.
 
 ---
 
