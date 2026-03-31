@@ -1,4 +1,5 @@
 ---
+import { pages } from '../../config/content';
 import { listPublishedArticles } from '../../lib/articles';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
@@ -14,8 +15,8 @@ const articleCount = articles.length;
 ---
 
 <BaseLayout
-  title="KERNEL_PANIC / ARTICLES | Articles"
-  description={`${articleCount} technical articles on machine learning, systems engineering, and software craftsmanship`}
+  title={`${pages.articles.title} | Articles`}
+  description={pages.articles.description}
   type="website"
 >
   <div class="layout-wrapper">
@@ -24,7 +25,7 @@ const articleCount = articles.length;
       <div class="page-header">
         <h1 class="page-title">Articles</h1>
         <p class="page-description">
-          Deep dives into machine learning, distributed systems, and the craft of building robust software.
+          {pages.articles.description}
         </p>
       </div>
 

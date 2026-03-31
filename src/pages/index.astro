@@ -1,4 +1,5 @@
 ---
+import { pages } from '../config/content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
 import BentoGrid from '../components/layout/BentoGrid.astro';
@@ -8,8 +9,8 @@ const currentPath = Astro.url.pathname;
 ---
 
 <BaseLayout
-  title="KERNEL_PANIC / ARCHITECTURE & SYSTEMS | Home"
-  description="Computing as craft — Technical writing and portfolio"
+  title={`${pages.home.title} | Home`}
+  description={pages.home.description}
   type="website"
 >
   <div class="layout-wrapper">
