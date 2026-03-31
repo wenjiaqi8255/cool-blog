@@ -6,7 +6,7 @@
 import { parseMarkdown, type ParsedArticle } from './parser';
 import { articleSchema, validateArticle } from './validator';
 import { generateSlug } from '../mcp/slugify';
-import { createArticle, updateArticleStatus } from '../mcp/db';
+import { createArticle, updateArticleStatus, listDrafts as dbListDrafts, deleteArticle, getArticle } from '../mcp/db';
 
 /**
  * Processed article result with all metadata.
@@ -182,6 +182,107 @@ export async function publishDraft(
     return {
       success: false,
       error: message,
+    };
+  }
+}
+
+/**
+ * List all draft articles.
+ *
+ * @returns Result with drafts array or error
+ */
+export async function listDrafts(): Promise<{ success: boolean; drafts?: unknown[]; error?: string }> {
+  try {
+    const drafts = await dbListDrafts();
+    return {
+      success: true,
+      drafts,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Failed to list drafts: ${message}`,
+    };
+  }
+}
+
+/**
+ * Save an article as a draft.
+ *
+ * @param meta - Article metadata
+ * @param body - Article body content
+ * @returns Result with article or error
+ */
+export async function saveDraft(
+  meta: ProcessedArticle['meta'],
+  body: string
+): Promise<{ success: boolean; article?: unknown; error?: string }> {
+  try {
+    // Validate inputs
+    if (!meta.title || typeof meta.title !== 'string') {
+      return {
+        success: false,
+        error: 'Missing or invalid frontmatter: title is required',
+      };
+    }
+
+    if (!body || typeof body !== 'string') {
+      return {
+        success: false,
+        error: 'Invalid Markdown format: body content is required',
+      };
+    }
+
+    const article = await createArticle({
+      title: meta.title,
+      body,
+      date: meta.date,
+      tags: meta.tags,
+      excerpt: meta.excerpt,
+      status: 'draft',
+    });
+
+    return {
+      success: true,
+      article,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Failed to save article: ${message}`,
+    };
+  }
+}
+
+/**
+ * Discard (soft-delete) an article.
+ *
+ * @param slug - Article slug to discard
+ * @returns Result with success or error
+ */
+export async function discardArticle(
+  slug: string
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    const deleted = await deleteArticle(slug);
+
+    if (!deleted) {
+      return {
+        success: false,
+        error: `Article not found: ${slug}`,
+      };
+    }
+
+    return {
+      success: true,
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Failed to discard article: ${message}`,
     };
   }
 }
