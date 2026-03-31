@@ -139,3 +139,32 @@ export async function deleteArticle(slug: string): Promise<boolean> {
 
   return true;
 }
+
+/**
+ * Update article status (draft <-> published).
+ * Returns updated article or null if not found or already soft-deleted.
+ */
+export async function updateArticleStatus(
+  slug: string,
+  status: 'draft' | 'published'
+): Promise<Article | null> {
+  // Find the article (must not be soft-deleted)
+  const existing = await db.query.articles.findFirst({
+    where: and(
+      eq(schema.articles.slug, slug),
+      isNull(schema.articles.deleted_at)
+    )
+  });
+
+  if (!existing) {
+    return null;
+  }
+
+  // Update status
+  const [updated] = await db.update(schema.articles)
+    .set({ status })
+    .where(eq(schema.articles.slug, slug))
+    .returning();
+
+  return updated;
+}
