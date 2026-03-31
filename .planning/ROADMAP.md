@@ -178,15 +178,16 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 **Wave Structure:**
 - Wave 0: Test infrastructure setup
 - Wave 1: UI styling (09-01, 09-02) — depends on 09-00
-- Wave 2: Content management + portfolio components (09-03, 09-04) — depends on 09-00, 09-01, 09-02
-- Wave 3: Homepage integration (09-05) — depends on 09-00, 09-04
+- Wave 2: Content management system (09-03) — depends on 09-00, 09-01, 09-02
+- Wave 3: Portfolio components + interaction enhancements (09-04) — depends on 09-00, 09-01, 09-02, 09-03
+- Wave 4: Homepage integration (09-05) — depends on 09-00, 09-04
 
 Plans:
 - [ ] 09-00: Test infrastructure setup (Wave 0)
 - [ ] 09-01: UI styling fixes (header, code blocks, images, tags)
 - [ ] 09-02: Layout and spacing improvements (margins, alignment)
 - [ ] 09-03: Variable-driven content management system
-- [ ] 09-04: Interaction enhancements (tabs, modal, modular portfolio)
+- [ ] 09-04: Interaction enhancements (tabs, modal, modular portfolio) (Wave 3)
 - [ ] 09-05: Photo card feature implementation
 
 ---
