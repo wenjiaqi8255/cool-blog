@@ -12,15 +12,15 @@ export interface PageConfig {
 
 export const pages: Record<PageKey, PageConfig> = {
   home: {
-    title: 'KERNEL_PANIC / ARCHITECTURE & SYSTEMS',
-    description: 'Exploring the intersection of generative intelligence, low-level systems engineering, and the aesthetics of the command line interface.'
+    title: '温佳琪 | ARCHITECTURE & SYSTEMS',
+    description: '探索生成式智能、低层系统工程与命令行美学的交叉领域。'
   },
   articles: {
-    title: 'KERNEL_PANIC / ARTICLES',
-    description: 'Technical articles on software architecture, systems engineering, and developer tooling.'
+    title: '温佳琪 | ARTICLES',
+    description: '关于软件架构、系统工程和开发者工具的技术文章。'
   },
   portfolio: {
-    title: 'KERNEL_PANIC / PORTFOLIO',
-    description: 'Projects, experiments, and experiments that explore the boundaries of computing.'
+    title: '温佳琪 | PORTFOLIO',
+    description: '项目、实验与探索计算边界的作品集。'
   }
 };

@@ -45,14 +45,16 @@ const sizeClasses = {
 const variantClasses = variant === 'photo' ? 'card-photo' : 'card-standard';
 ---
 
-<a
-  href={link || `/portfolio/${slug}`}
+<div
   class:list={[
     'portfolio-card',
     sizeClasses[size],
     variantClasses
   ]}
   data-slug={slug}
+  tabindex="0"
+  role="button"
+  aria-label={`View ${title} portfolio details`}
 >
   {variant === 'photo' && image && (
     <div class="card-image">
@@ -82,7 +84,7 @@ const variantClasses = variant === 'photo' ? 'card-photo' : 'card-standard';
       </time>
     )}
   </div>
-</a>
+</div>
 
 <style>
   .portfolio-card {

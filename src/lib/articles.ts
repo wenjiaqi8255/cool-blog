@@ -57,7 +57,7 @@ export async function getPublishedArticleBySlug(slug: string): Promise<Article |
 }
 
 /**
- * Returns all published, non-deleted articles with portfolio tag
+ * Returns all published, non-deleted articles with Project tag for portfolio display
  */
 export async function listPortfolioArticles(): Promise<Article[]> {
   const result = await db
@@ -67,7 +67,7 @@ export async function listPortfolioArticles(): Promise<Article[]> {
       and(
         eq(articles.status, 'published'),
         isNull(articles.deleted_at),
-        sql`${articles.tags} @> '{"portfolio"}'`
+        sql`${articles.tags} @> '{"Project"}'`
       )
     )
     .orderBy(desc(articles.date));
