@@ -3,7 +3,7 @@ import { portfolioCards, type CardConfig } from '../../config/cards';
 import ImageCard from '../cards/ImageCard.astro';
 import TextCard from '../cards/TextCard.astro';
 import TerminalCard from '../cards/TerminalCard.astro';
-import StatsCard from '../cards/StatsCard';
+import StatsCard from '../cards/StatsCard.astro';
 
 interface Props {
   cards?: CardConfig[];
@@ -27,7 +27,6 @@ const cardComponents = {
   ) : (
     cards.map((card) => {
       const Component = cardComponents[card.type];
-      const isReactComponent = card.type === 'stats';
 
       return (
         <div
@@ -39,11 +38,7 @@ const cardComponents = {
           data-card-id={card.id}
           data-card-type={card.type}
         >
-          {isReactComponent ? (
-            <Component client:load {...card.props} />
-          ) : (
-            <Component {...card.props} variant={card.variant} />
-          )}
+          <Component {...card.props} variant={card.variant} />
         </div>
       );
     })
