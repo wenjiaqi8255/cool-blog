@@ -48,39 +48,39 @@ const portfolioArticles: Article[] = await listPortfolioArticles();
 
     <Footer />
   </div>
-</BaseLayout>
 
-<!-- Portfolio Modal: Client-side component for modal interactivity -->
-<PortfolioModal
-  client:load
-  id="portfolio-modal"
-  articles={portfolioArticles.map(a => ({
-    ...a,
-    date: a.date instanceof Date ? a.date.toISOString() : a.date
-  }))}
-/>
+  <!-- Portfolio Modal: Client-side component for modal interactivity -->
+  <PortfolioModal
+    client:load
+    articles={portfolioArticles.map((a) => ({
+      ...a,
+      date: a.date instanceof Date ? a.date.toISOString() : a.date
+    }))}
+  />
 
-<script>
-  // Client-side interactivity for portfolio cards
-  document.querySelectorAll('.portfolio-card').forEach((card) => {
-    card.addEventListener('click', () => {
-      const slug = card.getAttribute('data-slug');
-      if (slug) {
-        window.dispatchEvent(new CustomEvent('open-portfolio-modal', { detail: { slug } }));
-      }
-    });
-
-    card.addEventListener('keydown', (e) => {
-      if (e instanceof KeyboardEvent && (e.key === 'Enter' || e.key === ' ')) {
-        e.preventDefault();
+  <script>
+    // Client-side interactivity for portfolio cards
+    document.querySelectorAll('.portfolio-card').forEach((card) => {
+      card.addEventListener('click', (e) => {
+        e.preventDefault(); // Prevent <a> navigation
         const slug = card.getAttribute('data-slug');
         if (slug) {
           window.dispatchEvent(new CustomEvent('open-portfolio-modal', { detail: { slug } }));
         }
-      }
+      });
+
+      card.addEventListener('keydown', (e) => {
+        if (e instanceof KeyboardEvent && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          const slug = card.getAttribute('data-slug');
+          if (slug) {
+            window.dispatchEvent(new CustomEvent('open-portfolio-modal', { detail: { slug } }));
+          }
+        }
+      });
     });
-  });
-</script>
+  </script>
+</BaseLayout>
 
 <style>
   .layout-wrapper {
