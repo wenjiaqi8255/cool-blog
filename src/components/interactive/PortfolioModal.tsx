@@ -65,16 +65,12 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
     }
   };
 
-  // Render markdown body safely
+  // Render markdown body safely - markdown-it configured with html: false prevents XSS
   const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
 
-  if (!mounted) {
-    return null;
-  }
-
   return (
-    <>
-      {isOpen && selectedArticle && (
+    <div id="portfolio-modal-container">
+      {mounted && isOpen && selectedArticle && (
         <div
           className="modal-overlay"
           onClick={handleOverlayClick}
@@ -131,6 +127,10 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
               <p className="modal-excerpt">{selectedArticle.excerpt}</p>
             )}
 
+            {/*
+              Security: markdown-it configured with html: false prevents XSS.
+              Article body comes from trusted database source, not user input at render time.
+            */}
             <div
               className="modal-body"
               dangerouslySetInnerHTML={{ __html: md.render(selectedArticle.body) }}
@@ -341,6 +341,6 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           background: #3d3d54;
         }
       `}</style>
-    </>
+    </div>
   );
 }
