@@ -1,0 +1,52 @@
+---
+interface Props {
+  label?: string;
+  title?: string;
+  value?: string;
+}
+
+const { label = 'Weekly Commits', title, value = 'N/A' } = Astro.props;
+---
+
+<div class="stats-card">
+  <div class="content">
+    <p class="label">{label}</p>
+    {title && <p class="title">{title}</p>}
+    <p class="value">{value}</p>
+  </div>
+</div>
+
+<style>
+  .stats-card {
+    background: var(--color-canvas-white);
+    border: 1px solid #EEEEEE;
+    border-radius: 8px;
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .content {
+    text-align: center;
+  }
+  .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-ink-light);
+    margin: 0 0 8px 0;
+  }
+  .title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-ink-black);
+    margin: 0 0 12px 0;
+  }
+  .value {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--color-ink-black);
+    margin: 0;
+  }
+</style>
