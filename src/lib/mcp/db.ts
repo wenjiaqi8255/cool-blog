@@ -14,6 +14,7 @@ interface CreateArticleInput {
   date?: string;
   tags?: string[];
   excerpt?: string;
+  image?: string;
   status?: string;
 }
 
@@ -31,7 +32,7 @@ type Article = typeof schema.articles.$inferSelect;
  * Generates slug from title, handles collision with numeric suffixes.
  */
 export async function createArticle(data: CreateArticleInput): Promise<Article> {
-  const { title, body, date, tags, excerpt, status = 'draft' } = data;
+  const { title, body, date, tags, excerpt, image, status = 'draft' } = data;
 
   // Generate initial slug
   let slug = generateSlug(title);
@@ -64,6 +65,7 @@ export async function createArticle(data: CreateArticleInput): Promise<Article> 
     date: articleDate,
     tags: tags || null,
     excerpt: excerpt || null,
+    image: image || null,
     status,
   }).returning();
 

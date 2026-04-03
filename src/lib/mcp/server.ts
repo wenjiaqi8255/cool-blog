@@ -24,6 +24,7 @@ const createArticleSchema = z.object({
   date: z.string().datetime().optional(),
   tags: z.array(z.string()).optional(),
   excerpt: z.string().optional(),
+  image: z.string().url().optional().describe('Optional image URL for portfolio cards'),
   status: z.enum(['draft', 'published']).optional(),
 });
 
@@ -52,9 +53,9 @@ const updateArticleSchema = z.object({
 // Tool handlers - connected to database
 async function handleCreateArticle(params: z.infer<typeof createArticleSchema>) {
   try {
-    const { title, body, date, tags, excerpt, status = 'draft' } = params;
+    const { title, body, date, tags, excerpt, image, status = 'draft' } = params;
 
-    const article = await createArticle({ title, body, date, tags, excerpt, status });
+    const article = await createArticle({ title, body, date, tags, excerpt, image, status });
 
     return {
       success: true,
