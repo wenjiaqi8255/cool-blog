@@ -75,3 +75,25 @@ export async function listPortfolioArticles(): Promise<Article[]> {
 
   return result;
 }
+
+/**
+ * Cache for portfolio articles (60 second TTL)
+ */
+let cachedPortfolioArticles: Article[] | null = null;
+let portfolioCacheExpiry = 0;
+
+/**
+ * Returns cached portfolio articles, refreshing every 60 seconds
+ */
+export async function listPortfolioArticlesCached(): Promise<Article[]> {
+  const now = Date.now();
+
+  if (cachedPortfolioArticles && now < portfolioCacheExpiry) {
+    return cachedPortfolioArticles;
+  }
+
+  cachedPortfolioArticles = await listPortfolioArticles();
+  portfolioCacheExpiry = now + 60000; // 60 seconds
+
+  return cachedPortfolioArticles;
+}
