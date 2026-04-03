@@ -5,7 +5,7 @@
 - ✅ **v1.0 MVP** — Phases 1-4 (shipped 2026-03-30)
 - ✅ **v1.1 Content Management & Automation** — Phases 5-8 complete (2026-03-31)
 - ✅ **v1.2 UI/UX Polish and Content Management** — Phase 9 complete (2026-04-02)
-- 🔄 **v1.3 Database-Driven Portfolio** — Phase 10 ready to start
+- ✅ **v1.3 Database-Driven Portfolio** — Phase 10 complete (2026-04-03)
 
 ## Phases
 
@@ -208,15 +208,15 @@ Plans:
 - Security: DOMPurify for XSS prevention
 
 Plans:
-- [ ] 10-01: Schema extension (add image field to articles table)
+- [x] 10-01: Schema extension (add image field to articles table)
 - [x] 10-02: Configuration system (explicit rules with Zod validation)
-- [ ] 10-03: BentoGrid integration (replace static cards with database queries)
-- [ ] 10-04: Visitor stats (replace Weekly Commits with visitor count)
-- [ ] 10-05: Modal redesign (match Bento aesthetic, DOMPurify sanitization)
-- [ ] 10-06: Fallback & polish (loading animation, performance optimization)
+- [x] 10-03: BentoGrid integration (replace static cards with database queries)
+- [x] 10-04: Visitor stats (replace Weekly Commits with visitor count)
+- [x] 10-05: Modal redesign (match Bento aesthetic, DOMPurify sanitization)
+- [x] 10-06: Fallback & polish (loading animation, performance optimization)
 
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-04-03 (Phase 10 planned)*
+*Last updated: 2026-04-03 (Phase 10 complete)*
 *Granularity: coarse*
