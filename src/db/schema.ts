@@ -25,6 +25,7 @@ export const articles = pgTable('articles', {
   tags: text('tags').array(), // PostgreSQL array type for tags
   excerpt: text('excerpt'), // Short description for article cards
   body: text('body').notNull(), // Full Markdown content
+  image: text('image'), // Optional image URL for portfolio cards
   status: text('status').notNull().default(ArticleStatus.DRAFT), // 'draft' | 'published'
   deleted_at: timestamp('deleted_at'), // Soft delete (NULL = visible, non-NULL = hidden)
   created_at: timestamp('created_at').defaultNow().notNull(),

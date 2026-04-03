@@ -12,6 +12,7 @@ describe('Database Schema', () => {
       expect(articles).toHaveProperty('tags');
       expect(articles).toHaveProperty('excerpt');
       expect(articles).toHaveProperty('body');
+      expect(articles).toHaveProperty('image');
       expect(articles).toHaveProperty('status');
       expect(articles).toHaveProperty('deleted_at');
       expect(articles).toHaveProperty('created_at');
@@ -24,7 +25,7 @@ describe('Database Schema', () => {
       expect(ArticleStatus.PUBLISHED).toBe('published');
     });
 
-    it('should have all 11 required columns', () => {
+    it('should have all 12 required columns', () => {
       const columnNames = Object.keys(articles);
       // Drizzle adds internal properties like 'enableRLS', so we check for presence, not count
       expect(columnNames).toContain('id');
@@ -34,6 +35,7 @@ describe('Database Schema', () => {
       expect(columnNames).toContain('tags');
       expect(columnNames).toContain('excerpt');
       expect(columnNames).toContain('body');
+      expect(columnNames).toContain('image');
       expect(columnNames).toContain('status');
       expect(columnNames).toContain('deleted_at');
       expect(columnNames).toContain('created_at');
@@ -59,6 +61,11 @@ describe('Database Schema', () => {
     it('should have nullable deleted_at timestamp', () => {
       // We verify deleted_at column exists; nullability is in the schema definition
       expect(articles.deleted_at).toBeDefined();
+    });
+
+    it('should have nullable image field for portfolio cards', () => {
+      // We verify image column exists; nullability is in the schema definition
+      expect(articles.image).toBeDefined();
     });
 
     it('should not modify existing subscribers table', () => {

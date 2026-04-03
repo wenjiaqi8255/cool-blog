@@ -13,6 +13,7 @@ export interface Article {
   tags: string[] | null;
   excerpt: string | null;
   body: string;
+  image: string | null; // Optional image URL for portfolio cards
   status: 'draft' | 'published';
   deleted_at: Date | null;
   created_at: Date;
