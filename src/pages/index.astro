@@ -81,6 +81,18 @@ const showAnimation = cards.length === 1; // Only stats card
     // Client-side interactivity for portfolio cards in BentoGrid
     document.querySelectorAll('.bento-card').forEach((card) => {
       card.addEventListener('click', (e) => {
+        // Prevent event from bubbling up from buttons inside cards
+        if (e.target.closest('button.card-trigger')) {
+          const cardId = card.getAttribute('data-card-id');
+          if (cardId) {
+            e.preventDefault();
+            window.dispatchEvent(new CustomEvent('open-portfolio-modal', {
+              detail: { slug: cardId }
+            }));
+          }
+          return;
+        }
+
         const link = card.querySelector('a');
         if (link) {
           // If card has a link, let it navigate naturally

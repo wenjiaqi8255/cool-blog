@@ -71,6 +71,23 @@ npm run cf:whoami
 
 ## Environment Variables
 
+### Astro + Cloudflare Adapter Gotchas
+
+**Important:** When using `@astrojs/cloudflare` adapter, use `import.meta.env` instead of `process.env`:
+
+```typescript
+// ✗ Wrong - won't work in Astro SSR with Cloudflare adapter
+const url = process.env.DATABASE_URL;
+
+// ✅ Correct - works in both dev and production
+const url = import.meta.env?.DATABASE_URL || process.env.DATABASE_URL;
+```
+
+Key gotchas:
+- `.dev.vars` is Wrangler-only, not loaded by `astro dev`
+- Use `.env.local` for local development (auto-loaded by Vite)
+- `fs` module is unavailable even with `platformProxy: { enabled: false }`
+
 ### Setting Environment Variables in Cloudflare Dashboard
 
 1. Go to **Pages** → **cool-blog** → **Settings** → **Environment variables**
@@ -89,6 +106,23 @@ npm run cf:whoami
    ```
 
 2. Fill in values in `.env.local`
+
+## Environment Variables (Astro + Cloudflare)
+
+**Important:** When using `@astrojs/cloudflare` adapter, use `import.meta.env` instead of `process.env`:
+
+```typescript
+// ✗ Wrong - won't work in Astro SSR with Cloudflare adapter
+const url = process.env.DATABASE_URL;
+
+// ✅ Correct - works in both dev and production
+const url = import.meta.env?.DATABASE_URL || process.env.DATABASE_URL;
+```
+
+Key gotchas:
+- `.dev.vars` is Wrangler-only, not loaded by `astro dev`
+- Use `.env.local` for local development (auto-loaded by Vite)
+- `fs` module is unavailable even with `platformProxy: { enabled: false }`
 
 ## Custom Domain (Optional)
 

@@ -7,38 +7,68 @@ interface Props {
   link?: string;
   variant?: 'light' | 'dark';
   body?: string;
+  // For modal trigger - when true, clicking opens modal instead of navigating
+  isModalTrigger?: boolean;
 }
 
-const { image, title, subtitle, metaTag, link = '#', variant = 'light', body } = Astro.props;
+const { image, title, subtitle, metaTag, link = '#', variant = 'light', body, isModalTrigger = false } = Astro.props;
+
+// Determine if this should be a modal trigger (no valid link or explicit flag)
+const isModal = isModalTrigger || link === '#';
 ---
 
 <!-- Image card: shows image with overlay content -->
 {image && (
   <div class:list={['card', variant]}>
-    <a href={link} class="card-link">
-      <img src={image} alt={title || 'Card image'} class="card-image" loading="lazy" decoding="async" />
-      <div class="content-overlay">
-        {metaTag && <span class="meta-tag">{metaTag}</span>}
-        {title && (
-          <div class="title-wrapper">
-            <h3 class="headline">{title}</h3>
-            <span class="arrow-icon" aria-hidden="true">↗</span>
-          </div>
-        )}
-      </div>
-    </a>
+    {isModal ? (
+      /* Modal trigger - button instead of anchor */
+      <button type="button" class="card-trigger" aria-label={`View ${title}`}>
+        <img src={image} alt={title || 'Card image'} class="card-image" loading="lazy" decoding="async" />
+        <div class="content-overlay">
+          {metaTag && <span class="meta-tag">{metaTag}</span>}
+          {title && (
+            <div class="title-wrapper">
+              <h3 class="headline">{title}</h3>
+              <span class="arrow-icon" aria-hidden="true">↗</span>
+            </div>
+          )}
+        </div>
+      </button>
+    ) : (
+      <a href={link} class="card-link">
+        <img src={image} alt={title || 'Card image'} class="card-image" loading="lazy" decoding="async" />
+        <div class="content-overlay">
+          {metaTag && <span class="meta-tag">{metaTag}</span>}
+          {title && (
+            <div class="title-wrapper">
+              <h3 class="headline">{title}</h3>
+              <span class="arrow-icon" aria-hidden="true">↗</span>
+            </div>
+          )}
+        </div>
+      </a>
+    )}
   </div>
 )}
 
 <!-- Text card fallback: shown when no image -->
 {!image && (
   <div class:list={['card', 'text-card', variant]}>
-    <a href={link} class="card-link">
-      <span class="arrow-icon" aria-hidden="true">↗</span>
-      {metaTag && <span class="meta-tag">{metaTag}</span>}
-      <h3 class="headline">{title}</h3>
-      {body && <p class="copy">{body}</p>}
-    </a>
+    {isModal ? (
+      <button type="button" class="card-trigger text-card-trigger">
+        <span class="arrow-icon" aria-hidden="true">↗</span>
+        {metaTag && <span class="meta-tag">{metaTag}</span>}
+        <h3 class="headline">{title}</h3>
+        {body && <p class="copy">{body}</p>}
+      </button>
+    ) : (
+      <a href={link} class="card-link">
+        <span class="arrow-icon" aria-hidden="true">↗</span>
+        {metaTag && <span class="meta-tag">{metaTag}</span>}
+        <h3 class="headline">{title}</h3>
+        {body && <p class="copy">{body}</p>}
+      </a>
+    )}
   </div>
 )}
 
@@ -156,5 +186,42 @@ const { image, title, subtitle, metaTag, link = '#', variant = 'light', body } =
   .text-card.dark .meta-tag,
   .text-card.dark .copy {
     color: #888;
+  }
+
+  /* Button trigger styles */
+  .card-trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+  }
+
+  .card-trigger .card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    filter: grayscale(100%) contrast(1.1);
+    transition: filter 0.4s ease, transform 0.6s ease;
+    z-index: 0;
+  }
+
+  .card-trigger:hover .card-image {
+    filter: grayscale(0%) contrast(1);
+    transform: scale(1.02);
+  }
+
+  .text-card-trigger {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 32px;
   }
 </style>

@@ -112,12 +112,12 @@ export function mapArticleToCard(article: Article, config: PortfolioConfig): Car
     span: sizing.span,
     row: sizing.row,
     variant: 'dark', // Match Bento aesthetic
+    isModalTrigger: true, // Open modal instead of navigating to article
     props: {
       title: article.title,
       body: article.excerpt,
       image: image,
       metaTag: metaTag,
-      link: `/articles/${article.slug}`,
       date: dateString
     }
   };

@@ -5,18 +5,32 @@ interface Props {
   link?: string;
   variant?: 'light' | 'dark';
   metaTag?: string;
+  // For modal trigger - when true, clicking opens modal instead of navigating
+  isModalTrigger?: boolean;
 }
 
-const { title, body, link = '#', variant = 'light', metaTag } = Astro.props;
+const { title, body, link = '#', variant = 'light', metaTag, isModalTrigger = false } = Astro.props;
+
+// Determine if this should be a modal trigger
+const isModal = isModalTrigger || link === '#';
 ---
 
 <div class:list={['card', variant]}>
-  <a href={link} class="card-link">
-    <span class="arrow-icon" aria-hidden="true">↗</span>
-    {metaTag && <span class="meta-tag">{metaTag}</span>}
-    <h3 class="headline">{title}</h3>
-    {body && <p class="copy">{body}</p>}
-  </a>
+  {isModal ? (
+    <button type="button" class="card-trigger" aria-label={`View ${title}`}>
+      <span class="arrow-icon" aria-hidden="true">↗</span>
+      {metaTag && <span class="meta-tag">{metaTag}</span>}
+      <h3 class="headline">{title}</h3>
+      {body && <p class="copy">{body}</p>}
+    </button>
+  ) : (
+    <a href={link} class="card-link">
+      <span class="arrow-icon" aria-hidden="true">↗</span>
+      {metaTag && <span class="meta-tag">{metaTag}</span>}
+      <h3 class="headline">{title}</h3>
+      {body && <p class="copy">{body}</p>}
+    </a>
+  )}
 </div>
 
 <style>
@@ -97,5 +111,28 @@ const { title, body, link = '#', variant = 'light', metaTag } = Astro.props;
     line-height: 1.5;
     max-width: 300px;
     margin: 0;
+  }
+
+  /* Button trigger styles */
+  .card-trigger {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+    min-height: 320px;
+  }
+
+  .card-trigger:hover .arrow-icon {
+    transform: translate(4px, -4px);
   }
 </style>
