@@ -1,6 +1,7 @@
 /* @refresh reload */
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import MarkdownIt from 'markdown-it';
+import DOMPurify from 'dompurify';
 
 export interface Article {
   id: number;
@@ -20,6 +21,9 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
   const [mounted, setMounted] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousActiveElement = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -31,6 +35,8 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
       const slug = e.detail.slug;
       const article = articles.find((a) => a.slug === slug);
       if (article) {
+        // Store the currently focused element to restore later
+        previousActiveElement.current = document.activeElement as HTMLElement;
         setSelectedArticle(article);
         setIsOpen(true);
       }
@@ -42,22 +48,80 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
     };
   }, [articles]);
 
-  // Handle body scroll lock
+  // Handle body scroll lock and focus management
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Focus the close button after a short delay to ensure modal is rendered
+      const focusTimeout = setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 100);
+      return () => {
+        clearTimeout(focusTimeout);
+      };
     } else {
       document.body.style.overflow = '';
+      // Restore focus to the element that opened the modal
+      previousActiveElement.current?.focus();
     }
     return () => {
       document.body.style.overflow = '';
     };
   }, [isOpen]);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsOpen(false);
     setSelectedArticle(null);
-  };
+  }, []);
+
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen, handleClose]);
+
+  // Focus trap - keep Tab cycling within modal
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      const modal = modalRef.current;
+      if (!modal) return;
+
+      const focusableElements = modal.querySelectorAll<HTMLElement>(
+        'button, a[href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+
+      if (focusableElements.length === 0) return;
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.shiftKey && document.activeElement === firstElement) {
+        e.preventDefault();
+        lastElement.focus();
+      } else if (!e.shiftKey && document.activeElement === lastElement) {
+        e.preventDefault();
+        firstElement.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    return () => document.removeEventListener('keydown', handleTab);
+  }, [isOpen]);
 
   const handleOverlayClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -65,13 +129,27 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
     }
   };
 
-  // Render markdown body safely - markdown-it configured with html: false prevents XSS
+  // Filter tags - exclude 'Project' and 'featured' from display
+  const getDisplayTags = (tags: string[]): string[] => {
+    return tags.filter((tag) => tag !== 'Project' && tag !== 'featured');
+  };
+
+  // Render markdown body safely with DOMPurify sanitization (XSS prevention)
   const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
+
+  // Sanitize rendered markdown with DOMPurify for XSS prevention
+  const getSanitizedBody = (body: string): string => {
+    const rendered = md.render(body);
+    return DOMPurify.sanitize(rendered);
+  };
+
+  const displayTags = selectedArticle ? getDisplayTags(selectedArticle.tags) : [];
 
   return (
     <div id="portfolio-modal-container">
       {mounted && isOpen && selectedArticle && (
         <div
+          ref={modalRef}
           className="modal-overlay"
           onClick={handleOverlayClick}
           role="dialog"
@@ -80,6 +158,7 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         >
           <div className="modal-content portfolio-modal" onClick={(e) => e.stopPropagation()}>
             <button
+              ref={closeButtonRef}
               className="modal-close"
               onClick={handleClose}
               aria-label="Close modal"
@@ -100,27 +179,27 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
             </button>
 
             <header className="modal-header">
-              <h2 id="modal-title" className="modal-title">
-                {selectedArticle.title}
-              </h2>
-              <div className="modal-meta">
-                {selectedArticle.date && (
-                  <time dateTime={selectedArticle.date}>
-                    {new Date(selectedArticle.date).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric'
-                    })}
-                  </time>
-                )}
-                {selectedArticle.tags && selectedArticle.tags.length > 0 && (
+              <div className="modal-meta-top">
+                {displayTags.length > 0 && (
                   <div className="modal-tags">
-                    {selectedArticle.tags.map((tag) => (
+                    {displayTags.map((tag) => (
                       <span key={tag} className="tag">{tag}</span>
                     ))}
                   </div>
                 )}
+                {selectedArticle.date && (
+                  <time className="modal-date" dateTime={selectedArticle.date}>
+                    {new Date(selectedArticle.date).toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric'
+                    })}
+                  </time>
+                )}
               </div>
+              <h2 id="modal-title" className="modal-title">
+                {selectedArticle.title}
+              </h2>
             </header>
 
             {selectedArticle.excerpt && (
@@ -128,13 +207,22 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
             )}
 
             {/*
-              Security: markdown-it configured with html: false prevents XSS.
-              Article body comes from trusted database source, not user input at render time.
+              Security: DOMPurify sanitizes rendered markdown to prevent XSS attacks.
+              markdown-it is configured with html: false as an additional layer of defense.
             */}
             <div
               className="modal-body"
-              dangerouslySetInnerHTML={{ __html: md.render(selectedArticle.body) }}
+              dangerouslySetInnerHTML={{ __html: getSanitizedBody(selectedArticle.body) }}
             />
+
+            <footer className="modal-footer">
+              <a
+                href={`/articles/${selectedArticle.slug}`}
+                className="read-more-link"
+              >
+                Read full article
+              </a>
+            </footer>
           </div>
         </div>
       )}
@@ -147,11 +235,12 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           right: 0;
           bottom: 0;
           background: rgba(0, 0, 0, 0.8);
-          backdrop-filter: blur(4px);
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
           display: flex;
           align-items: center;
           justify-content: center;
-          z-index: 1000;
+          z-index: 9999;
           padding: 20px;
           animation: fadeIn 0.2s ease;
         }
@@ -164,14 +253,15 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         .modal-content.portfolio-modal {
           background: #1a1a2e;
           border: 1px solid #2d2d44;
-          border-radius: 16px;
+          border-radius: 12px;
           width: 100%;
-          max-width: 640px;
-          max-height: 85vh;
+          max-width: 800px;
+          max-height: 90vh;
           overflow-y: auto;
           padding: 32px;
           position: relative;
           animation: slideUp 0.3s ease;
+          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
         }
 
         @keyframes slideUp {
@@ -190,44 +280,41 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           top: 16px;
           right: 16px;
           background: transparent;
-          border: none;
-          color: #a0a0a0;
-          cursor: pointer;
-          padding: 8px;
+          border: 1px solid #2d2d44;
           border-radius: 8px;
-          transition: color 0.2s, background 0.2s;
+          color: #f0f0f0;
+          font-size: 24px;
+          width: 40px;
+          height: 40px;
+          cursor: pointer;
+          transition: all 0.2s ease;
           display: flex;
           align-items: center;
           justify-content: center;
         }
 
         .modal-close:hover {
-          color: #f0f0f0;
-          background: rgba(255, 255, 255, 0.1);
+          background: rgba(0, 212, 255, 0.1);
+          border-color: #00d4ff;
+          color: #00d4ff;
+        }
+
+        .modal-close:focus {
+          outline: 2px solid #00d4ff;
+          outline-offset: 2px;
         }
 
         .modal-header {
-          margin-bottom: 16px;
+          margin-bottom: 24px;
+          padding-right: 48px;
         }
 
-        .modal-title {
-          font-size: 24px;
-          font-weight: 600;
-          color: #f0f0f0;
-          margin: 0 0 12px 0;
-          line-height: 1.3;
-        }
-
-        .modal-meta {
+        .modal-meta-top {
           display: flex;
-          flex-wrap: wrap;
           align-items: center;
           gap: 12px;
-        }
-
-        .modal-meta time {
-          font-size: 14px;
-          color: #6a6a7a;
+          flex-wrap: wrap;
+          margin-bottom: 12px;
         }
 
         .modal-tags {
@@ -237,60 +324,76 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         }
 
         .tag {
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 500;
           text-transform: uppercase;
           letter-spacing: 0.5px;
-          padding: 4px 10px;
+          padding: 4px 8px;
           background: rgba(0, 212, 255, 0.15);
           color: #00d4ff;
           border-radius: 4px;
         }
 
+        .modal-date {
+          font-size: 12px;
+          color: #6a6a7a;
+          font-family: 'JetBrains Mono', monospace;
+        }
+
+        .modal-title {
+          font-size: 32px;
+          font-weight: 600;
+          color: #f0f0f0;
+          margin: 0;
+          line-height: 1.3;
+        }
+
         .modal-excerpt {
-          font-size: 16px;
+          font-size: 18px;
           color: #a0a0a0;
           line-height: 1.6;
-          margin-bottom: 20px;
-          padding-bottom: 20px;
-          border-bottom: 1px solid #2d2d44;
+          margin: 0 0 24px 0;
         }
 
         .modal-body {
-          color: #c0c0c0;
-          line-height: 1.7;
-          font-size: 15px;
+          color: #d0d0d0;
+          line-height: 1.8;
+          font-size: 16px;
         }
 
         .modal-body h1,
         .modal-body h2,
         .modal-body h3 {
           color: #f0f0f0;
-          margin-top: 24px;
-          margin-bottom: 12px;
+          margin-top: 32px;
+          margin-bottom: 16px;
         }
 
-        .modal-body h1 { font-size: 20px; }
-        .modal-body h2 { font-size: 18px; }
-        .modal-body h3 { font-size: 16px; }
+        .modal-body h1 { font-size: 24px; }
+        .modal-body h2 { font-size: 20px; }
+        .modal-body h3 { font-size: 18px; }
 
         .modal-body p {
           margin-bottom: 16px;
         }
 
         .modal-body code {
-          background: #0d0d1a;
+          font-family: 'JetBrains Mono', monospace;
+          background: rgba(0, 0, 0, 0.3);
           padding: 2px 6px;
           border-radius: 4px;
-          font-size: 13px;
+          font-size: 14px;
         }
 
         .modal-body pre {
-          background: #0d0d1a;
-          padding: 16px;
+          background: rgba(0, 0, 0, 0.4);
+          border: 1px solid #2d2d44;
           border-radius: 8px;
+          padding: 16px;
           overflow-x: auto;
           margin-bottom: 16px;
+          font-size: 14px;
+          line-height: 1.6;
         }
 
         .modal-body pre code {
@@ -323,6 +426,29 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           margin: 16px 0;
         }
 
+        .modal-footer {
+          margin-top: 32px;
+          padding-top: 24px;
+          border-top: 1px solid #2d2d44;
+        }
+
+        .read-more-link {
+          color: #00d4ff;
+          text-decoration: none;
+          font-weight: 500;
+          font-size: 14px;
+          transition: color 0.2s ease;
+        }
+
+        .read-more-link:hover {
+          color: #00b8e6;
+        }
+
+        .read-more-link:focus {
+          outline: 2px solid #00d4ff;
+          outline-offset: 2px;
+        }
+
         /* Scrollbar styling */
         .modal-content::-webkit-scrollbar {
           width: 8px;
@@ -339,6 +465,27 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
 
         .modal-content::-webkit-scrollbar-thumb:hover {
           background: #3d3d54;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+          .modal-content.portfolio-modal {
+            width: 95%;
+            max-height: 95vh;
+            padding: 24px;
+          }
+
+          .modal-title {
+            font-size: 24px;
+          }
+
+          .modal-excerpt {
+            font-size: 16px;
+          }
+
+          .modal-body {
+            font-size: 14px;
+          }
         }
       `}</style>
     </div>

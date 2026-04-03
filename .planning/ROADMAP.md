@@ -4,7 +4,8 @@
 
 - ✅ **v1.0 MVP** — Phases 1-4 (shipped 2026-03-30)
 - ✅ **v1.1 Content Management & Automation** — Phases 5-8 complete (2026-03-31)
-- 🔄 **v1.2 UI/UX Polish and Content Management** — Phase 9 in progress
+- ✅ **v1.2 UI/UX Polish and Content Management** — Phase 9 complete (2026-04-02)
+- 🔄 **v1.3 Database-Driven Portfolio** — Phase 10 ready to start
 
 ## Phases
 
@@ -190,8 +191,32 @@ Plans:
 - [x] 09-04: Interaction enhancements (tabs, modal, modular portfolio) (Wave 3)
 - [x] 09-05: Photo card feature implementation
 
+### Phase 10: Database-Driven Portfolio
+
+**Goal:** Replace static mockup cards with database-driven portfolio articles in BentoGrid
+**Requirements**: DATA-10 (image field), CONFIG-10 (explicit rules), VIS-10 (Bento aesthetic), MODAL-10 (redesign), STATS-10 (visitor counter), FALLBACK-10 (animations)
+**Depends on:** Phase 9
+**Plans:** 2/6 plans executed
+
+**Key Decisions:**
+- Fully data-driven (no static cards)
+- Explicit configuration (readable by humans and AI agents)
+- Image field: optional URL, fallback to first image in body
+- Terminal card logic: deferred (will be used for future features)
+- Stats card: changed to visitor count
+- Fallback: loading animation when no articles
+- Security: DOMPurify for XSS prevention
+
+Plans:
+- [ ] 10-01: Schema extension (add image field to articles table)
+- [ ] 10-02: Configuration system (explicit rules with Zod validation)
+- [ ] 10-03: BentoGrid integration (replace static cards with database queries)
+- [ ] 10-04: Visitor stats (replace Weekly Commits with visitor count)
+- [ ] 10-05: Modal redesign (match Bento aesthetic, DOMPurify sanitization)
+- [ ] 10-06: Fallback & polish (loading animation, performance optimization)
+
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-03-31 (Phase 9 revised with test infrastructure)*
+*Last updated: 2026-04-03 (Phase 10 planned)*
 *Granularity: coarse*
