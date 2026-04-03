@@ -32,7 +32,7 @@ Plan: 2 of 6 in current phase
 Status: 10-02 complete - Configuration system with Zod validation
 Last activity: 2026-04-03 — Completed 10-02 Configuration System
 
-Progress: [▓▓▓▓▓▓▓░░] 71% (15 of 21 plans complete)
+Progress: [▓▓▓▓▓▓▓▓░] 86% (18 of 21 plans complete)
 
 v1.3 Milestone: READY TO START
 
@@ -56,7 +56,7 @@ v1.3 Milestone: READY TO START
 | 7. Content Workflow | 3/3 | Complete | 2026-03-31 |
 | 8. Astro Integration | 2/8 | Complete | 2026-03-31 |
 | 9. UI/UX Polish | 5/5 | Complete | 2026-04-01 |
-| 10. Database-Driven Portfolio | 0/6 | Ready to Start | 2026-04-03 |
+| 10. Database-Driven Portfolio | 2/6 | In Progress | 2026-04-03 |
 
 *Updated after each plan completion*
 | Phase 09 P00 | 7 | 5 tasks | 5 files |
@@ -101,6 +101,9 @@ v1.3 Milestone: READY TO START
 - [Phase 10]: Stats card changed to visitor count (not Weekly Commits)
 - [Phase 10]: Modal redesign with DOMPurify sanitization (XSS prevention)
 - [Phase 10]: Terminal card logic deferred for future features (chatbot)
+- [Phase 10-02]: PortfolioConfigSchema defines all rules for portfolio display explicitly
+- [Phase 10-02]: mapArticleToCard converts database articles to Bento card configurations
+- [Phase 10-02]: extractFirstImage supports Markdown and HTML image syntax
 
 ### Pending Todos
 
