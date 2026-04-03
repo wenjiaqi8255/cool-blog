@@ -1,0 +1,106 @@
+---
+/**
+ * Loading Animation
+ *
+ * Displayed when:
+ * - No portfolio articles in database
+ * - Too few articles (< 3)
+ *
+ * Animation matches Bento aesthetic (dark, minimal, geometric)
+ */
+---
+
+<div class="loading-container" role="status" aria-label="Loading portfolio">
+  <div class="loading-grid">
+    <!-- Geometric shapes animation -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+    <div class="shape shape-4"></div>
+  </div>
+  <p class="loading-text">Loading portfolio...</p>
+</div>
+
+<style>
+  .loading-container {
+    min-height: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+  }
+
+  .loading-grid {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .shape {
+    width: 100%;
+    height: 100%;
+    background: var(--card-bg, #1a1a2e);
+    border: 1px solid var(--card-border, #2d2d44);
+    border-radius: 12px;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  .shape-1 {
+    animation-delay: 0s;
+  }
+
+  .shape-2 {
+    animation-delay: 0.3s;
+  }
+
+  .shape-3 {
+    animation-delay: 0.6s;
+  }
+
+  .shape-4 {
+    animation-delay: 0.9s;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 0.5;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 1;
+      border-color: var(--accent-primary, #00d4ff);
+    }
+  }
+
+  .loading-text {
+    font-size: 14px;
+    color: var(--text-muted, #6a6a7a);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .shape {
+      animation: none;
+      opacity: 0.7;
+    }
+  }
+
+  /* Mobile */
+  @media (max-width: 768px) {
+    .loading-container {
+      min-height: 400px;
+    }
+
+    .loading-grid {
+      width: 150px;
+      height: 150px;
+    }
+  }
+</style>
