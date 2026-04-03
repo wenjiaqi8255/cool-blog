@@ -135,9 +135,9 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
   };
 
   // Render markdown body safely with DOMPurify sanitization (XSS prevention)
+  // Same approach as article detail page - render body directly without preprocessing
   const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
 
-  // Sanitize rendered markdown with DOMPurify for XSS prevention
   const getSanitizedBody = (body: string): string => {
     const rendered = md.render(body);
     return DOMPurify.sanitize(rendered);
@@ -234,7 +234,7 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           left: 0;
           right: 0;
           bottom: 0;
-          background: rgba(0, 0, 0, 0.8);
+          background: rgba(0, 0, 0, 0.6);
           backdrop-filter: blur(8px);
           -webkit-backdrop-filter: blur(8px);
           display: flex;
@@ -251,8 +251,8 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         }
 
         .modal-content.portfolio-modal {
-          background: #1a1a2e;
-          border: 1px solid #2d2d44;
+          background: var(--color-canvas-white, #ffffff);
+          border: 1px solid rgba(0, 0, 0, 0.1);
           border-radius: 12px;
           width: 100%;
           max-width: 800px;
@@ -261,7 +261,7 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           padding: 32px;
           position: relative;
           animation: slideUp 0.3s ease;
-          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.4);
+          box-shadow: 0 24px 48px rgba(0, 0, 0, 0.15);
         }
 
         @keyframes slideUp {
@@ -280,9 +280,9 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           top: 16px;
           right: 16px;
           background: transparent;
-          border: 1px solid #2d2d44;
+          border: 1px solid rgba(0, 0, 0, 0.15);
           border-radius: 8px;
-          color: #f0f0f0;
+          color: var(--color-ink-light, #666);
           font-size: 24px;
           width: 40px;
           height: 40px;
@@ -294,13 +294,13 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         }
 
         .modal-close:hover {
-          background: rgba(0, 212, 255, 0.1);
-          border-color: #00d4ff;
-          color: #00d4ff;
+          background: rgba(0, 0, 0, 0.05);
+          border-color: var(--color-ink-light, #333);
+          color: var(--color-ink-black, #111);
         }
 
         .modal-close:focus {
-          outline: 2px solid #00d4ff;
+          outline: 2px solid var(--color-ink-black, #111);
           outline-offset: 2px;
         }
 
@@ -329,34 +329,36 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           text-transform: uppercase;
           letter-spacing: 0.5px;
           padding: 4px 8px;
-          background: rgba(0, 212, 255, 0.15);
-          color: #00d4ff;
+          background: rgba(0, 0, 0, 0.06);
+          color: var(--color-ink-gray, #555);
           border-radius: 4px;
         }
 
         .modal-date {
           font-size: 12px;
-          color: #6a6a7a;
+          color: var(--color-ink-light, #888);
           font-family: 'JetBrains Mono', monospace;
         }
 
         .modal-title {
-          font-size: 32px;
-          font-weight: 600;
-          color: #f0f0f0;
+          font-size: 28px;
+          font-weight: 400;
+          color: var(--color-ink-black, #111);
           margin: 0;
           line-height: 1.3;
+          letter-spacing: -0.02em;
         }
 
         .modal-excerpt {
           font-size: 18px;
-          color: #a0a0a0;
+          color: var(--color-ink-gray, #444);
           line-height: 1.6;
           margin: 0 0 24px 0;
         }
 
         .modal-body {
-          color: #d0d0d0;
+          font-family: 'Inter', sans-serif;
+          color: var(--color-ink-black, #111);
           line-height: 1.8;
           font-size: 16px;
         }
@@ -364,14 +366,14 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         .modal-body h1,
         .modal-body h2,
         .modal-body h3 {
-          color: #f0f0f0;
+          color: var(--color-ink-black, #111);
           margin-top: 32px;
           margin-bottom: 16px;
         }
 
-        .modal-body h1 { font-size: 24px; }
-        .modal-body h2 { font-size: 20px; }
-        .modal-body h3 { font-size: 18px; }
+        .modal-body h1 { font-size: 24px; font-weight: 400; letter-spacing: -0.02em; }
+        .modal-body h2 { font-size: 20px; font-weight: 400; }
+        .modal-body h3 { font-size: 18px; font-weight: 400; }
 
         .modal-body p {
           margin-bottom: 16px;
@@ -379,17 +381,18 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
 
         .modal-body code {
           font-family: 'JetBrains Mono', monospace;
-          background: rgba(0, 0, 0, 0.3);
+          background: #1f1f1f;
+          color: #111111;
           padding: 2px 6px;
           border-radius: 4px;
           font-size: 14px;
         }
 
         .modal-body pre {
-          background: rgba(0, 0, 0, 0.4);
-          border: 1px solid #2d2d44;
+          background: #1f1f1f;
+          color: #111111;
           border-radius: 8px;
-          padding: 16px;
+          padding: 24px;
           overflow-x: auto;
           margin-bottom: 16px;
           font-size: 14px;
@@ -398,12 +401,13 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
 
         .modal-body pre code {
           background: transparent;
+          color: inherit;
           padding: 0;
         }
 
         .modal-body ul,
         .modal-body ol {
-          margin-bottom: 16px;
+          margin: 16px 0;
           padding-left: 24px;
         }
 
@@ -412,28 +416,37 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         }
 
         .modal-body a {
-          color: #00d4ff;
-          text-decoration: none;
+          color: var(--color-ink-black, #111);
+          text-decoration: underline;
+          text-underline-offset: 2px;
         }
 
         .modal-body a:hover {
-          text-decoration: underline;
+          text-decoration: none;
         }
 
         .modal-body img {
           max-width: 100%;
           border-radius: 8px;
-          margin: 16px 0;
+          margin: 24px 0;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .modal-body blockquote {
+          border-left: 2px solid var(--color-ink-light, #ccc);
+          margin: 24px 0;
+          padding-left: 16px;
+          color: var(--color-ink-gray, #555);
         }
 
         .modal-footer {
           margin-top: 32px;
           padding-top: 24px;
-          border-top: 1px solid #2d2d44;
+          border-top: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         .read-more-link {
-          color: #00d4ff;
+          color: var(--color-ink-black, #111);
           text-decoration: none;
           font-weight: 500;
           font-size: 14px;
@@ -441,11 +454,11 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         }
 
         .read-more-link:hover {
-          color: #00b8e6;
+          text-decoration: underline;
         }
 
         .read-more-link:focus {
-          outline: 2px solid #00d4ff;
+          outline: 2px solid var(--color-ink-black, #111);
           outline-offset: 2px;
         }
 
@@ -455,16 +468,16 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
         }
 
         .modal-content::-webkit-scrollbar-track {
-          background: #1a1a2e;
+          background: #f5f5f5;
         }
 
         .modal-content::-webkit-scrollbar-thumb {
-          background: #2d2d44;
+          background: #ccc;
           border-radius: 4px;
         }
 
         .modal-content::-webkit-scrollbar-thumb:hover {
-          background: #3d3d54;
+          background: #aaa;
         }
 
         /* Mobile responsive */
@@ -484,7 +497,7 @@ export default function PortfolioModal({ articles = [] }: PortfolioModalProps) {
           }
 
           .modal-body {
-            font-size: 14px;
+            font-size: 15px;
           }
         }
       `}</style>

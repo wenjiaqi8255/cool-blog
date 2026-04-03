@@ -18,15 +18,19 @@ const isModal = isModalTrigger || link === '#';
 <div class:list={['card', variant]}>
   {isModal ? (
     <button type="button" class="card-trigger" aria-label={`View ${title}`}>
-      <span class="arrow-icon" aria-hidden="true">↗</span>
-      {metaTag && <span class="meta-tag">{metaTag}</span>}
+      <div class="top-row">
+        {metaTag && <span class="meta-tag">{metaTag}</span>}
+        <span class="arrow-icon" aria-hidden="true">↗</span>
+      </div>
       <h3 class="headline">{title}</h3>
       {body && <p class="copy">{body}</p>}
     </button>
   ) : (
     <a href={link} class="card-link">
-      <span class="arrow-icon" aria-hidden="true">↗</span>
-      {metaTag && <span class="meta-tag">{metaTag}</span>}
+      <div class="top-row">
+        {metaTag && <span class="meta-tag">{metaTag}</span>}
+        <span class="arrow-icon" aria-hidden="true">↗</span>
+      </div>
       <h3 class="headline">{title}</h3>
       {body && <p class="copy">{body}</p>}
     </a>
@@ -53,17 +57,38 @@ const isModal = isModalTrigger || link === '#';
     background-color: var(--color-card-hover);
   }
 
-  .card:hover .arrow-icon {
-    transform: translate(4px, -4px);
-  }
-
   .card.dark {
     background-color: var(--color-ink-black);
     color: var(--color-canvas-white);
   }
 
+  .card.dark .headline,
+  .card.dark .arrow-icon {
+    color: var(--color-canvas-white);
+  }
+
+  .card:hover .arrow-icon {
+    transform: translate(4px, -4px);
+  }
+
   .card.dark:hover {
     background-color: #000;
+  }
+
+  /* Direct child selector for button inside dark card */
+  .card.dark > button.card-trigger:hover .headline,
+  .card.dark > button.card-trigger:hover .arrow-icon {
+    color: white !important;
+  }
+
+  .card.dark:hover .headline,
+  .card.dark:hover .arrow-icon {
+    color: var(--color-canvas-white);
+  }
+
+  .card.dark:hover .meta-tag,
+  .card.dark:hover .copy {
+    color: #666;
   }
 
   .card.dark .meta-tag,
@@ -79,10 +104,14 @@ const isModal = isModalTrigger || link === '#';
     color: inherit;
   }
 
+  .top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
   .arrow-icon {
-    position: absolute;
-    top: 24px;
-    right: 24px;
     font-size: 14px;
     transition: transform 0.3s var(--ease-out);
   }
@@ -92,7 +121,6 @@ const isModal = isModalTrigger || link === '#';
     text-transform: uppercase;
     letter-spacing: 0.1em;
     color: var(--color-ink-light);
-    margin-bottom: 16px;
     display: block;
   }
 
