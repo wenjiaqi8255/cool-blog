@@ -5,18 +5,25 @@ import Header from '../components/layout/Header.astro';
 import BentoGrid from '../components/layout/BentoGrid.astro';
 import Footer from '../components/layout/Footer.astro';
 import PortfolioModal from '../components/interactive/PortfolioModal';
-import { listPortfolioArticles, type Article } from '../lib/articles';
+import LoadingAnimation from '../components/animations/LoadingAnimation.astro';
+import { listPortfolioArticlesCached, type Article } from '../lib/articles';
 import { mapArticlesToCards, portfolioConfig } from '../config/portfolio';
 import type { CardConfig } from '../config/cards';
 import { getVisitorCountCached, isRedisConfigured } from '../lib/visitor-counter';
 
 const currentPath = Astro.url.pathname;
 
-// Fetch portfolio articles
-const portfolioArticles: Article[] = await listPortfolioArticles();
+// Fetch portfolio articles with caching
+let portfolioArticles: Article[] = [];
+let portfolioCards: CardConfig[] = [];
 
-// Map to card configurations
-const portfolioCards: CardConfig[] = mapArticlesToCards(portfolioArticles, portfolioConfig);
+try {
+  portfolioArticles = await listPortfolioArticlesCached();
+  portfolioCards = mapArticlesToCards(portfolioArticles, portfolioConfig);
+} catch (error) {
+  console.error('Failed to load portfolio articles:', error);
+  // Keep empty arrays to show loading animation
+}
 
 // Fetch visitor count for stats card
 const visitorCount = isRedisConfigured()
@@ -52,10 +59,7 @@ const showAnimation = cards.length === 1; // Only stats card
 
     <main class="bento-grid-container">
       {showAnimation ? (
-        <div class="portfolio-animation">
-          <!-- User will provide HTML animation -->
-          <slot name="animation" />
-        </div>
+        <LoadingAnimation />
       ) : (
         <BentoGrid cards={cards} />
       )}
@@ -111,13 +115,6 @@ const showAnimation = cards.length === 1; // Only stats card
 
   .bento-grid-container {
     margin-top: 40px;
-  }
-
-  .portfolio-animation {
-    min-height: 600px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 
   @media (max-width: 768px) {
