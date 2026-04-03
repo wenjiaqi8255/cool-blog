@@ -3,7 +3,7 @@
  * Provides article CRUD operations via Model Context Protocol.
  */
 
-import { McpServer } from '@modelcontextprotocol/sdk/server';
+import { Server as McpServer } from '@modelcontextprotocol/sdk/server';
 import { z } from 'zod';
 import type { Implementation } from '@modelcontextprotocol/sdk/types.js';
 import { createArticle, listArticles, getArticle, deleteArticle, updateArticleStatus } from './db.js';

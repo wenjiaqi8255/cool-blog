@@ -4,9 +4,8 @@
  */
 
 import type { APIRoute } from 'astro';
-import { mcpServer } from '../lib/mcp/server';
+import { mcpServer } from '../../lib/mcp/server';
 import { StreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/streamableHttp';
-import { IncomingMessage, ServerResponse } from 'http';
 
 // Create transport instance for MCP server
 const transport = new StreamableHTTPServerTransport();

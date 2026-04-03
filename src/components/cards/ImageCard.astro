@@ -10,37 +10,37 @@ interface Props {
 }
 
 const { image, title, subtitle, metaTag, link = '#', variant = 'light', body } = Astro.props;
-
-// If no image, render as text card instead
-if (!image) {
-  return (
-    <div class:list={['card', 'text-card', variant]}>
-      <a href={link} class="card-link">
-        <span class="arrow-icon" aria-hidden="true">↗</span>
-        {metaTag && <span class="meta-tag">{metaTag}</span>}
-        <h3 class="headline">{title}</h3>
-        {body && <p class="copy">{body}</p>}
-      </a>
-    </div>
-  );
-}
 ---
 
+<!-- Image card: shows image with overlay content -->
+{image && (
+  <div class:list={['card', variant]}>
+    <a href={link} class="card-link">
+      <img src={image} alt={title || 'Card image'} class="card-image" loading="lazy" decoding="async" />
+      <div class="content-overlay">
+        {metaTag && <span class="meta-tag">{metaTag}</span>}
+        {title && (
+          <div class="title-wrapper">
+            <h3 class="headline">{title}</h3>
+            <span class="arrow-icon" aria-hidden="true">↗</span>
+          </div>
+        )}
+      </div>
+    </a>
+  </div>
+)}
 
-<div class:list={['card', variant]}>
-  <a href={link} class="card-link">
-    <img src={image} alt={title || 'Card image'} class="card-image" loading="lazy" decoding="async" />
-    <div class="content-overlay">
+<!-- Text card fallback: shown when no image -->
+{!image && (
+  <div class:list={['card', 'text-card', variant]}>
+    <a href={link} class="card-link">
+      <span class="arrow-icon" aria-hidden="true">↗</span>
       {metaTag && <span class="meta-tag">{metaTag}</span>}
-      {title && (
-        <div class="title-wrapper">
-          <h3 class="headline">{title}</h3>
-          <span class="arrow-icon" aria-hidden="true">↗</span>
-        </div>
-      )}
-    </div>
-  </a>
-</div>
+      <h3 class="headline">{title}</h3>
+      {body && <p class="copy">{body}</p>}
+    </a>
+  </div>
+)}
 
 <style>
   .card {
