@@ -73,15 +73,17 @@ export const portfolioCards: CardConfig[] = [
     }
   },
 
-  // Row 3: Weekly Commits (stats) + Rust vs C++ + Code image (span-2)
+  // Row 3: Visitor Count (stats) + Rust vs C++ + Code image (span-2)
+  // Note: Visitor count is injected dynamically in index.astro
+  // This is a placeholder that gets replaced at runtime
   {
-    id: 'weekly-commits',
+    id: 'visitor-stats',
     type: 'stats',
     span: 1,
     props: {
-      label: 'Repo Activity',
-      title: 'Weekly Commits',
-      value: '142+'
+      label: 'Blog Traffic',
+      title: 'Visitor Count',
+      value: '---' // Placeholder - replaced dynamically
     }
   },
   {

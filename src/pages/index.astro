@@ -4,14 +4,42 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
 import BentoGrid from '../components/layout/BentoGrid.astro';
 import Footer from '../components/layout/Footer.astro';
-import PortfolioCard from '../components/portfolio/PortfolioCard.astro';
 import PortfolioModal from '../components/interactive/PortfolioModal';
 import { listPortfolioArticles, type Article } from '../lib/articles';
+import { mapArticlesToCards, portfolioConfig } from '../config/portfolio';
+import type { CardConfig } from '../config/cards';
+import { getVisitorCountCached, isRedisConfigured } from '../lib/visitor-counter';
 
 const currentPath = Astro.url.pathname;
 
-// Fetch portfolio articles (those with 'portfolio' tag)
+// Fetch portfolio articles
 const portfolioArticles: Article[] = await listPortfolioArticles();
+
+// Map to card configurations
+const portfolioCards: CardConfig[] = mapArticlesToCards(portfolioArticles, portfolioConfig);
+
+// Fetch visitor count for stats card
+const visitorCount = isRedisConfigured()
+  ? await getVisitorCountCached()
+  : null;
+
+// Add visitor stats card to the grid
+const cards: CardConfig[] = [
+  ...portfolioCards,
+  {
+    id: 'visitor-stats',
+    type: 'stats',
+    span: 1,
+    props: {
+      label: 'Repo Activity',
+      title: 'Visitor Count',
+      value: visitorCount !== null ? visitorCount.toLocaleString() : '---'
+    }
+  }
+];
+
+// Determine if we should show animation (no articles)
+const showAnimation = cards.length === 1; // Only stats card
 ---
 
 <BaseLayout
@@ -22,28 +50,15 @@ const portfolioArticles: Article[] = await listPortfolioArticles();
   <div class="layout-wrapper">
     <Header currentPath={currentPath} />
 
-    <!-- Portfolio Section -->
-    {portfolioArticles.length > 0 && (
-      <section class="portfolio-section">
-        <h2 class="section-title">Portfolio</h2>
-        <div class="portfolio-grid">
-          {portfolioArticles.map((article, index) => (
-            <PortfolioCard
-              title={article.title}
-              description={article.excerpt || ''}
-              tags={article.tags || []}
-              slug={article.slug}
-              date={article.date}
-              size={index === 0 ? 'large' : 'medium'}
-              variant="standard"
-            />
-          ))}
-        </div>
-      </section>
-    )}
-
     <main class="bento-grid-container">
-      <BentoGrid />
+      {showAnimation ? (
+        <div class="portfolio-animation">
+          <!-- User will provide HTML animation -->
+          <slot name="animation" />
+        </div>
+      ) : (
+        <BentoGrid cards={cards} />
+      )}
     </main>
 
     <Footer />
@@ -59,26 +74,31 @@ const portfolioArticles: Article[] = await listPortfolioArticles();
   />
 
   <script>
-    // Client-side interactivity for portfolio cards
-    document.querySelectorAll('.portfolio-card').forEach((card) => {
+    // Client-side interactivity for portfolio cards in BentoGrid
+    document.querySelectorAll('.bento-card').forEach((card) => {
       card.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent <a> navigation
-        const slug = card.getAttribute('data-slug');
-        if (slug) {
-          window.dispatchEvent(new CustomEvent('open-portfolio-modal', { detail: { slug } }));
+        const link = card.querySelector('a');
+        if (link) {
+          // If card has a link, let it navigate naturally
+          return;
         }
-      });
 
-      card.addEventListener('keydown', (e) => {
-        if (e instanceof KeyboardEvent && (e.key === 'Enter' || e.key === ' ')) {
-          e.preventDefault();
-          const slug = card.getAttribute('data-slug');
-          if (slug) {
-            window.dispatchEvent(new CustomEvent('open-portfolio-modal', { detail: { slug } }));
-          }
+        // Otherwise, check if it's a portfolio card
+        const cardId = card.getAttribute('data-card-id');
+        if (cardId) {
+          window.dispatchEvent(new CustomEvent('open-portfolio-modal', {
+            detail: { slug: cardId }
+          }));
         }
       });
     });
+
+    // Track visitor (only on first visit per session)
+    if (!sessionStorage.getItem('visited')) {
+      fetch('/api/track-visit', { method: 'POST' })
+        .then(() => sessionStorage.setItem('visited', 'true'))
+        .catch((err) => console.error('Failed to track visit:', err));
+    }
   </script>
 </BaseLayout>
 
