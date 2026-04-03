@@ -209,7 +209,7 @@ Plans:
 
 Plans:
 - [ ] 10-01: Schema extension (add image field to articles table)
-- [ ] 10-02: Configuration system (explicit rules with Zod validation)
+- [x] 10-02: Configuration system (explicit rules with Zod validation)
 - [ ] 10-03: BentoGrid integration (replace static cards with database queries)
 - [ ] 10-04: Visitor stats (replace Weekly Commits with visitor count)
 - [ ] 10-05: Modal redesign (match Bento aesthetic, DOMPurify sanitization)

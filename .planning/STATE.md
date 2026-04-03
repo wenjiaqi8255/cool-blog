@@ -95,25 +95,21 @@ v1.3 Milestone: READY TO START
 - [Phase 09-04]: PortfolioModal uses event-driven pattern with CustomEvent for cross-component communication
 - [Phase 09-04]: PortfolioCard accepts optional link prop with fallback to /portfolio/{slug}
 - [Phase 09-05]: PortfolioModal accepts articles prop, uses custom events for modal interaction
-- [Phase 10]: Fully data-driven approach - no static cards in BentoGrid
-- [Phase 10]: Explicit configuration system using Zod (not JSDoc)
-- [Phase 10]: Image field optional - fallback to first image in body
-- [Phase 10]: Stats card changed to visitor count (not Weekly Commits)
-- [Phase 10]: Modal redesign with DOMPurify sanitization (XSS prevention)
-- [Phase 10]: Terminal card logic deferred for future features (chatbot)
+- [Phase 10-01]: Schema extension with image field for portfolio cards
+- [Phase 10-02]: PortfolioConfigSchema defines all rules for portfolio display explicitly
 - [Phase 10-02]: PortfolioConfigSchema defines all rules for portfolio display explicitly
 - [Phase 10-02]: mapArticleToCard converts database articles to Bento card configurations
 - [Phase 10-02]: extractFirstImage supports Markdown and HTML image syntax
 
 ### Pending Todos
 
-Phase 10 Database-Driven Portfolio ready to start:
-- Plan 10-01: TODO (Schema extension - add image field)
-- Plan 10-02: TODO (Configuration system - Zod validation, explicit rules)
-- Plan 10-03: TODO (BentoGrid integration - replace static cards)
-- Plan 10-04: TODO (Visitor stats - replace Weekly Commits)
-- Plan 10-05: TODO (Modal redesign - Bento aesthetic, DOMPurify)
-- Plan 10-06: TODO (Fallback & polish - loading animation, performance)
+Phase 10 Database-Driven Portfolio in progress:
+- Plan 10-01: COMPLETE (Schema extension- add image field)
+- Plan 10-02: COMPLETE (Configuration system- Zod validation, explicit rules)
+- Plan 10-03: TODO (BentoGrid integration- replace static cards)
+- Plan 10-04: COMPLETE (Visitor stats- replace Weekly Commits)
+- Plan 10-05: TODO (Modal redesign- Bento aesthetic, DOMPurify)
+- Plan 10-06: TODO (Fallback & polish- loading animation, performance)
 
 ### Blockers/Concerns
 
