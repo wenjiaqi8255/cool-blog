@@ -113,25 +113,11 @@ const showAnimation = cards.length === 1; // Only stats card
     margin-top: 40px;
   }
 
-  /* Portfolio section styles */
-  .portfolio-section {
-    margin-bottom: 48px;
-  }
-
-  .section-title {
-    font-size: 14px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-muted, #6a6a7a);
-    margin-bottom: 24px;
-    padding-left: 4px;
-  }
-
-  .portfolio-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 24px;
+  .portfolio-animation {
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   @media (max-width: 768px) {
@@ -141,11 +127,6 @@ const showAnimation = cards.length === 1; // Only stats card
 
     .bento-grid-container {
       margin-top: 24px;
-    }
-
-    .portfolio-grid {
-      grid-template-columns: 1fr;
-      gap: 16px;
     }
   }
 </style>

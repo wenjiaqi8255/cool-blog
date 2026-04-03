@@ -1,15 +1,31 @@
 ---
 interface Props {
-  image: string;
+  image?: string;
   title?: string;
   subtitle?: string;
   metaTag?: string;
   link?: string;
   variant?: 'light' | 'dark';
+  body?: string;
 }
 
-const { image, title, subtitle, metaTag, link = '#', variant = 'light' } = Astro.props;
+const { image, title, subtitle, metaTag, link = '#', variant = 'light', body } = Astro.props;
+
+// If no image, render as text card instead
+if (!image) {
+  return (
+    <div class:list={['card', 'text-card', variant]}>
+      <a href={link} class="card-link">
+        <span class="arrow-icon" aria-hidden="true">↗</span>
+        {metaTag && <span class="meta-tag">{metaTag}</span>}
+        <h3 class="headline">{title}</h3>
+        {body && <p class="copy">{body}</p>}
+      </a>
+    </div>
+  );
+}
 ---
+
 
 <div class:list={['card', variant]}>
   <a href={link} class="card-link">
@@ -104,5 +120,41 @@ const { image, title, subtitle, metaTag, link = '#', variant = 'light' } = Astro
 
   .card:hover .arrow-icon {
     transform: translate(4px, -4px);
+  }
+
+  /* Text card fallback styles */
+  .text-card {
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .text-card .arrow-icon {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+  }
+
+  .text-card .meta-tag {
+    color: var(--color-ink-light);
+  }
+
+  .text-card .copy {
+    font-size: 13px;
+    color: var(--color-ink-gray);
+    line-height: 1.5;
+    max-width: 300px;
+    margin: 0;
+  }
+
+  .text-card.dark {
+    background-color: var(--color-ink-black);
+    color: var(--color-canvas-white);
+  }
+
+  .text-card.dark .meta-tag,
+  .text-card.dark .copy {
+    color: #888;
   }
 </style>
