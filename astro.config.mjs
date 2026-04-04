@@ -1,28 +1,23 @@
 import { defineConfig } from 'astro/config';
-import cloudflare from '@astrojs/cloudflare';
+import node from '@astrojs/node';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
   site: 'https://kernel-panic.dev',
-  output: 'static',
+  output: 'server',
+  server: {
+    port: 4321,
+    host: true
+  },
   markdown: {
     shikiConfig: {
       theme: 'github-dark',
       wrap: true,
     }
   },
-  adapter: cloudflare({
-    platformProxy: {
-      enabled: false  // Disable for local dev to use .env.local
-    },
-    imageService: 'cloudflare',
-    // Enable on-demand API routes in production
-    routes: {
-      extend: {
-        include: [{ pattern: '/api/*' }]
-      }
-    }
+  adapter: node({
+    mode: 'standalone'
   }),
   integrations: [
     react(),
@@ -37,9 +32,6 @@ export default defineConfig({
     },
     optimizeDeps: {
       exclude: ['drizzle-orm', '@neondatabase/serverless', '@modelcontextprotocol/sdk']
-    },
-    define: {
-      'process.env.DATABASE_URL': JSON.stringify(process.env.DATABASE_URL || '')
     }
   }
 });
