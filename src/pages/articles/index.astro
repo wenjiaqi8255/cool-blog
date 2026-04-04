@@ -1,5 +1,5 @@
 ---
-import { pages } from '../../config/content';
+import { pages, type PageKey } from '../../config/content';
 import { listPublishedArticles } from '../../lib/articles';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
@@ -8,6 +8,7 @@ import ArticleCard from '../../components/articles/ArticleCard.astro';
 import BentoGrid from '../../components/layout/BentoGrid.astro';
 
 const currentPath = Astro.url.pathname;
+const currentPageKey: PageKey = 'articles';
 
 // Fetch published articles from database
 const articles = await listPublishedArticles();
@@ -50,7 +51,7 @@ const articleCount = articles.length;
         </BentoGrid>
       )}
     </main>
-    <Footer />
+    <Footer currentPage={currentPageKey} />
   </div>
 </BaseLayout>
 

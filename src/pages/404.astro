@@ -1,10 +1,11 @@
 ---
-import { pages } from '../config/content';
+import { pages, type PageKey } from '../config/content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
 import Footer from '../components/layout/Footer.astro';
 
 const currentPath = Astro.url.pathname;
+const currentPageKey: PageKey = 'home';
 ---
 
 <BaseLayout
@@ -25,7 +26,7 @@ const currentPath = Astro.url.pathname;
         <a href="/articles" class="back-link">Back to Articles</a>
       </div>
     </main>
-    <Footer />
+    <Footer currentPage={currentPageKey} />
   </div>
 </BaseLayout>
 

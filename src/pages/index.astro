@@ -1,5 +1,5 @@
 ---
-import { pages } from '../config/content';
+import { pages, type PageKey } from '../config/content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Header from '../components/layout/Header.astro';
 import BentoGrid from '../components/layout/BentoGrid.astro';
@@ -12,6 +12,14 @@ import type { CardConfig } from '../config/cards';
 import { getVisitorCountCached, isRedisConfigured } from '../lib/visitor-counter';
 
 const currentPath = Astro.url.pathname;
+
+// Determine current page key based on URL path
+let currentPageKey: PageKey = 'home';
+if (currentPath.startsWith('/articles')) {
+  currentPageKey = 'articles';
+} else if (currentPath.startsWith('/portfolio')) {
+  currentPageKey = 'portfolio';
+}
 
 // Fetch portfolio articles with caching
 let portfolioArticles: Article[] = [];
@@ -69,7 +77,7 @@ const showAnimation = cards.length === 1; // Only stats card
       )}
     </main>
 
-    <Footer />
+    <Footer currentPage={currentPageKey} />
   </div>
 
   <!-- Portfolio Modal: Client-side component for modal interactivity -->
