@@ -1,4 +1,5 @@
 ---
+import { pages } from '../../config/content';
 import { getPublishedArticleBySlug } from '../../lib/articles';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/layout/Header.astro';
@@ -45,13 +46,17 @@ const currentPath = Astro.url.pathname;
 ---
 
 <BaseLayout
-  title={`KERNEL_PANIC / ${title}`}
+  title={`${pages.home.brandTitle} / ${title}`}
   description={excerpt || title}
   type="article"
   image={`/og/${article.slug}.svg`}
 >
   <div class="layout-wrapper">
-    <Header currentPath={currentPath} />
+    <Header
+      currentPath={currentPath}
+      brandTitle={pages.home.brandTitle}
+      brandSubtitle={pages.home.brandSubtitle}
+    />
     <main class="main-content">
       <article class="article">
         <header class="article-header">

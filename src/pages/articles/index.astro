@@ -20,7 +20,11 @@ const articleCount = articles.length;
   type="website"
 >
   <div class="layout-wrapper">
-    <Header currentPath={currentPath} />
+    <Header
+      currentPath={currentPath}
+      brandTitle={pages.home.brandTitle}
+      brandSubtitle={pages.home.brandSubtitle}
+    />
     <main class="main-content">
       <div class="page-header">
         <h1 class="page-title">Articles</h1>

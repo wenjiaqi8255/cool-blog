@@ -4,17 +4,19 @@ import SubscribeModal from '../interactive/SubscribeModal';
 
 interface Props {
   currentPath?: string;
+  brandTitle?: string;
+  brandSubtitle?: string;
 }
 
-const { currentPath = '/' } = Astro.props;
+const { currentPath = '/', brandTitle = 'KERNEL_PANIC', brandSubtitle = 'ARCHITECTURE & SYSTEMS' } = Astro.props;
 ---
 
 <header class="header" id="main-header">
   <div class="header-content">
     <a href="/" class="brand">
-      <span class="brand-text">KERNEL_PANIC</span>
+      <span class="brand-text">{brandTitle}</span>
       <span class="brand-divider">/</span>
-      <span class="brand-subtitle">ARCHITECTURE & SYSTEMS</span>
+      <span class="brand-subtitle">{brandSubtitle}</span>
     </a>
 
     <nav class="nav">

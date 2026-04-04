@@ -53,7 +53,7 @@ const isModal = isModalTrigger || link === '#';
     height: 100%;
   }
 
-  .card:hover {
+  .card:not(.dark):hover {
     background-color: var(--color-card-hover);
   }
 
@@ -71,29 +71,9 @@ const isModal = isModalTrigger || link === '#';
     transform: translate(4px, -4px);
   }
 
+  /* Dark card hover: subtle background shift */
   .card.dark:hover {
     background-color: #000;
-  }
-
-  /* Direct child selector for button inside dark card */
-  .card.dark > button.card-trigger:hover .headline,
-  .card.dark > button.card-trigger:hover .arrow-icon {
-    color: white !important;
-  }
-
-  .card.dark:hover .headline,
-  .card.dark:hover .arrow-icon {
-    color: var(--color-canvas-white);
-  }
-
-  .card.dark:hover .meta-tag,
-  .card.dark:hover .copy {
-    color: #666;
-  }
-
-  .card.dark .meta-tag,
-  .card.dark .copy {
-    color: #888;
   }
 
   .card-link {

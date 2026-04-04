@@ -55,7 +55,11 @@ const showAnimation = cards.length === 1; // Only stats card
   type="website"
 >
   <div class="layout-wrapper">
-    <Header currentPath={currentPath} />
+    <Header
+      currentPath={currentPath}
+      brandTitle={pages.home.brandTitle}
+      brandSubtitle={pages.home.brandSubtitle}
+    />
 
     <main class="bento-grid-container">
       {showAnimation ? (
