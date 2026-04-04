@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from 'zod/v4';
 import type { Article } from '../lib/articles';
 import type { CardConfig } from './cards';
 

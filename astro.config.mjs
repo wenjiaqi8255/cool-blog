@@ -36,7 +36,7 @@ export default defineConfig({
       noExternal: ['@fontsource/inter', '@fontsource/jetbrains-mono']
     },
     optimizeDeps: {
-      exclude: ['drizzle-orm', '@neondatabase/serverless']
+      exclude: ['drizzle-orm', '@neondatabase/serverless', '@modelcontextprotocol/sdk']
     },
     define: {
       'process.env.DATABASE_URL': JSON.stringify(process.env.DATABASE_URL || '')

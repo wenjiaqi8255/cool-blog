@@ -1,10 +1,9 @@
 /**
  * MCP Server implementation for cool-blog.
  * Provides article CRUD operations via Model Context Protocol.
+ * Uses simple JSON-RPC over HTTP without the complex transport layer.
  */
 
-import { Server as McpServer } from '@modelcontextprotocol/sdk/server';
-import { z } from 'zod';
 import type { Implementation } from '@modelcontextprotocol/sdk/types.js';
 import { createArticle, listArticles, getArticle, deleteArticle, updateArticleStatus } from './db.js';
 
@@ -14,275 +13,247 @@ const serverInfo: Implementation = {
   version: '1.0.0',
 };
 
-// Create MCP server instance
-export const mcpServer = new McpServer(serverInfo);
-
-// Zod schemas for tool input validation (MCP-06)
-const createArticleSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  body: z.string().min(1, 'Body is required'),
-  date: z.string().datetime().optional(),
-  tags: z.array(z.string()).optional(),
-  excerpt: z.string().optional(),
-  image: z.string().url().optional().describe('Optional image URL for portfolio cards'),
-  status: z.enum(['draft', 'published']).optional(),
-});
-
-const listArticlesSchema = z.object({
-  status: z.enum(['draft', 'published']).optional(),
-  limit: z.number().int().min(1).max(100).optional(),
-  offset: z.number().int().min(0).optional(),
-  order_by: z.enum(['date_DESC', 'date_ASC']).optional(),
-});
-
-const getArticleSchema = z.object({
-  slug: z.string().min(1, 'Slug is required'),
-});
-
-const deleteArticleSchema = z.object({
-  slug: z.string().min(1, 'Slug is required'),
-});
-
-const updateArticleSchema = z.object({
-  slug: z.string().min(1, 'Slug is required'),
-  status: z.enum(['draft', 'published']).optional(),
-  title: z.string().optional(),
-  body: z.string().optional(),
-});
-
-// Tool handlers - connected to database
-async function handleCreateArticle(params: z.infer<typeof createArticleSchema>) {
+// Tool handlers
+async function handleCreateArticle(params: {
+  title: string;
+  body: string;
+  date?: string;
+  tags?: string[];
+  excerpt?: string;
+  image?: string;
+  status?: 'draft' | 'published';
+}) {
   try {
     const { title, body, date, tags, excerpt, image, status = 'draft' } = params;
-
     const article = await createArticle({ title, body, date, tags, excerpt, image, status });
-
-    return {
-      success: true,
-      message: 'Article created successfully',
-      article,
-    };
+    return { success: true, message: 'Article created successfully', article };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      message: `Failed to create article: ${message}`,
-    };
+    return { success: false, message: `Failed to create article: ${message}` };
   }
 }
 
-async function handleListArticles(params: z.infer<typeof listArticlesSchema>) {
+async function handleListArticles(params: {
+  status?: 'draft' | 'published';
+  limit?: number;
+  offset?: number;
+  order_by?: 'date_DESC' | 'date_ASC';
+}) {
   try {
     const { status, limit = 20, offset = 0, order_by = 'date_DESC' } = params;
-
     const articles = await listArticles({ status, limit, offset, order_by });
-
-    return {
-      success: true,
-      message: 'Articles retrieved successfully',
-      articles,
-      meta: {
-        total: articles.length,
-        limit,
-        offset,
-        order_by,
-      },
-    };
+    return { success: true, message: 'Articles retrieved successfully', articles, meta: { total: articles.length, limit, offset, order_by } };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      message: `Failed to list articles: ${message}`,
-      articles: [],
-    };
+    return { success: false, message: `Failed to list articles: ${message}`, articles: [] };
   }
 }
 
-async function handleGetArticle(params: z.infer<typeof getArticleSchema>) {
+async function handleGetArticle(params: { slug: string }) {
   try {
     const { slug } = params;
-
     const article = await getArticle(slug);
-
     if (!article) {
-      return {
-        success: false,
-        message: `Article not found: ${slug}`,
-        article: null,
-      };
+      return { success: false, message: `Article not found: ${slug}`, article: null };
     }
-
-    return {
-      success: true,
-      message: 'Article retrieved successfully',
-      article,
-    };
+    return { success: true, message: 'Article retrieved successfully', article };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      message: `Failed to get article: ${message}`,
-      article: null,
-    };
+    return { success: false, message: `Failed to get article: ${message}`, article: null };
   }
 }
 
-async function handleDeleteArticle(params: z.infer<typeof deleteArticleSchema>) {
+async function handleDeleteArticle(params: { slug: string }) {
   try {
     const { slug } = params;
-
     const deleted = await deleteArticle(slug);
-
     if (!deleted) {
-      return {
-        success: false,
-        message: `Article not found or already deleted: ${slug}`,
-      };
+      return { success: false, message: `Article not found or already deleted: ${slug}` };
     }
-
-    return {
-      success: true,
-      message: `Article "${slug}" deleted successfully`,
-    };
+    return { success: true, message: `Article "${slug}" deleted successfully` };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      message: `Failed to delete article: ${message}`,
-    };
+    return { success: false, message: `Failed to delete article: ${message}` };
   }
 }
 
-async function handleUpdateArticle(params: z.infer<typeof updateArticleSchema>) {
+async function handleUpdateArticle(params: {
+  slug: string;
+  status?: 'draft' | 'published';
+  title?: string;
+  body?: string;
+}) {
   try {
-    const { slug, status, title, body } = params;
-
-    // If status is provided, update it
+    const { slug, status } = params;
     if (status) {
       const updated = await updateArticleStatus(slug, status);
-
       if (!updated) {
-        return {
-          success: false,
-          message: `Article not found: ${slug}`,
-          article: null,
-        };
+        return { success: false, message: `Article not found: ${slug}`, article: null };
       }
-
-      return {
-        success: true,
-        message: `Article "${slug}" status updated to "${status}"`,
-        article: updated,
-      };
+      return { success: true, message: `Article "${slug}" status updated to "${status}"`, article: updated };
     }
-
-    // If no status but title/body provided, that's not supported for now
-    // just return success with current article
     const article = await getArticle(slug);
-
     if (!article) {
-      return {
-        success: false,
-        message: `Article not found: ${slug}`,
-        article: null,
-      };
+      return { success: false, message: `Article not found: ${slug}`, article: null };
     }
-
-    return {
-      success: true,
-      message: 'No updates provided',
-      article,
-    };
+    return { success: true, message: 'No updates provided', article };
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    return {
-      success: false,
-      message: `Failed to update article: ${message}`,
-      article: null,
-    };
+    return { success: false, message: `Failed to update article: ${message}` };
   }
 }
 
-// Register all 4 tools with Zod validation schemas (MCP-01 to MCP-04, MCP-06)
-mcpServer.registerTool(
-  'create_article',
-  {
+// Tool definitions for list
+const tools = {
+  create_article: {
+    name: 'create_article',
     title: 'Create Article',
     description: 'Create a new blog article with title, body, and optional metadata',
-    inputSchema: createArticleSchema,
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        title: { type: 'string' as const, description: 'Title of the article' },
+        body: { type: 'string' as const, description: 'Body content of the article' },
+        date: { type: 'string' as const, description: 'Publication date (ISO 8601)' },
+        tags: { type: 'array' as const, items: { type: 'string' as const }, description: 'Tags for the article' },
+        excerpt: { type: 'string' as const, description: 'Short excerpt' },
+        image: { type: 'string' as const, description: 'Optional image URL' },
+        status: { type: 'string' as const, enum: ['draft', 'published'], description: 'Article status' },
+      },
+      required: ['title', 'body'],
+    },
   },
-  async (params) => {
-    const result = await handleCreateArticle(params);
-    return {
-      content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-    };
-  }
-);
-
-mcpServer.registerTool(
-  'list_articles',
-  {
+  list_articles: {
+    name: 'list_articles',
     title: 'List Articles',
     description: 'List blog articles with optional filtering, pagination, and ordering',
-    inputSchema: listArticlesSchema,
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        status: { type: 'string' as const, enum: ['draft', 'published'], description: 'Filter by status' },
+        limit: { type: 'number' as const, description: 'Number of articles to return' },
+        offset: { type: 'number' as const, description: 'Number of articles to skip' },
+        order_by: { type: 'string' as const, enum: ['date_DESC', 'date_ASC'], description: 'Order by date' },
+      },
+    },
   },
-  async (params) => {
-    const result = await handleListArticles(params);
-    return {
-      content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-    };
-  }
-);
-
-mcpServer.registerTool(
-  'get_article',
-  {
+  get_article: {
+    name: 'get_article',
     title: 'Get Article',
     description: 'Retrieve a single blog article by its slug',
-    inputSchema: getArticleSchema,
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        slug: { type: 'string' as const, description: 'The article slug' },
+      },
+      required: ['slug'],
+    },
   },
-  async (params) => {
-    const result = await handleGetArticle(params);
-    return {
-      content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-    };
-  }
-);
-
-mcpServer.registerTool(
-  'delete_article',
-  {
+  delete_article: {
+    name: 'delete_article',
     title: 'Delete Article',
     description: 'Soft-delete a blog article by setting its deleted_at timestamp',
-    inputSchema: deleteArticleSchema,
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        slug: { type: 'string' as const, description: 'The article slug to delete' },
+      },
+      required: ['slug'],
+    },
   },
-  async (params) => {
-    const result = await handleDeleteArticle(params);
-    return {
-      content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
-    };
-  }
-);
-
-mcpServer.registerTool(
-  'update_article',
-  {
+  update_article: {
+    name: 'update_article',
     title: 'Update Article',
     description: 'Update an article status from draft to published (or vice versa)',
-    inputSchema: updateArticleSchema,
+    inputSchema: {
+      type: 'object' as const,
+      properties: {
+        slug: { type: 'string' as const, description: 'The article slug' },
+        status: { type: 'string' as const, enum: ['draft', 'published'], description: 'New status' },
+        title: { type: 'string' as const, description: 'New title' },
+        body: { type: 'string' as const, description: 'New body' },
+      },
+      required: ['slug'],
+    },
   },
-  async (params) => {
-    const result = await handleUpdateArticle(params);
+};
+
+// Tool handlers map
+const toolHandlers: Record<string, (params: unknown) => Promise<unknown>> = {
+  create_article: handleCreateArticle,
+  list_articles: handleListArticles,
+  get_article: handleGetArticle,
+  delete_article: handleDeleteArticle,
+  update_article: handleUpdateArticle,
+};
+
+// Simple MCP Server class
+export class McpServer {
+  private info: Implementation;
+
+  constructor(info: Implementation) {
+    this.info = info;
+  }
+
+  // Handle JSON-RPC request
+  async handleRequest(request: { jsonrpc?: string; method?: string; params?: unknown; id?: unknown }) {
+    const { method, params, id } = request || {};
+
+    if (method === 'initialize') {
+      return {
+        jsonrpc: '2.0',
+        id,
+        result: {
+          protocolVersion: '2024-11-05',
+          capabilities: {},
+          serverInfo: this.info,
+        },
+      };
+    }
+
+    if (method === 'tools/list') {
+      return {
+        jsonrpc: '2.0',
+        id,
+        result: {
+          tools: Object.values(tools),
+        },
+      };
+    }
+
+    if (method === 'tools/call') {
+      const { name, arguments: args } = (params as { name?: string; arguments?: unknown }) || {};
+      if (!name || !toolHandlers[name]) {
+        return {
+          jsonrpc: '2.0',
+          id,
+          error: { code: -32601, message: `Tool not found: ${name}` },
+        };
+      }
+      try {
+        const result = await toolHandlers[name](args as object);
+        return {
+          jsonrpc: '2.0',
+          id,
+          result: {
+            content: [{ type: 'text' as const, text: JSON.stringify(result, null, 2) }],
+          },
+        };
+      } catch (error) {
+        return {
+          jsonrpc: '2.0',
+          id,
+          error: { code: -32000, message: String(error) },
+        };
+      }
+    }
+
     return {
-      content: [{ type: 'text', text: JSON.stringify(result, null, 2) }],
+      jsonrpc: '2.0',
+      id,
+      error: { code: -32601, message: `Method not found: ${method}` },
     };
   }
-);
-
-/**
- * Create and return the MCP server instance.
- * Used by the API endpoint to run the server with HTTP transport.
- */
-export function createMcpServer() {
-  return mcpServer;
 }
+
+export const mcpServer = new McpServer(serverInfo);
