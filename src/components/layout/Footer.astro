@@ -31,16 +31,16 @@ const socialLinks = [
   }
 ];
 
-const creditName = 'WEN';
-const creditTagline = 'Building Something Fun';
+const creditName = pageConfig.authorName || 'WEN';
+const creditTagline = pageConfig.authorTagline || 'Building Something Fun';
 const creditLabel = 'Crafted with ♥ by';
 ---
 
 <footer class="footer">
   <div class="footer-content">
     <div class="footer-left">
-      <span class="brand">{pageConfig.footerBrand || 'KERNEL_PANIC'}</span>
-      <span class="copyright">© {currentYear} {pageConfig.footerBrand || 'KERNEL PANIC'}</span>
+      <span class="brand">{pageConfig.footerBrand || 'WEN'}</span>
+      <span class="copyright">© {currentYear} {pageConfig.footerBrand || 'WEN'}</span>
     </div>
 
     <div class="footer-right">
