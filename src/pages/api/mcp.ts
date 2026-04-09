@@ -7,9 +7,11 @@
 import type { APIRoute } from 'astro';
 import { mcpServer } from '../../lib/mcp/server.js';
 
-// Use import.meta.env for Vite/Astro environment variables
+// Use process.env to read at runtime (not build time).
+// import.meta.env gets statically replaced by Vite during build,
+// which bakes in the build-time value instead of reading the runtime env.
 const getApiKey = (): string | undefined => {
-  return import.meta.env.MCP_API_KEY;
+  return process.env.MCP_API_KEY;
 };
 
 /**
