@@ -7,8 +7,8 @@ const CACHE_TTL = 60; // Cache for 60 seconds
 let redis: Redis | null = null;
 
 function getRedisClient(): Redis | null {
-  const url = import.meta.env.UPSTASH_REDIS_REST_URL;
-  const token = import.meta.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN;
 
   if (!url || !token) {
     return null;
@@ -25,7 +25,7 @@ function getRedisClient(): Redis | null {
  * Check if Redis is configured
  */
 export function isRedisConfigured(): boolean {
-  return Boolean(import.meta.env.UPSTASH_REDIS_REST_URL && import.meta.env.UPSTASH_REDIS_REST_TOKEN);
+  return Boolean(process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN);
 }
 
 /**

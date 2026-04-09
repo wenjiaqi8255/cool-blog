@@ -1,8 +1,8 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(import.meta.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const FROM_EMAIL = import.meta.env.RESEND_FROM_EMAIL ?? 'newsletter@resend.dev';
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? 'newsletter@resend.dev';
 
 export async function sendConfirmationEmail(to: string): Promise<void> {
   const { data, error } = await resend.emails.send({
