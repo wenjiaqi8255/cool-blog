@@ -36,12 +36,33 @@ export const GET: APIRoute = async ({ request }) => {
   // Debug endpoint - check env vars without auth
   const url = new URL(request.url);
   if (url.searchParams.has('_debug')) {
-    return new Response(JSON.stringify({
-      has_process_env: Boolean(process.env.MCP_API_KEY),
-      process_env_prefix: process.env.MCP_API_KEY?.substring(0, 10),
-      process_env_len: process.env.MCP_API_KEY?.length,
-      all_env_keys: Object.keys(process.env).filter(k => k.includes('MCP') || k.includes('KEY') || k.includes('DATABASE')).sort(),
-    }), { headers: { 'Content-Type': 'application/json' } });
+    const envInfo = {
+      timestamp: new Date().toISOString(),
+      mcp_api_key: {
+        exists: Boolean(process.env.MCP_API_KEY),
+        type: typeof process.env.MCP_API_KEY,
+        length: process.env.MCP_API_KEY?.length || 0,
+        prefix: process.env.MCP_API_KEY?.substring(0, 10) || 'N/A',
+        is_empty_string: process.env.MCP_API_KEY === '',
+        is_undefined: process.env.MCP_API_KEY === undefined,
+      },
+      database_url: {
+        exists: Boolean(process.env.DATABASE_URL),
+        length: process.env.DATABASE_URL?.length || 0,
+        prefix: process.env.DATABASE_URL?.substring(0, 50) || 'N/A',
+      },
+      all_env_keys: Object.keys(process.env)
+        .filter(k => k.includes('MCP') || k.includes('KEY') || k.includes('DATABASE'))
+        .sort()
+        .map(k => ({
+          key: k,
+          exists: Boolean(process.env[k]),
+          length: process.env[k]?.length || 0,
+        })),
+    };
+    return new Response(JSON.stringify(envInfo, null, 2), {
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   const authHeader = request.headers.get('Authorization');
