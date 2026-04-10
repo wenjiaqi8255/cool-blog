@@ -23,14 +23,27 @@ function validateApiKey(authHeader: string | null): string | null {
 
   const token = authHeader.slice(7);
   const apiKey = getApiKey();
+  console.log('[MCP DEBUG] token:', token.substring(0, 10) + '...', 'apiKey exists:', Boolean(apiKey), 'apiKey prefix:', apiKey?.substring(0, 10));
   if (!apiKey) {
     console.error('MCP_API_KEY is not configured');
     return null;
   }
+  console.log('[MCP DEBUG] match:', token === apiKey, 'token len:', token.length, 'apiKey len:', apiKey.length);
   return token === apiKey ? token : null;
 }
 
 export const GET: APIRoute = async ({ request }) => {
+  // Debug endpoint - check env vars without auth
+  const url = new URL(request.url);
+  if (url.searchParams.has('_debug')) {
+    return new Response(JSON.stringify({
+      has_process_env: Boolean(process.env.MCP_API_KEY),
+      process_env_prefix: process.env.MCP_API_KEY?.substring(0, 10),
+      process_env_len: process.env.MCP_API_KEY?.length,
+      all_env_keys: Object.keys(process.env).filter(k => k.includes('MCP') || k.includes('KEY') || k.includes('DATABASE')).sort(),
+    }), { headers: { 'Content-Type': 'application/json' } });
+  }
+
   const authHeader = request.headers.get('Authorization');
   if (!authHeader) {
     return new Response(JSON.stringify({ error: 'Missing Authorization header' }), {
