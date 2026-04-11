@@ -20,25 +20,37 @@ export interface BrandConfig {
 }
 
 /**
- * Detect environment based on PUBLIC_SITE_URL
+ * Detect environment based on PUBLIC_SITE_URL or explicit flag
  *
- * Production: your actual domain
- * Template: localhost or example domain
+ * Production detection:
+ * 1. Domain matching (blog.wenjiaqi.top)
+ * 2. Explicit flag (PUBLIC_IS_PERSONAL_SITE=true)
+ * 3. Any non-localhost, non-example domain
  *
- * Update this with your actual domain(s)
+ * Template mode:
+ * - PUBLIC_USE_TEMPLATE_BRANDING=true
+ * - localhost or example domains
  */
-const isProduction = import.meta.env.PUBLIC_SITE_URL?.includes('your-domain.com') ||
-                      import.meta.env.PUBLIC_SITE_URL?.includes('wenjiaqi') ||
-                      import.meta.env.PUBLIC_SITE_URL?.includes('your-actual-domain');
+const isPersonalSite = import.meta.env.PUBLIC_IS_PERSONAL_SITE === 'true' ||  // Explicit flag
+                          import.meta.env.PUBLIC_SITE_URL?.includes('blog.wenjiaqi.top') ||
+                          import.meta.env.PUBLIC_SITE_URL?.includes('wenjiaqi');
+
+const isTemplateSite = import.meta.env.PUBLIC_USE_TEMPLATE_BRANDING === 'true' ||
+                          !import.meta.env.PUBLIC_SITE_URL ||
+                          import.meta.env.PUBLIC_SITE_URL?.includes('localhost') ||
+                          import.meta.env.PUBLIC_SITE_URL?.includes('example') ||
+                          import.meta.env.PUBLIC_SITE_URL?.includes('your-domain');
+
+const isProduction = isPersonalSite && !isTemplateSite;
 
 /**
  * Production branding (your private deployment)
  */
 const productionBranding: BrandConfig = {
-  siteName: '温嘉琪',
-  siteTitle: '温嘉琪 | ARCHITECTURE & SYSTEMS',
+  siteName: '温嘉琪的博客',
+  siteTitle: '温嘉琪的博客 | ARCHITECTURE & SYSTEMS',
   siteDescription: '探索生成式智能、低层系统工程与命令行美学的交叉领域。',
-  brandTitle: '温嘉琪',
+  brandTitle: '温嘉琪的博客',
   brandSubtitle: 'BUILDING SOMETHING FUN',
   footerBrand: 'WEN',
   authorName: 'WEN',
@@ -50,11 +62,11 @@ const productionBranding: BrandConfig = {
  */
 const templateBranding: BrandConfig = {
   siteName: 'YOUR NAME',
-  siteTitle: 'YOUR NAME | BUILDING SOMETHING FUN',
+  siteTitle: 'YOUR NAME\'s Blog | BUILDING SOMETHING FUN',
   siteDescription: 'A modern blog exploring software engineering, systems design, and developer tools.',
-  brandTitle: 'YOUR NAME',
+  brandTitle: 'YOUR NAME\'s Blog',
   brandSubtitle: 'BUILDING SOMETHING FUN',
-  footerBrand: 'YN',
+  footerBrand: 'YOUR NAME',
   authorName: 'YOUR NAME',
   authorTagline: 'Building Something Fun'
 };
