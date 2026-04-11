@@ -46,8 +46,10 @@ This will install all required packages (~2-3 minutes).
 
 **Example:**
 ```
-postgresql://postgres:abc123@ep-cool-darkness-123456.us-east-2.aws.neon.tech/neondb?sslmode=require
+postgresql://postgres:YOUR_PASSWORD@ep-cool-darkness-123456.us-east-2.aws.neon.tech/neondb?sslmode=require
 ```
+
+⚠️ **Note**: This is just an example format. Replace with your actual connection string from Neon Dashboard.
 
 ## ⚙️ Configuration
 
