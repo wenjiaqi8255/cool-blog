@@ -26,18 +26,21 @@ Repository: wenjiaqi8255/cool-blog
 ### Investigation Results
 
 **What GitGuardian Detected**:
-- Example connection string in `QUICKSTART.md`
-- Pattern: `postgresql://postgres:abc123@ep-cool-darkness-123456...`
+- Example connection string in `QUICKSTART.md` (original version)
+- Pattern: PostgreSQL connection string format with example password
+- Location: Documentation file showing database setup
 
 **Why It Was Flagged**:
 - Looks like a real PostgreSQL connection string
-- Contains common pattern format
+- Contains common connection string pattern
+- Uses realistic-looking example format
 
 **Why It's a False Positive**:
-- `abc123` is a common example password
-- `ep-cool-darkness-123456` is clearly an example project name
+- Password was changed from `abc123` to `YOUR_PASSWORD` placeholder
+- Project name uses obvious example patterns
 - No real Neon database ID format (would be `npg_` prefix)
 - Documentation clearly states it's an example
+- Not a real credential, just instructional content
 
 **Confirmed Safe**:
 - ✅ No real Neon passwords (`npg_` format)
@@ -88,8 +91,9 @@ Repository: wenjiaqi8255/cool-blog
 - **GitGuardian Alerts**: 1 (false positive)
 
 ### Affected Files
-- `QUICKSTART.md` - Example connection string (clarified)
-- `.env.example` - Example connection string (obviously placeholder)
+- `QUICKSTART.md` - Example connection string (clarified with YOUR_PASSWORD)
+- `.env.example` - Example connection string (obviously placeholder with xxx)
+- `SECURITY-INCIDENT-2026-04-11.md` - This report (mentions original example)
 - Documentation files - All use example formats
 
 ### Data at Risk
