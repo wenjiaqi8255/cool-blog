@@ -17,7 +17,6 @@
     "migrate:notion": "tsx scripts/migrate-notion.ts"
   },
   "dependencies": {
-    "@astrojs/check": "^0.9.8",
     "@astrojs/cloudflare": "^13.1.4",
     "@astrojs/node": "^10.0.4",
     "@astrojs/react": "^5.0.2",
