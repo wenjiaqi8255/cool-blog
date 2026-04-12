@@ -34,9 +34,8 @@ Check out the live demo: [https://cool-blog.pages.dev](https://cool-blog.pages.d
 
 ### Prerequisites
 
-- Node.js 20+ 
+- Node.js 22+ (required for Astro 6)
 - A [Neon](https://neon.tech) account (free tier available)
-- A [Resend](https://resend.com) account (optional, for newsletter)
 
 ### 1. Clone & Install
 
@@ -136,22 +135,39 @@ Visitors can subscribe via the modal form. Subscriptions are stored in PostgreSQ
 
 ## 🚢 Deployment
 
-### Cloudflare Pages (Recommended)
+Cool Blog supports deployment to Zeabur or Cloudflare Pages. Both platforms support server-side rendering and database queries.
 
-```bash
-npm run deploy
-```
+### Deploy to Zeabur
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for detailed instructions.
+[Zeabur](https://zeabur.com) provides Node.js deployment with domestic China network optimization.
 
-### Environment Variables
+1. Push your code to GitHub
+2. Create a new project on Zeabur
+3. Configure environment variables:
+   - `DATABASE_URL`: Your Neon PostgreSQL connection string
+   - `DEPLOY_PLATFORM`: Leave unset (defaults to Node.js)
+4. Deploy!
 
-Configure in Cloudflare Dashboard:
-- `PUBLIC_SITE_URL` - Your site's public URL
-- `DATABASE_URL` - Neon connection string
-- `GITHUB_TOKEN` - GitHub API token (optional)
-- `RESEND_API_KEY` - Resend API key (optional)
-- `MCP_API_KEY` - MCP server authentication (optional)
+Zeabur will automatically build and deploy your blog.
+
+### Deploy to Cloudflare Pages
+
+[Cloudflare Pages](https://pages.cloudflare.com) provides global edge deployment with Workers runtime.
+
+1. Push your code to GitHub
+2. Add environment variables in Cloudflare Pages:
+   - `DATABASE_URL`: Your Neon PostgreSQL connection string
+   - `DEPLOY_PLATFORM`: `cloudflare`
+3. Add GitHub repository to Cloudflare Pages
+4. Deploy!
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup instructions.
+
+### Advanced: Multi-Region Setup
+
+Configure intelligent DNS routing for optimal global performance. Domestic users route to Zeabur, international users route to Cloudflare Pages.
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for the complete multi-region deployment guide.
 
 ## 🧪 Testing
 
