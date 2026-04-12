@@ -142,8 +142,8 @@ Phases execute in numeric order: 5 → 6 → 7 → 8
 | 2. Content System | v1.0 | 2/2 | Complete | 2026-03-30 |
 | 3. Newsletter & Backend | v1.0 | 3/3 | Complete | 2026-03-30 |
 | 4. SEO & Launch | v1.0 | 2/2 | Complete | 2026-03-30 |
-| 5. Database Schema & Notion Migration | v1.1 | 2/2 | Complete | 2026-03-31 |
-| 6. MCP Server Development | v1.1 | 2/2 | Complete | 2026-03-31 |
+| 5. Database Schema | v1.1 | 2/2 | Complete | 2026-03-31 |
+| 6. MCP Server | v1.1 | 2/2 | Complete | 2026-03-31 |
 | 7. Content Workflow | v1.1 | 3/3 | Complete | 2026-03-31 |
 | 8. Astro Integration | v1.1 | Complete    | 2026-03-31 | 2026-03-31 |
 
@@ -227,22 +227,24 @@ Plans:
   3. SSR and database queries work on both platforms (no static export regression)
   4. Documentation enables open-source users to deploy to either platform
   5. Multi-region routing is configured and verified (Aliyun DNS + CDN + Cloudflare SaaS)
-**Plans:** 5 plans
+**Plans:** 1/6 plans executed
 
 **Wave Structure:**
 - Wave 1: 11-01 (conditional adapter), 11-02 (build script wrapper) — independent, can run parallel
 - Wave 2: 11-03 (GitHub Actions), 11-04 (documentation) — depends on Wave 1
-- Wave 3: 11-05 (multi-region routing infrastructure) — depends on Wave 1, 2
+- Wave 3: 11-05 (infrastructure setup) — depends on Wave 1, 2
+- Wave 4: 11-06 (detailed documentation) — depends on Wave 3
 
 Plans:
 - [ ] 11-01-PLAN.md — Conditional adapter configuration (astro.config.mjs)
 - [ ] 11-02-PLAN.md — Secure build script wrapper (build.js)
 - [ ] 11-03-PLAN.md — GitHub Actions deployment update (deploy.yml)
 - [ ] 11-04-PLAN.md — Deployment documentation (README.md + DEPLOYMENT.md)
-- [ ] 11-05-PLAN.md — Multi-region routing infrastructure (Aliyun DNS + CDN + Cloudflare SaaS)
+- [ ] 11-05-PLAN.md — Multi-region infrastructure setup (Aliyun DNS + CDN + Cloudflare SaaS)
+- [ ] 11-06-PLAN.md — Detailed verification and troubleshooting documentation
 
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-04-12 (Phase 11 planning complete - added Plan 11-05 for multi-region routing)*
+*Last updated: 2026-04-12 (Phase 11 planning complete - 6 plans for multi-region deployment)*
 *Granularity: coarse*
