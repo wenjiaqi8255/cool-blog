@@ -1,405 +1,198 @@
 # Deployment Guide
 
-Cool Blog can be deployed to multiple platforms. Choose the one that best fits your needs.
+This guide covers deploying Cool Blog to Zeabur, Cloudflare Pages, or both with intelligent DNS routing for optimal global performance.
 
-## 🚀 Quick Comparison
+## Overview
 
-| Platform | Best For | Cost | Ease of Setup | Performance |
-|----------|----------|------|--------------|-------------|
-| **Cloudflare Pages** | Global CDN, Free tier | Free | ⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
-| **Zeabur** | Chinese users, Aliyun | Low cost | ⭐⭐⭐⭐ | ⭐⭐⭐⭐ |
-| **Vercel** | Next.js/Astro apps | Free tier | ⭐⭐⭐⭐⭐ | ⭐⭐⭐⭐⭐ |
+Cool Blog supports dual-platform deployment:
+- **Zeabur** - Node.js runtime, recommended for domestic (China) users
+- **Cloudflare Pages** - Workers runtime, recommended for international users
+- **Multi-Region** - Intelligent DNS routing directs users to the fastest platform
 
----
+The deployment platform is controlled by the `DEPLOY_PLATFORM` environment variable:
+- `DEPLOY_PLATFORM=node` (or unset) → Zeabur with Node.js adapter
+- `DEPLOY_PLATFORM=cloudflare` → Cloudflare Pages with Cloudflare adapter
 
-## 🌐 Cloudflare Pages Deployment
+## Prerequisites
 
-### Prerequisites
+- Domain name (optional, for custom domain)
+- Neon database account (for article storage)
+- Deployment platform account(s): Zeabur, Cloudflare, or both
 
-- Cloudflare account (free)
-- GitHub account
-- Neon database (free tier available)
+## Option 1: Deploy to Zeabur (Domestic)
 
-### Setup Steps
+### Step 1: Prepare Your Project
 
-#### 1. Prepare Your Repository
+1. Fork or clone this repository
+2. Install dependencies: `npm install`
+3. Set up your Neon database and get connection string
 
-✅ Already done - your project is configured for Cloudflare Pages.
+### Step 2: Deploy on Zeabur
 
-#### 2. Connect to Cloudflare Pages
+1. Log in to [Zeabur](https://zeabur.com)
+2. Click "New Project" → "Deploy Service"
+3. Connect your GitHub repository
+4. Configure environment variables:
+   - `DATABASE_URL`: Your Neon PostgreSQL connection string
+   - `DEPLOY_PLATFORM`: Leave unset (defaults to `node`)
+   - `RESEND_API_KEY`: For newsletter functionality (optional)
+5. Click "Deploy"
 
-**Option A: Via Cloudflare Dashboard**
+Zeabur will automatically:
+- Detect Node.js project
+- Install dependencies with `npm install`
+- Build with `npm run build`
+- Start the standalone server
 
-1. Go to [Cloudflare Dashboard](https://dash.cloudflare.com)
-2. Navigate to **Pages** → **Create a project**
-3. Select **Connect to Git**
-4. Authorize GitHub and select `cool-blog` repository
-5. Configure build settings:
-   - **Build command**: `npm run build`
-   - **Build output directory**: `dist`
-   - **Root directory**: `/`
-   - **Branch**: `master`
-6. Click **Save and Deploy**
+### Step 3: Configure Custom Domain (Optional)
 
-**Option B: Via Wrangler CLI**
+1. In Zeabur dashboard, go to "Networking"
+2. Add your custom domain
+3. Update your domain's DNS to point to Zeabur's target
+
+## Option 2: Deploy to Cloudflare Pages (International)
+
+### Step 1: Prepare Your Project
+
+1. Fork or clone this repository
+2. Install dependencies: `npm install`
+3. Set up your Neon database and get connection string
+
+### Step 2: Deploy via GitHub Actions
+
+1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Get your API Token: "My Profile" → "API Tokens" → "Create Token"
+3. Get your Account ID from the dashboard URL or sidebar
+4. Add secrets to your GitHub repository:
+   - `CLOUDFLARE_API_TOKEN`: Your API token
+   - `CLOUDFLARE_ACCOUNT_ID`: Your account ID
+5. Add environment variables in Cloudflare Pages:
+   - `DATABASE_URL`: Your Neon PostgreSQL connection string
+   - `DEPLOY_PLATFORM`: `cloudflare`
+6. Push to `master` branch to trigger deployment
+
+### Step 3: Configure Custom Domain (Optional)
+
+1. In Cloudflare Pages dashboard, go to "Custom Domains"
+2. Add your domain
+3. Follow DNS instructions (add CNAME record)
+
+### Deploy via Wrangler CLI (Alternative)
 
 ```bash
 # Install Wrangler
 npm install -g wrangler
 
-# Login to Cloudflare
+# Login
 wrangler login
 
+# Build for Cloudflare
+DEPLOY_PLATFORM=cloudflare npm run build
+
 # Deploy
-npm run deploy
+wrangler pages deploy dist --project-name=your-blog
 ```
 
-#### 3. Configure Environment Variables
+## Option 3: Multi-Region Deployment (Advanced)
 
-In Cloudflare Dashboard → **Pages** → **cool-blog** → **Settings** → **Environment variables**:
+Configure intelligent DNS routing to direct domestic users to Zeabur and international users to Cloudflare Pages.
 
-```bash
-# Required
-DATABASE_URL=postgresql://user:password@host/database?sslmode=require
+### Architecture
 
-# Optional (for your personal deployment)
-PUBLIC_IS_PERSONAL_SITE=true
-PUBLIC_SITE_URL=https://your-domain.com
-
-# Optional (for features)
-RESEND_API_KEY=re_xxxxx
-MCP_API_KEY=ckb_xxxxx
-GITHUB_TOKEN=ghp_xxxxx
+```
+Domestic users → Aliyun DNS (境内线路) → Aliyun CDN → Zeabur
+International users → Aliyun DNS (境外线路) → Cloudflare SaaS → Cloudflare Pages
+Default fallback → Aliyun DNS (默认线路) → Aliyun CDN → Zeabur
 ```
 
-#### 4. Automatic Deployments
+### Implementation
 
-- **Push to `master`** → Production deployment
-- **Pull requests** → Preview deployments
-- **Every commit** → Automatic rebuild
+Multi-region deployment requires manual infrastructure setup:
 
-#### 5. Custom Domain (Optional)
+1. **Deploy to both platforms** (complete Option 1 and Option 2 first)
+2. **Set up Aliyun CDN** for domestic acceleration
+3. **Configure Cloudflare SaaS** for international routing
+4. **Configure Aliyun DNS** with intelligent routing (境内/境外/默认 lines)
 
-1. Go to **Pages** → **cool-blog** → **Custom domains**
-2. Click **Set up a custom domain**
-3. Enter your domain (e.g., `blog.yourdomain.com`)
-4. Follow DNS configuration instructions
+> **Note**: Detailed step-by-step procedures for multi-region infrastructure setup are implemented in **Plan 11-05**. This includes console navigation, configuration screenshots, and verification procedures.
 
-**DNS Configuration:**
+## Environment Variables
 
-If your domain is on Cloudflare:
-- Add a CNAME record pointing to `cool-blog.pages.dev`
+| Variable | Platforms | Value | Required |
+|----------|-----------|-------|----------|
+| `DEPLOY_PLATFORM` | All | `node` (Zeabur) or `cloudflare` (Cloudflare) | No (defaults to `node`) |
+| `DATABASE_URL` | All | Neon PostgreSQL connection string | Yes |
+| `RESEND_API_KEY` | All | Resend API key for newsletter | No |
 
-If your domain is elsewhere:
-- Add a CNAME record: `blog → cool-blog.pages.dev`
+## Troubleshooting
 
----
+### Deployment succeeds but site shows 404
 
-## 🇨🇳 Zeabur Deployment (Alibaba Cloud)
+**Cause**: Built with wrong adapter (e.g., built for Cloudflare but deploying to Zeabur)
 
-### Prerequisites
+**Solution**: Check `DEPLOY_PLATFORM` environment variable:
+- Zeabur: `DEPLOY_PLATFORM=node` or leave unset
+- Cloudflare Pages: `DEPLOY_PLATFORM=cloudflare`
 
-- Zeabur account (https://zeabur.com)
-- GitHub account
-- Neon database
+### Database connection fails
 
-### Why Zeabur?
+**Cause**: Runtime incompatibility or wrong connection string
 
-✅ **Great for Chinese users**
-- Fast deployment to Chinese regions
-- Native Alibaba Cloud integration
-- Simple pricing model
-- Excellent Chinese documentation
+**Solution**:
+- Verify `DATABASE_URL` is correct and includes `?sslmode=require`
+- Ensure using `@neondatabase/serverless` package (already installed)
+- Check Neon console for connection issues
 
-### Setup Steps
+### Build fails with "Astro version not supported"
 
-#### 1. Create Zeabur Account
+**Cause**: Node.js version too old
 
-1. Visit [https://zeabur.com](https://zeabur.com)
-2. Sign up with GitHub account
-3. Select region (recommend: Hong Kong or Singapore for Chinese users)
+**Solution**: Upgrade to Node.js 22 or higher:
+- Locally: Use `nvm install 22 && nvm use 22`
+- CI/CD: Set `node-version: '22'` in GitHub Actions
 
-#### 2. Create New Service
+## Architecture Diagrams
 
-1. Click **"Create New Service"**
-2. Select **GitHub** → Select `cool-blog` repository
-3. Configure service:
-   - **Service Name**: `cool-blog` (or your choice)
-   - **Region**: Choose closest to your users
-     - Hong Kong (香港)
-     - Singapore (新加坡)
-     - Tokyo (东京)
-4. Click **"Create"**
+### Zeabur Deployment (Node.js)
 
-#### 3. Configure Build Settings
-
-Zeabur auto-detects Astro projects, but verify settings:
-
-```yaml
-# Service Configuration (auto-detected)
-Build Command: npm run build
-Output Directory: dist
-Start Command: node server/entry.mjs  # Auto-detected
-
-# Environment Variables (click "Settings" → "Environment Variables")
-DATABASE_URL=postgresql://user:password@host/db?sslmode=require
-PORT=3000  # Auto-set by Zeabur
-NODE_ENV=production
-
-# Optional: For your personal branding
-PUBLIC_IS_PERSONAL_SITE=true
-PUBLIC_SITE_URL=https://your-domain.com
+```
+GitHub → Zeabur → Build (DEPLOY_PLATFORM=node) → Node.js Server → Neon Database
+         ↓
+    Your Domain
 ```
 
-#### 4. Deploy
+### Cloudflare Pages Deployment (Workers)
 
-**Automatic Deployment:**
-```bash
-# Push to master branch
-git push origin master
-
-# Zeabur automatically detects and deploys
+```
+GitHub → Cloudflare Pages → Build (DEPLOY_PLATFORM=cloudflare) → Workers → Neon Database
+                    ↓
+                Your Domain
 ```
 
-**Manual Deployment:**
-1. Go to Zeabur dashboard
-2. Click **"Deploy"** button
-3. Watch real-time build logs
+### Multi-Region Deployment
 
-#### 5. Domain Configuration
-
-**Option A: Use Zeabur Subdomain**
-- Your site will be available at: `https://your-service.zeabur.app`
-
-**Option B: Custom Domain**
-
-1. Go to **Service** → **Settings** → **Domains**
-2. Click **"Add Domain"**
-3. Enter your domain (e.g., `blog.wenjiaqi.top`)
-4. Configure DNS:
-   ```
-   Type: CNAME
-   Name: blog
-   Value: your-service.zeabur.app
-   TTL: 600
-   ```
-
-5. Wait for SSL certificate (automatic, ~1-2 minutes)
-
-#### 6. Alibaba Cloud Integration
-
-**If you have Alibaba Cloud servers:**
-
-1. **Region Selection**
-   - Zeabur supports deploying to Alibaba Cloud regions
-   - Available: Hong Kong, Singapore, etc.
-
-2. **Database Options**
-   - **Recommended**: Keep using Neon (works great globally)
-   - **Alternative**: Use Alibaba Cloud ApsaraDB
-     ```bash
-     # Update DATABASE_URL format
-     DATABASE_URL=postgresql://user:password@rm-xxxx.rds.aliyuncs.com:3306/dbname
-     ```
-
-3. **CDN Integration**
-   - Zeabur automatically uses Alibaba Cloud CDN
-   - Static assets cached globally
-   - Fast access in China
-
----
-
-## 🔧 Troubleshooting
-
-### Cloudflare Pages Issues
-
-#### Build Failed: "Cannot find module"
-
-**Solution:**
-```bash
-# Clear build cache
-rm -rf .astro dist node_modules
-npm install
-npm run build
+```
+Domestic User → Aliyun DNS → Aliyun CDN → Zeabur → Node.js Server
+International User → Aliyun DNS → Cloudflare SaaS → Cloudflare Pages → Workers
 ```
 
-#### Build Failed: "Worker threw exception"
+## Performance Optimization
 
-**Cause**: Using Node.js APIs not available in Cloudflare Workers
+### Aliyun CDN Cache Configuration
 
-**Solution**: 
-- Check for `fs`, `path`, `process` usage
-- Replace with Cloudflare-compatible alternatives
-- Use `import { env } from 'cloudflare:workers'`
+- HTML pages: 60 seconds TTL
+- Static assets (CSS/JS): 3600 seconds TTL
+- Images: 86400 seconds TTL (1 day)
 
-#### Environment Variables Not Working
+### Cloudflare Cache Configuration
 
-**Solution:**
-1. Check variables are set in Cloudflare Dashboard
-2. Make sure you're using `import.meta.env.VAR_NAME`
-3. Trigger new deployment after adding variables
+- Cache Everything: Enabled
+- Browser Cache TTL: 4 hours
+- Edge Cache TTL: 1 day
 
-### Zeabur Issues
+## Security Considerations
 
-#### Build Failed: "Module not found"
-
-**Solution:**
-```bash
-# Clear cache and rebuild
-rm -rf node_modules package-lock.json
-npm install
-git add .
-git commit -m "fix: update dependencies"
-git push
-```
-
-#### Runtime Error: "EADDRINUSE"
-
-**Cause**: Port conflict
-
-**Solution**: Zeabur automatically sets `PORT` environment variable. Make sure your code uses it:
-
-```typescript
-// astro.config.mjs
-server: {
-  port: Number(process.env.PORT) || 4321  // ✅ Use env PORT
-  // port: 4321  // ❌ Hardcoded port
-}
-```
-
-#### Database Connection Failed
-
-**Solution:**
-1. Verify `DATABASE_URL` is set in Zeabur dashboard
-2. Check database is accessible from Zeabur region
-3. Ensure SSL mode is enabled: `?sslmode=require`
-
----
-
-## 🎯 Platform Comparison
-
-### Cloudflare Pages
-
-**Pros:**
-- ✅ Free tier available
-- ✅ Global CDN
-- ✅ Automatic HTTPS
-- ✅ DDoS protection
-- ✅ Preview deployments
-
-**Cons:**
-- ❌ Build time limits (free tier)
-- ❌ Limited to Cloudflare regions
-- ❌ Cold starts on free tier
-
-**Best For:**
-- Global audience
-- Static + SSR sites
-- High traffic needs
-
-### Zeabur
-
-**Pros:**
-- ✅ Fast in China
-- ✅ Alibaba Cloud integration
-- ✅ Simple pricing
-- ✅ Good documentation (Chinese)
-- ✅ No cold starts
-
-**Cons:**
-- ❌ Paid service (but affordable)
-- ❌ Fewer regions than Cloudflare
-- ❌ Newer platform
-
-**Best For:**
-- Chinese users
-- Asian markets
-- Alibaba Cloud ecosystem
-
----
-
-## 📋 Pre-Deployment Checklist
-
-### Before Deploying to Any Platform
-
-- [ ] Update `PUBLIC_SITE_URL` environment variable
-- [ ] Set `DATABASE_URL` to production database
-- [ ] Configure branding (set `PUBLIC_IS_PERSONAL_SITE=true` if needed)
-- [ ] Test build locally: `npm run build`
-- [ ] Run tests: `npm test`
-- [ ] Check environment variables are set
-- [ ] Verify database connection
-- [ ] Set up custom domain (optional)
-
-### Platform-Specific
-
-**Cloudflare Pages:**
-- [ ] Connected GitHub repository
-- [ ] Build settings configured
-- [ ] Environment variables set
-- [ ] Custom domain configured (optional)
-
-**Zeabur:**
-- [ ] Connected GitHub repository
-- [ ] Region selected
-- [ ] Environment variables set
-- [ ] Custom domain configured (optional)
-- [ ] Database accessible from Zeabur region
-
----
-
-## 🚦 Deployment Workflow
-
-### Development
-
-```bash
-# 1. Create feature branch
-git checkout -b feature/new-feature
-
-# 2. Make changes
-# ... edit files ...
-
-# 3. Test locally
-npm run dev
-npm test
-
-# 4. Commit changes
-git add .
-git commit -m "feat: add new feature"
-
-# 5. Push to trigger deployment
-git push origin feature/new-feature
-
-# 6. Create PR on GitHub
-#    - Preview deployment created automatically
-#    - Test preview URL
-#    - Merge to master when ready
-```
-
-### Production
-
-```bash
-# 1. Merge to master
-git checkout master
-git merge feature/new-feature
-
-# 2. Push to trigger production deployment
-git push origin master
-
-# 3. Automatic deployment
-#    - Cloudflare Pages: https://cool-blog.pages.dev
-#    - Zeabur: https://your-service.zeabur.app
-```
-
----
-
-## 📚 Additional Resources
-
-- [Cloudflare Pages Documentation](https://developers.cloudflare.com/pages/)
-- [Astro Deployment Guides](https://docs.astro.build/en/guides/deploy/)
-- [Zeabur Documentation](https://zeabur.com/docs)
-- [Neon Database](https://neon.tech/docs)
-
----
-
-**Need help?** Check [SECURITY.md](SECURITY.md) for vulnerability reporting or open an issue on GitHub.
+1. **Environment Variables**: Never commit `.env` files to git
+2. **Database**: Use Neon's connection pooling for serverless deployments
+3. **HTTPS**: Enable HTTPS on both platforms (free certificates available)
+4. **CORS**: Configure CORS if accessing API from different domains
