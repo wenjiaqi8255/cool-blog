@@ -226,21 +226,23 @@ Plans:
   2. DEPLOY_PLATFORM environment variable controls adapter selection at build time
   3. SSR and database queries work on both platforms (no static export regression)
   4. Documentation enables open-source users to deploy to either platform
-  5. Multi-region routing guide documents Aliyun DNS + CDN + Cloudflare SaaS setup
-**Plans:** 4 plans
+  5. Multi-region routing is configured and verified (Aliyun DNS + CDN + Cloudflare SaaS)
+**Plans:** 5 plans
 
 **Wave Structure:**
 - Wave 1: 11-01 (conditional adapter), 11-02 (build script wrapper) — independent, can run parallel
 - Wave 2: 11-03 (GitHub Actions), 11-04 (documentation) — depends on Wave 1
+- Wave 3: 11-05 (multi-region routing infrastructure) — depends on Wave 1, 2
 
 Plans:
 - [ ] 11-01-PLAN.md — Conditional adapter configuration (astro.config.mjs)
 - [ ] 11-02-PLAN.md — Secure build script wrapper (build.js)
 - [ ] 11-03-PLAN.md — GitHub Actions deployment update (deploy.yml)
 - [ ] 11-04-PLAN.md — Deployment documentation (README.md + DEPLOYMENT.md)
+- [ ] 11-05-PLAN.md — Multi-region routing infrastructure (Aliyun DNS + CDN + Cloudflare SaaS)
 
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-04-12 (Phase 11 planning complete)*
+*Last updated: 2026-04-12 (Phase 11 planning complete - added Plan 11-05 for multi-region routing)*
 *Granularity: coarse*
