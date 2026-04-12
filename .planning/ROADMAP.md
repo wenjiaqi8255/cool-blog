@@ -6,6 +6,7 @@
 - ✅ **v1.1 Content Management & Automation** — Phases 5-8 complete (2026-03-31)
 - ✅ **v1.2 UI/UX Polish and Content Management** — Phase 9 complete (2026-04-02)
 - ✅ **v1.3 Database-Driven Portfolio** — Phase 10 complete (2026-04-03)
+- 🚧 **v1.4 Multi-Region Deployment** — Phase 11 in planning
 
 ## Phases
 
@@ -215,8 +216,31 @@ Plans:
 - [x] 10-05: Modal redesign (match Bento aesthetic, DOMPurify sanitization)
 - [x] 10-06: Fallback & polish (loading animation, performance optimization)
 
+### Phase 11: Multi-Region Deployment Setup
+
+**Goal:** Enable dual-platform deployment (Zeabur + Cloudflare Pages) with intelligent DNS routing for optimal global performance, plus comprehensive deployment documentation for open-source release.
+**Depends on:** Phase 10
+**Requirements:** DEPLOY-01, DEPLOY-02, DEPLOY-03, DEPLOY-04, DEPLOY-05, DEPLOY-06, DEPLOY-07
+**Success Criteria** (what must be TRUE):
+  1. Single codebase deploys to both Zeabur (Node.js) and Cloudflare Pages (Workers)
+  2. DEPLOY_PLATFORM environment variable controls adapter selection at build time
+  3. SSR and database queries work on both platforms (no static export regression)
+  4. Documentation enables open-source users to deploy to either platform
+  5. Multi-region routing guide documents Aliyun DNS + CDN + Cloudflare SaaS setup
+**Plans:** 4 plans
+
+**Wave Structure:**
+- Wave 1: 11-01 (conditional adapter), 11-02 (build script wrapper) — independent, can run parallel
+- Wave 2: 11-03 (GitHub Actions), 11-04 (documentation) — depends on Wave 1
+
+Plans:
+- [ ] 11-01-PLAN.md — Conditional adapter configuration (astro.config.mjs)
+- [ ] 11-02-PLAN.md — Secure build script wrapper (build.js)
+- [ ] 11-03-PLAN.md — GitHub Actions deployment update (deploy.yml)
+- [ ] 11-04-PLAN.md — Deployment documentation (README.md + DEPLOYMENT.md)
+
 ---
 
 *Roadmap created: 2026-03-27*
-*Last updated: 2026-04-03 (Phase 10 complete)*
+*Last updated: 2026-04-12 (Phase 11 planning complete)*
 *Granularity: coarse*
