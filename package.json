@@ -5,19 +5,19 @@
   "scripts": {
     "dev": "astro dev",
     "dev:local": "dotenv -e .dev.vars -- astro dev",
-    "build": "astro build",
+    "build": "node build.js",
     "preview": "astro preview",
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run",
     "test:e2e": "playwright test",
-    "deploy": "astro build && wrangler pages deploy ./dist/client --project-name=cool-blog --branch=main",
-    "deploy:preview": "astro build && wrangler pages deploy ./dist/client --project-name=cool-blog --branch=preview",
+    "deploy": "DEPLOY_PLATFORM=cloudflare npm run build && wrangler pages deploy dist --project-name=cool-blog",
+    "deploy:preview": "DEPLOY_PLATFORM=cloudflare npm run build && wrangler pages deploy dist --project-name=cool-blog --branch=preview",
     "cf:login": "wrangler login",
     "cf:whoami": "wrangler whoami",
     "migrate:notion": "tsx scripts/migrate-notion.ts"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^13.1.4",
+    "@astrojs/cloudflare": "^13.1.8",
     "@astrojs/node": "^10.0.4",
     "@astrojs/react": "^5.0.2",
     "@astrojs/rss": "^4.0.18",
