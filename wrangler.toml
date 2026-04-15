@@ -1,0 +1,12 @@
+name = "cool-blog"
+compatibility_date = "2024-04-03"
+main = "dist/server/entry.mjs"
+
+# Assets binding with custom name to avoid conflicts
+[assets]
+directory = "./dist/client"
+binding = "STATIC_ASSETS"
+
+# This configuration is for Cloudflare Workers deployment
+# Build command: DEPLOY_PLATFORM=cloudflare npm run build
+# Deploy command: wrangler deploy

@@ -32,14 +32,9 @@ jobs:
           PUBLIC_IS_PERSONAL_SITE: true
         run: npm run build
 
-      - name: Remove Worker Config
-        run: |
-          rm -f dist/server/wrangler.json dist/server/.prerender/wrangler.json
-          rm -rf .wrangler/deploy
-
-      - name: Deploy to Cloudflare Pages
+      - name: Deploy to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist --project-name=cool-blog
+          command: wrangler deploy
