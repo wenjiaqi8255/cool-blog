@@ -28,6 +28,8 @@ jobs:
       - name: Build
         env:
           DEPLOY_PLATFORM: cloudflare
+          PUBLIC_SITE_URL: https://blog.wenjiaqi.top
+          PUBLIC_IS_PERSONAL_SITE: true
         run: npm run build
 
       - name: Deploy to Cloudflare Pages
