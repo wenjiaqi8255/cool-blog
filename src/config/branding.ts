@@ -37,7 +37,7 @@ const isPersonalSite = import.meta.env.PUBLIC_IS_PERSONAL_SITE === 'true' ||  //
 
 const isTemplateSite = import.meta.env.PUBLIC_USE_TEMPLATE_BRANDING === 'true' ||
                           !import.meta.env.PUBLIC_SITE_URL ||
-                          import.meta.env.PUBLIC_SITE_URL?.includes('localhost') ||
+                          (import.meta.env.PUBLIC_SITE_URL?.includes('localhost') && import.meta.env.PUBLIC_IS_PERSONAL_SITE !== 'true') ||
                           import.meta.env.PUBLIC_SITE_URL?.includes('example') ||
                           import.meta.env.PUBLIC_SITE_URL?.includes('your-domain');
 

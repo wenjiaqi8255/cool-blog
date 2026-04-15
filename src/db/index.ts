@@ -28,9 +28,11 @@ let dbInstance: ReturnType<typeof drizzle> | null = null;
 function initDb() {
   if (dbInstance) return dbInstance;
 
-  // Use process.env exclusively — import.meta.env gets statically replaced
-  // by Vite during build, baking in build-time values instead of runtime ones.
-  const url = process.env.DATABASE_URL;
+  // Use import.meta.env for Vite dev server (loads .env.local)
+  // Fallback to process.env for production runtime env vars
+  // import.meta.env gets statically replaced during build, so production
+  // will use process.env.DATABASE_URL at runtime
+  const url = import.meta.env?.DATABASE_URL || process.env.DATABASE_URL;
 
   console.log('[DB] DATABASE_URL value:', url ? 'SET (' + url.substring(0, 30) + '...)' : 'NOT SET');
 
