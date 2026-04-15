@@ -48,7 +48,7 @@ const isProduction = isPersonalSite && !isTemplateSite;
  */
 const productionBranding: BrandConfig = {
   siteName: '温嘉琪的博客',
-  siteTitle: '温嘉琪的博客 | ARCHITECTURE & SYSTEMS',
+  siteTitle: '温嘉琪的博客 | BUILDING SOMETHING FUN',
   siteDescription: '探索生成式智能、低层系统工程与命令行美学的交叉领域。',
   brandTitle: '温嘉琪的博客',
   brandSubtitle: 'BUILDING SOMETHING FUN',
