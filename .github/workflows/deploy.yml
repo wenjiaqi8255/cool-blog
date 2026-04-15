@@ -32,6 +32,9 @@ jobs:
           PUBLIC_IS_PERSONAL_SITE: true
         run: npm run build
 
+      - name: Remove Worker Config
+        run: rm -f dist/server/wrangler.json dist/server/.prerender/wrangler.json
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
