@@ -33,7 +33,9 @@ jobs:
         run: npm run build
 
       - name: Remove Worker Config
-        run: rm -f dist/server/wrangler.json dist/server/.prerender/wrangler.json
+        run: |
+          rm -f dist/server/wrangler.json dist/server/.prerender/wrangler.json
+          rm -rf .wrangler/deploy
 
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
