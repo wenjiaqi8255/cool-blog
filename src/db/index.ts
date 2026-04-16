@@ -1,4 +1,5 @@
 import { drizzle } from 'drizzle-orm/neon-http';
+import { getSecret } from 'astro:env/server';
 import * as schema from './schema';
 
 // Mock DB for development without credentials
@@ -22,17 +23,26 @@ const mockDb = {
   })
 };
 
-// Real DB with env var access
 let dbInstance: ReturnType<typeof drizzle> | null = null;
+
+function getDatabaseUrl(): string | undefined {
+  // Astro v6 official API — reads from Workers env on Cloudflare,
+  // from process.env on Node.js, and from .env files in dev.
+  const url = getSecret('DATABASE_URL');
+  if (url) return url;
+
+  // Fallback for environments where Astro's env system isn't fully wired
+  if (typeof process !== 'undefined' && process.env?.DATABASE_URL) {
+    return process.env.DATABASE_URL;
+  }
+
+  return undefined;
+}
 
 function initDb() {
   if (dbInstance) return dbInstance;
 
-  // Use import.meta.env for Vite dev server (loads .env.local)
-  // Fallback to process.env for production runtime env vars
-  // import.meta.env gets statically replaced during build, so production
-  // will use process.env.DATABASE_URL at runtime
-  const url = import.meta.env?.DATABASE_URL || process.env.DATABASE_URL;
+  const url = getDatabaseUrl();
 
   console.log('[DB] DATABASE_URL value:', url ? 'SET (' + url.substring(0, 30) + '...)' : 'NOT SET');
 

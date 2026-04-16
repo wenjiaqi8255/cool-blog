@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config';
+import { defineConfig, envField } from 'astro/config';
 import node from '@astrojs/node';
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
@@ -9,6 +9,15 @@ const platform = process.env.DEPLOY_PLATFORM || 'node';
 export default defineConfig({
   site: 'https://kernel-panic.dev',
   output: 'server',
+  env: {
+    schema: {
+      DATABASE_URL: envField.string({
+        context: 'server',
+        access: 'secret',
+        optional: true,
+      }),
+    },
+  },
   server: platform === 'node' ? {
     port: 4321,
     host: true
@@ -28,6 +37,7 @@ export default defineConfig({
     })
   ],
   vite: {
+    envPrefix: 'PUBLIC_',
     ssr: {
       noExternal: ['@fontsource/inter', '@fontsource/jetbrains-mono']
     },
