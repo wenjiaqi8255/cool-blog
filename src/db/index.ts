@@ -44,7 +44,7 @@ function initDb() {
 
   const url = getDatabaseUrl();
 
-  console.log('[DB] DATABASE_URL value:', url ? 'SET (' + url.substring(0, 30) + '...)' : 'NOT SET');
+  console.log('[DB] DATABASE_URL:', url ? 'configured' : 'NOT SET');
 
   if (!url) {
     console.warn('[DB] DATABASE_URL not set - using mock mode');
