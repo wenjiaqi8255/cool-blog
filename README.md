@@ -10,9 +10,8 @@
 
 ## 🌟 Live Demo
 
-Check out the live demo: [https://cool-blog.pages.dev](https://cool-blog.pages.dev)
+Check out the live demo: [https://cool-blog.aries10011.workers.dev](https://cool-blog.aries10011.workers.dev)
 
-*Looking for the original author's site? It's coming soon!*
 - **💾 Database-Driven** - PostgreSQL + Drizzle ORM for scalable content management
 - **🤖 MCP Server** - Built-in MCP server for AI assistant article management
 - **🔍 Search** - Client-side fuzzy search with Fuse.js
@@ -111,7 +110,7 @@ cool-blog/
 | **Search** | Fuse.js |
 | **Email** | Resend |
 | **Testing** | Playwright + Vitest |
-| **Deployment** | Cloudflare Pages |
+| **Deployment** | Cloudflare Workers / Zeabur |
 
 ## 📖 Usage
 
@@ -135,39 +134,24 @@ Visitors can subscribe via the modal form. Subscriptions are stored in PostgreSQ
 
 ## 🚢 Deployment
 
-Cool Blog supports deployment to Zeabur or Cloudflare Pages. Both platforms support server-side rendering and database queries.
+Cool Blog supports deployment to Cloudflare Workers or Zeabur. Both platforms support server-side rendering and database queries.
+
+### Deploy to Cloudflare Workers
+
+1. Fork this repository
+2. Add GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
+3. Set `DATABASE_URL` as a Workers secret in Cloudflare Dashboard
+4. Push to `master` — GitHub Actions deploys automatically
 
 ### Deploy to Zeabur
 
 [Zeabur](https://zeabur.com) provides Node.js deployment with domestic China network optimization.
 
-1. Push your code to GitHub
-2. Create a new project on Zeabur
-3. Configure environment variables:
-   - `DATABASE_URL`: Your Neon PostgreSQL connection string
-   - `DEPLOY_PLATFORM`: Leave unset (defaults to Node.js)
-4. Deploy!
-
-Zeabur will automatically build and deploy your blog.
-
-### Deploy to Cloudflare Pages
-
-[Cloudflare Pages](https://pages.cloudflare.com) provides global edge deployment with Workers runtime.
-
-1. Push your code to GitHub
-2. Add environment variables in Cloudflare Pages:
-   - `DATABASE_URL`: Your Neon PostgreSQL connection string
-   - `DEPLOY_PLATFORM`: `cloudflare`
-3. Add GitHub repository to Cloudflare Pages
-4. Deploy!
+1. Connect your repository on Zeabur
+2. Set environment variables: `DATABASE_URL`
+3. Deploy!
 
 See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup instructions.
-
-### Advanced: Multi-Region Setup
-
-Configure intelligent DNS routing for optimal global performance. Domestic users route to Zeabur, international users route to Cloudflare Pages.
-
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for the complete multi-region deployment guide.
 
 ## 🧪 Testing
 
