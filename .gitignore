@@ -43,8 +43,12 @@ playwright/.cache/
 
 # Internal development notes (not for open source)
 .internal-archive/
+.planning/
 *.html
 *.skill
 scripts/test-*.sh
 scripts/update-*.sh
+
+# Local Claude config
+.claude.local.md
 

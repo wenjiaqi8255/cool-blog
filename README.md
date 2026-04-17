@@ -1,40 +1,31 @@
 # Cool Blog
 
-> A modern, database-driven blog solution with MCP (Model Context Protocol) server integration for AI-powered content management.
+> A modern, database-driven blog with MCP server integration for AI-powered content management.
 
 ![Cool Blog](docs/screenshots/article-detail-full.png)
 
-## ✨ Features
+## Live Demo
 
-- **🚀 Modern Stack** - Built with Astro 6, TypeScript, and Tailwind CSS 4
+[https://cool-blog.aries10011.workers.dev](https://cool-blog.aries10011.workers.dev)
 
-## 🌟 Live Demo
+## Features
 
-Check out the live demo: [https://cool-blog.aries10011.workers.dev](https://cool-blog.aries10011.workers.dev)
+- **Modern Stack** — Astro 6, TypeScript, Tailwind CSS 4, React 19
+- **Database-Driven** — Neon PostgreSQL + Drizzle ORM
+- **MCP Server** — AI assistant integration for article management
+- **Search** — Client-side fuzzy search with Fuse.js
+- **Newsletter** — Email subscriptions via Resend
+- **Analytics** — Privacy-friendly visitor tracking
+- **Bento Grid** — Responsive card-based design
+- **Hybrid Rendering** — SSR + static generation
+- **Type-Safe** — Full TypeScript coverage
 
-- **💾 Database-Driven** - PostgreSQL + Drizzle ORM for scalable content management
-- **🤖 MCP Server** - Built-in MCP server for AI assistant article management
-- **🔍 Search** - Client-side fuzzy search with Fuse.js
-- **📧 Newsletter** - Email subscription system via Resend
-- **📊 Analytics** - Privacy-friendly visitor tracking
-- **🎨 Bento Grid** - Modern card-based responsive design
-- **⚡ Hybrid Rendering** - SSR + static generation for optimal performance
-- **🔒 Type-Safe** - Full TypeScript coverage
-- **✅ Tested** - Playwright E2E + Vitest unit tests
-
-## 🎯 Perfect For
-
-- Developers wanting a modern, database-driven blog
-- Content creators needing AI-powered management
-- Teams requiring collaborative publishing workflows
-- Anyone interested in MCP protocol integration
-
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
-- Node.js 22+ (required for Astro 6)
-- A [Neon](https://neon.tech) account (free tier available)
+- Node.js 22+
+- A [Neon](https://neon.tech) account (free tier)
 
 ### 1. Clone & Install
 
@@ -44,36 +35,26 @@ cd cool-blog
 npm install
 ```
 
-### 2. Set Up Database
-
-```bash
-# Create a Neon project at https://neon.tech
-# Get your connection string from Dashboard → Connection Details
-```
-
-### 3. Configure Environment
+### 2. Configure Environment
 
 ```bash
 cp .env.example .env.local
 ```
 
 Edit `.env.local`:
+
 ```bash
 # Required
 DATABASE_URL=postgresql://user:password@host/database?sslmode=require
 
-# Optional - for GitHub stats card
+# Optional
 GITHUB_TOKEN=your_github_token
-
-# Optional - for newsletter feature
 RESEND_API_KEY=re_xxxxx
 RESEND_FROM_EMAIL=newsletter@yourdomain.com
-
-# Optional - for MCP article management
 MCP_API_KEY=ckb_your_generated_key
 ```
 
-### 4. Run Development Server
+### 3. Run
 
 ```bash
 npm run dev
@@ -81,24 +62,22 @@ npm run dev
 
 Visit `http://localhost:4321`
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 cool-blog/
 ├── src/
-│   ├── components/          # React components
-│   ├── config/              # Site configuration
-│   ├── db/                  # Database schema & connection
-│   ├── lib/                 # Utilities & helpers
-│   │   ├── mcp/            # MCP server implementation
-│   │   └── content/        # Content parsing & validation
-│   └── pages/              # Astro pages & API routes
-├── public/                  # Static assets
-├── scripts/                 # Build & migration scripts
-└── tests/                   # E2E tests
+│   ├── components/       # React & Astro components
+│   ├── config/           # Site configuration & branding
+│   ├── db/               # Database schema & connection
+│   ├── lib/              # Utilities, MCP server, search
+│   └── pages/            # Astro pages & API routes
+├── public/               # Static assets
+├── scripts/              # Build & migration scripts
+└── tests/                # E2E tests
 ```
 
-## 🔧 Key Technologies
+## Key Technologies
 
 | Category | Technology |
 |----------|-----------|
@@ -112,92 +91,78 @@ cool-blog/
 | **Testing** | Playwright + Vitest |
 | **Deployment** | Cloudflare Workers / Zeabur |
 
-## 📖 Usage
+## Usage
 
 ### Adding Articles
 
 Articles are stored in PostgreSQL and can be managed via:
 
-1. **Database** - Direct SQL inserts
-2. **MCP Server** - AI assistant integration
-3. **API** - RESTful endpoints (with API key)
+1. **Database** — Direct SQL inserts
+2. **MCP Server** — AI assistant integration ([setup guide](docs/MCP_SETUP_GUIDE.md))
+3. **API** — RESTful endpoints (with API key)
 
-See [MCP_SETUP_GUIDE.md](MCP_SETUP_GUIDE.md) for MCP server details.
-
-### Portfolio Management
+### Portfolio
 
 Add `"Project"` tag to articles to feature them in the portfolio section. Use `"featured"` tag for prominent display.
 
-### Newsletter
+### Customization
 
-Visitors can subscribe via the modal form. Subscriptions are stored in PostgreSQL and managed via Resend.
+- **Branding** — Edit `src/config/content.ts` for site name and titles
+- **Colors** — Edit `src/styles/global.css`
+- **Card Layout** — Edit `src/config/cards.ts`
+- **Portfolio** — Edit `src/config/portfolio.ts`
 
-## 🚢 Deployment
+### MCP Server
 
-Cool Blog supports deployment to Cloudflare Workers or Zeabur. Both platforms support server-side rendering and database queries.
+Built-in MCP server for AI-powered content management. Available tools:
 
-### Deploy to Cloudflare Workers
+| Tool | Description |
+|------|-------------|
+| `create_article` | Create new articles |
+| `update_article` | Update existing articles |
+| `delete_article` | Remove articles |
+| `list_articles` | List all articles |
+| `get_article` | Get article by slug |
+
+See [MCP Setup Guide](docs/MCP_SETUP_GUIDE.md) for configuration.
+
+## Deployment
+
+### Cloudflare Workers
 
 1. Fork this repository
 2. Add GitHub secrets: `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`
 3. Set `DATABASE_URL` as a Workers secret in Cloudflare Dashboard
 4. Push to `master` — GitHub Actions deploys automatically
 
-### Deploy to Zeabur
+### Zeabur
 
-[Zeabur](https://zeabur.com) provides Node.js deployment with domestic China network optimization.
-
-1. Connect your repository on Zeabur
+1. Connect your repository on [Zeabur](https://zeabur.com)
 2. Set environment variables: `DATABASE_URL`
-3. Deploy!
+3. Deploy
 
-See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed setup instructions.
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed instructions.
 
-## 🧪 Testing
+## Testing
 
 ```bash
-# Unit tests
-npm run test:unit
-
-# E2E tests
-npm run test:e2e
-
-# All tests
-npm test
+npm run test:unit    # Unit tests
+npm run test:e2e     # E2E tests
+npm test             # All tests
 ```
 
-## 🤝 Contributing
+## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## 📝 License
+## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+MIT License — see [LICENSE](LICENSE).
 
-## 🙏 Credits
-
-Built by the open-source community
-
-Special thanks to:
-- [Astro](https://astro.build) - The web framework
-- [Neon](https://neon.tech) - Serverless PostgreSQL
-- [Cloudflare](https://cloudflare.com) - Hosting & deployment
-
-## 📚 Documentation
+## Documentation
 
 - [Deployment Guide](DEPLOYMENT.md)
-- [MCP Server Setup](MCP_SETUP_GUIDE.md)
+- [MCP Server Setup](docs/MCP_SETUP_GUIDE.md)
 - [Contributing Guidelines](CONTRIBUTING.md)
 - [Security Policy](SECURITY.md)
-
-## 🌟 Show Your Support
-
-If you find this project helpful, consider:
-- ⭐ Starring it on GitHub
-- 🐛 Reporting issues
-- 💡 Suggesting features
-- 📖 Improving documentation
-
----
-
-**Note**: This is a personal blog template. Feel free to customize it for your needs!
+- [Open Source Checklist](docs/OPENSOURCE-CHECKLIST.md)
