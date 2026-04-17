@@ -51,4 +51,5 @@ scripts/update-*.sh
 
 # Local Claude config
 .claude.local.md
+.claude/settings.local.json
 

@@ -5,7 +5,10 @@ import { db } from '../src/db';
 import { articles, ArticleStatus } from '../src/db/schema';
 
 // Configuration
-const NOTION_EXPORT_PATH = process.env.NOTION_EXPORT_PATH || '/Users/wenjiaqi/Downloads/BLOG-notion';
+const NOTION_EXPORT_PATH = process.env.NOTION_EXPORT_PATH;
+if (!NOTION_EXPORT_PATH) {
+  throw new Error('NOTION_EXPORT_PATH environment variable is required');
+}
 const CSV_FILE = path.join(NOTION_EXPORT_PATH, 'BLOG 8e31fdff877c4d7caef28277beed03cf_all.csv');
 const MARKDOWN_FOLDER = path.join(NOTION_EXPORT_PATH, 'BLOG');
 const IMAGES_OUTPUT = path.join(process.cwd(), 'public/images/articles');
