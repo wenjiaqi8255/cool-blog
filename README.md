@@ -1,6 +1,6 @@
 # Cool Blog
 
-> A modern, database-driven blog with MCP server integration for AI-powered content management.
+> 配置驱动的个人博客，内置 MCP Server，AI 聊完直接发
 
 ![Cool Blog](docs/screenshots/article-detail-full.png)
 
@@ -8,9 +8,25 @@
 
 [https://cool-blog.aries10011.workers.dev](https://cool-blog.aries10011.workers.dev)
 
+## Why Cool Blog?
+
+- **One Article, Two Views** — 同一篇文章加 `"Project"` tag 上首页 portfolio，不加就在 `/articles`。不用维护两套内容。
+- **Config-Driven Portfolio** — 卡片大小、颜色深浅、排列模式全部在 `portfolio.ts` 里配。改配置文件，不改组件代码。
+- **AI-Native Workflow** — 内置 MCP Server。和 Claude 聊完，让它直接创建文章，博客自动更新。
+
+## Workflow
+
+```
+  Claude / Agent  ──MCP──▶  Cool Blog API  ──▶  你的博客
+  (讨论、起草)              (创建/发布)          (portfolio + articles)
+```
+
+和 AI 讨论出一个想法，让它调用 MCP Server 创建文章，博客自动渲染。推荐直接把仓库地址发给 Agent 让它自己配置。
+
 ## Features
 
 - **Modern Stack** — Astro 6, TypeScript, Tailwind CSS 4, React 19
+- **Config-Driven** — Portfolio layout controlled by `portfolio.ts`, styling by CSS variables
 - **Database-Driven** — Neon PostgreSQL + Drizzle ORM
 - **MCP Server** — AI assistant integration for article management
 - **Search** — Client-side fuzzy search with Fuse.js
@@ -446,13 +462,17 @@ npm run test:e2e     # E2E tests
 npm test             # All tests
 ```
 
+## Roadmap
+
+- [ ] 社交媒体发布工作流（小红书等）— 基于同一数据库，一键将文章发布到社交平台
+
 ## Contributing
 
 Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
-MIT License — see [LICENSE](LICENSE).
+MIT License — see [LICENSE](LICENSE). Please don't sell this.
 
 ## Documentation
 
